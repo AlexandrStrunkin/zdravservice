@@ -1,0 +1,32 @@
+<?
+$aMenuLinks = Array(
+	Array(
+		"Акции", 
+		"/promo/", 
+		Array(), 
+		Array(), 
+		"" 
+	),
+	Array(
+		"Аптеки", 
+		"/pharmacies/", 
+		Array(), 
+		Array(), 
+		"" 
+	),
+	Array(
+		"Правила доставки", 
+		"/delivery-rules/", 
+		Array(), 
+		Array(), 
+		"" 
+	),
+	Array(
+		"Контакты", 
+		"/contacts/", 
+		Array(), 
+		Array(), 
+		"" 
+	)
+);
+?>

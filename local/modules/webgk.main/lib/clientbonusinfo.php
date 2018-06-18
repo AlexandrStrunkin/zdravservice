@@ -101,7 +101,7 @@ class ClientBonusInfo {
                 $phonesArr[] = $curResult["UF_PHONE_NUMBER"];
            }
            foreach ($phonesArr as $phoneNumber) {
-               $this->ClientsInfo($phoneNumber);
+               ClientBonusInfo::ClientsInfo($phoneNumber);
            }
     }
     
@@ -110,7 +110,7 @@ class ClientBonusInfo {
     * 
     */
     function gettingClientsInfoAgent() {
-        if ($this->checkUpdatedClientsInfo) {
+        if (ClientBonusInfo::checkUpdatedClientsInfo()) {
             return "\\Webgk\\Main\\ClientBonusInfo::gettingClientsInfoAgent();";
         }    
     }
