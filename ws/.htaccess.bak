@@ -1,0 +1,6 @@
+<IfModule auth_basic.c>
+  AuthType Basic
+  AuthName "Closed website"
+  AuthUserFile .htpasswd
+  Require valid-user
+</IfModule>
