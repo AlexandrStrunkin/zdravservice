@@ -5,8 +5,7 @@
     use \webgk\main\Catalog;
 
     if (!empty($_POST["items"])) {
-        $data = json_decode($_POST["items"], true);    
-
+        $data = json_decode($_POST["items"], true);            
 
         $result = array();
 
@@ -66,8 +65,7 @@
                         $status = "error";
                         $errorText[] = "Ошибка обновления остатков товара";
                     } 
-                }             
-
+                }      
             } 
 
             if ($error){
@@ -78,6 +76,8 @@
             $data[$key]["status"] = $status; 
         }
 
-    }      
+    } else {
+        $data = array("error" => "Неверный формат данных");   
+    }        
 
     echo json_encode($data);
