@@ -2,7 +2,7 @@
 
 AuthType Basic
 AuthName "You shall not pass"
-AuthUserFile /srv/www/dev-fedotov-zdravservice.webgk.ru/htdocs/ws/.htpasswd
+AuthUserFile /srv/www/dev-zdravservice.webgk.ru/htdocs/ws/.htpasswd   
 Require valid-user
 Order deny,allow
 Deny from all
