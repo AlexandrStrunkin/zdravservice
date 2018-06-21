@@ -86,11 +86,6 @@
                                     }
                                 });
                             }
-                            /*$("button[name='register_submit_button1']").on("click", function(e){
-                                e.preventDefault();
-                                $(".jqmOverlay").show();
-                                $(".popup").show();
-                            });*/
                         })
                     </script>
 
@@ -189,7 +184,7 @@
                                                 <input size="30" type="text" id="input_<?=$FIELD;?>" name="REGISTER[<?=$FIELD?>]" <?=($arResult["REQUIRED_FIELDS_FLAGS"][$FIELD] == "Y" ? "required": "");?> value="<?=htmlspecialcharsbx($_REQUEST["REGISTER"]["NAME"])?>" <?=$class?>/>
                                             <?break;?>
                                             <?case "PERSONAL_PHONE":?>
-                                                <input size="30" type="tel" id="input_<?=$FIELD;?>" name="REGISTER[<?=$FIELD?>]" class="phone_input <?=(array_key_exists( $FIELD, $arResult["ERRORS"] ))? 'error': ''?>" <?=($arResult["REQUIRED_FIELDS_FLAGS"][$FIELD] == "Y" ? "required": "");?> value="<?=$arResult["VALUES"][$FIELD]?>" onkeyup="phoneFieldCheck();"/>
+                                                <input size="30" type="tel" id="input_<?=$FIELD;?>" name="REGISTER[<?=$FIELD?>]" class="phone_input <?=(array_key_exists( $FIELD, $arResult["ERRORS"] ))? 'error': ''?>" <?=($arResult["REQUIRED_FIELDS_FLAGS"][$FIELD] == "Y" ? "required": "");?> value="<?=$arResult["VALUES"][$FIELD]?>"/>
                                             <?break;?>
                                             <?break;
                                             default:?>
@@ -298,6 +293,7 @@
     <div class="form">
         <div class="form_head"><h2>Подтверждение мобильного телефона</h2></div>
         <form action="" method="POST" enctype="multipart/form-data" novalidate="novalidate">
+            <?=bitrix_sessid_post()?>
             <div class="form_body">
                 <span class="smsPopupNote">Для завершения регистрации подтвердите<br> номер мобильного телефона </span><span class="phoneNumber"></span>
                 <br><br>

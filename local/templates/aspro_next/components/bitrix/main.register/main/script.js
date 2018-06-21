@@ -1,18 +1,4 @@
 /**
-* функция очистки содержимого поля телефона от лишних знаков
-* 
-*/
-function phoneFieldCheck() {
-    var replacedSymbols = ["_", "-", "(", ")", " "];
-    var phoneFieldValue = $("#input_PERSONAL_PHONE").val();
-        replacedSymbols.forEach(function(arItem, i, replacedSymbols) {
-            phoneFieldValue = phoneFieldValue.split(arItem).join("");
-        });
-    if (phoneFieldValue.length == 12) {
-        $(".smsConfirmButton").attr("disabled", false);
-    }    
-};
-/**
 * функция таймера обратного отсчета
 * 
 * @param timestamp
@@ -73,6 +59,9 @@ $(document).ready(function(){
         }).done(function(strResult){
             if (strResult == "error") {
                 $(".wrongCode").show();    
+            } else if (strResult == "timestamp_error") {
+                $(".wrongCode").html("Срок жизни подтверждаемой операции истек.");
+                $(".wrongCode").show();
             } else {
                 $("form#registraion-page-form").validate
                 ({
