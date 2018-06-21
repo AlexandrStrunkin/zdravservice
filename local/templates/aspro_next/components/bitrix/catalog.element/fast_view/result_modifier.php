@@ -1033,4 +1033,7 @@ if(is_array($arParams["SECTION_TIZER"]) && $arParams["SECTION_TIZER"]){
 		$obCache->EndDataCache($arTizersData);
 	}
 	$arResult["TIZERS_ITEMS"]=$arTizersData;
-}?>
+}
+
+$arResult = \Webgk\Main\Catalog::addOldPricesToElement($arResult);
+?>

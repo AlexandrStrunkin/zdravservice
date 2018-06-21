@@ -281,7 +281,7 @@
 										if($arDiscounts)
 											$arDiscount=current($arDiscounts);
 										if($arDiscount["ACTIVE_TO"]){?>
-											<div class="view_sale_block <?=($arQuantityData["HTML"] ? '' : 'wq');?>"">
+											<div class="view_sale_block <?=($arQuantityData["HTML"] ? '' : 'wq');?>">
 												<div class="count_d_block">
 													<span class="active_to hidden"><?=$arDiscount["ACTIVE_TO"];?></span>
 													<div class="title"><?=GetMessage("UNTIL_AKC");?></div>

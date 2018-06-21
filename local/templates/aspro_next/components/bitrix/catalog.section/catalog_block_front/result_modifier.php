@@ -244,4 +244,7 @@ if (!empty($arResult['ITEMS'])){
 
 	unset($arNewItemsList);
 	$arResult['CURRENCIES'] = array();
-}?>
+}
+
+$arResult = \Webgk\Main\Catalog::addOldPricesToResult($arResult); 
+?>

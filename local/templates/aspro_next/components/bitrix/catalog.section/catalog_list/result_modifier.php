@@ -657,4 +657,7 @@ if (!empty($arResult['ITEMS'])){
 		}
 	}
 }
+
+$arResult = \Webgk\Main\Catalog::addOldPricesToResult($arResult); 
+
 ?>
