@@ -30,7 +30,7 @@ $(document).ready(function(){
         $.ajax({
             type: "POST",
             url: "/ajax/smsconfirmation.php",
-            data: {phoneNumber: $("#input_PERSONAL_PHONE").val()},
+            data: {sessid: $("input[name='sessid']").val(), phoneNumber: $("#input_PERSONAL_PHONE").val()},
         }).done(function(strResult){
             
         });
@@ -52,10 +52,12 @@ $(document).ready(function(){
     */
     $(".confirmCodeButton").on("click", function(e){
         e.preventDefault();
+        var form_data = $(".form form").serialize();
+        form_data += "&phoneNumber=" + $("#input_PERSONAL_PHONE").val() + "&code=" + $(".smsCode").val();
         $.ajax({
             type: "POST",
             url: "/ajax/smscodecheck.php",
-            data: {code: $(".smsCode").val(), phoneNumber: $("#input_PERSONAL_PHONE").val()},
+            data: form_data,
         }).done(function(strResult){
             if (strResult == "error") {
                 $(".wrongCode").show();    

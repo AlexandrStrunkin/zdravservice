@@ -2,34 +2,32 @@
 use Bitrix\Main\Entity;
 use Bitrix\Main\Option;
 use Webgk\Main\Hlblock\Prototype;
-if ($_REQUEST["phoneNumber"] && check_bitrix_sessid()) {  
-    $curl = curl_init();
+if ($_REQUEST["phoneNumber"] && check_bitrix_sessid()) {
+    $phoneNumber = preg_replace("/\D/", "", $_REQUEST["phoneNumber"]);
+    if (strlen($phoneNumber) == 11) {
+        if (substr($phoneNumber, 0, 1) == "8") {
+            $userPhone = substr_replace($phoneNumber, "7", 0, 1);
+        }
+        $phoneNumber = "+".$phoneNumber;    
+    }                        
     $url = \COption::GetOptionString("grain.customsettings", "sms_sending_url"); 
     $login = \COption::GetOptionString("grain.customsettings", "sms_sending_login");
     $password = \COption::GetOptionString("grain.customsettings", "sms_sending_password");
     $confCode = rand(1000, 9999);
-    $message = "ÐšÐ¾Ð´ Ð¿Ð¾Ð´Ñ‚Ð²ÐµÑ€Ð¶Ð´ÐµÐ½Ð¸Ñ: ".$confCode;
+    $message = "Êîä ïîäòâåðæäåíèÿ: ".$confCode;
     if ($url && $login && $password) {
-        $paramArr = json_encode(['login' => $login, 'psw' => $password, 'phones' => $_REQUEST["phoneNumber"], 'mes' => $message]);
-        curl_setopt_array($curl, [
-                CURLOPT_RETURNTRANSFER => 1, //1 - Ð²Ð¾Ð·Ð²Ñ€Ð°Ñ‚ Ñ€ÐµÐ·ÑƒÐ»ÑŒÑ‚Ð°Ñ‚Ð° Ð² Ð²Ð¸Ð´Ðµ ÑÑ‚Ñ€Ð¾ÐºÐ¸, 0 - Ð²Ñ‹Ð²Ð¾Ð´ Ñ€ÐµÐ·ÑƒÐ»ÑŒÑ‚Ð°Ñ‚Ð° Ð² Ð±Ñ€Ð°ÑƒÐ·ÐµÑ€
-                CURLOPT_URL => $url, //ÑƒÑ€Ð» Ð´Ð»Ñ Ð·Ð°Ð¿Ñ€Ð¾ÑÐ°
-                CURLOPT_POST => 1, //Ð¼ÐµÑ‚Ð¾Ð´ POST
-                CURLOPT_POSTFIELDS => $paramArr
-            ]);
-        $res = curl_exec($curl);
-            curl_close($curl);
-            $hlblock = Prototype::getInstance("SMSConfirmationCodes");
+        $hlblock = Prototype::getInstance("SMSConfirmationCodes");
 
             $resultData = $hlblock->getElements(array(
                 "select" => array("*"),
-                "filter" => array("UF_PHONE_NUMBER" => $_REQUEST["phoneNumber"])
+                "filter" => array("UF_PHONE_NUMBER" => $phoneNumber),
+                "cacheTime" => 0
             ));
             if (!empty($resultData)) {
                 foreach ($resultData as $curResult) {
 
                     $result = $hlblock->updateData($curResult["ID"], array(
-                        'UF_PHONE_NUMBER' => $_REQUEST["phoneNumber"],
+                        'UF_PHONE_NUMBER' => $phoneNumber,
                         'UF_SMS_CODE' => $confCode,
                         'UF_TIMESTAMP_X' => time()
                     ));
@@ -37,11 +35,25 @@ if ($_REQUEST["phoneNumber"] && check_bitrix_sessid()) {
             } else {
 
                 $result = $hlblock->addData(array(
-                    'UF_PHONE_NUMBER' => $_REQUEST["phoneNumber"],
+                    'UF_PHONE_NUMBER' => $phoneNumber,
                     'UF_SMS_CODE' => $confCode,
                     'UF_TIMESTAMP_X' => time()
                 ));
             }
+        if ($result->getId() > 0) {
+            $curl = curl_init();
+            echo $phoneNumber."<br>";
+            $paramArr = ['login' => $login, 'psw' => $password, 'phones' => $phoneNumber, 'mes' => $message];
+            curl_setopt_array($curl, [
+                    CURLOPT_RETURNTRANSFER => 1, //1 - âîçâðàò ðåçóëüòàòà â âèäå ñòðîêè, 0 - âûâîä ðåçóëüòàòà â áðàóçåð
+                    CURLOPT_URL => $url, //óðë äëÿ çàïðîñà
+                    CURLOPT_POST => 1, //ìåòîä POST
+                    CURLOPT_POSTFIELDS => $paramArr
+                ]);
+            $res = curl_exec($curl);
+            echo $res;
+                curl_close($curl);
+        }
     }
 }
 ?>
