@@ -1,0 +1,81 @@
+<?
+$l_prefix = "WAS_GEOOBJECTSMAPBD_";
+$MESS["IBLOCK_CACHE_FILTER"] = "Кешировать при установленном фильтре";
+$MESS["CP_BNL_CACHE_GROUPS"] = "Учитывать права доступа";
+$MESS["CP_BNL_INCLUDE_SUBSECTIONS"] = "Показывать элементы подразделов раздела";
+
+$MESS[$l_prefix ."GROUPS_MAP_SETTINGS"] = "Настройки карты";
+$MESS[$l_prefix ."GROUPS_MAP_BALLOON_SETTINGS"] = "Настройки метки";
+$MESS[$l_prefix ."GROUPS_MAP_CLUSTER"] = "Настройки кластеризации";
+$MESS[$l_prefix ."EMPTY_VALUE"] = "не выбрано";
+
+$MESS[$l_prefix ."IBLOCK_ASC"] = "По возрастанию";
+$MESS[$l_prefix ."IBLOCK_DESC"] = "По убыванию";
+$MESS[$l_prefix ."IBLOCK_FID"] = "ID";
+$MESS[$l_prefix ."IBLOCK_FNAME"] = "Название";
+$MESS[$l_prefix ."IBLOCK_FACT"] = "Дата начала активности";
+$MESS[$l_prefix ."IBLOCK_FSORT"] = "Сортировка";
+$MESS[$l_prefix ."IBLOCK_FTSAMP"] = "Дата последнего изменения";
+$MESS[$l_prefix ."IBLOCK_IBORD1"] = "Поле для первой сортировки";
+$MESS[$l_prefix ."IBLOCK_IBBY1"] = "Направление для первой сортировки";
+$MESS[$l_prefix ."IBLOCK_IBORD2"] = "Поле для второй сортировки";
+$MESS[$l_prefix ."IBLOCK_IBBY2"] = "Направление для второй сортировки";
+$MESS[$l_prefix ."REQUEST_LIMIT"] = "Кол-во элементов в одном запросе к серверу (100-5000)";
+$MESS[$l_prefix ."IBLOCK_LIST_ID"] = "Код информационного блока";
+$MESS[$l_prefix ."IBLOCK_LIST_TYPE"] = "Тип информационного блока (используется только для проверки)";
+$MESS[$l_prefix ."IBLOCK_DETAIL_PAGE_URL"] = "URL страницы детального просмотра (по умолчанию - из настроек инфоблока)";
+$MESS[$l_prefix ."IBLOCK_FILTER"] = "Фильтр";
+$MESS[$l_prefix ."IBLOCK_SECTION_ID"] = "ID раздела";
+$MESS[$l_prefix ."IBLOCK_SECTION_CODE"] = "Код раздела";
+$MESS[$l_prefix ."IBLOCK_CHECK_DATES"] = "Показывать только активные на данный момент элементы";
+
+$MESS[$l_prefix ."INIT_MAP_TYPE"] = "Стартовый тип карты";
+$MESS[$l_prefix ."INIT_MAP_TYPE_MAP"] = "схема";
+$MESS[$l_prefix ."INIT_MAP_TYPE_SATELLITE"] = "спутник";
+$MESS[$l_prefix ."INIT_MAP_TYPE_HYBRID"] = "гибрид";
+$MESS[$l_prefix ."BEHAVIORS"] = "Настройки";
+$MESS[$l_prefix ."BEHAVIORS_SCROLL_ZOOM"] = "изменение масштаба колесом мыши";
+$MESS[$l_prefix ."BEHAVIORS_DBLCLICK_ZOOM"] = "изменение масштаба двойным щелчком мыши";
+$MESS[$l_prefix ."BEHAVIORS_RIGHT_MAGNIFIER"] = "изменение масштаба правой кнопкой мыши";
+$MESS[$l_prefix ."BEHAVIORS_DRAGGING"] = "перетаскивание карты";
+$MESS[$l_prefix ."BEHAVIORS_RULER"] = "инструмент \"линейка\"";
+$MESS[$l_prefix ."CONTROLS"] = "Элементы управления";
+$MESS[$l_prefix ."CONTROLS_GEO"] = "Кнопка геолокации";
+$MESS[$l_prefix ."CONTROLS_SEARCH"] = "Поиск по карте";
+$MESS[$l_prefix ."CONTROLS_ROUTE"] = "Редактор маршрута";
+$MESS[$l_prefix ."CONTROLS_TRAFFIC"] = "Элемент управления «Пробки»";
+$MESS[$l_prefix ."CONTROLS_TYPE"] = "Тип карты";
+$MESS[$l_prefix ."CONTROLS_FULLSCREEN"] = "Переключение полноэкранного режима";
+$MESS[$l_prefix ."CONTROLS_ZOOM"] = "Ползунок масштаба";
+$MESS[$l_prefix ."CONTROLS_RULER"] = "Элементы управления для измерения расстояний";
+$MESS[$l_prefix ."MAP_AUTO_SCALE_CENTER"] = "Авто масштаб и центрирование карты";
+$MESS[$l_prefix ."MAP_SCALE"] = "Начальный масштаб карты";
+$MESS[$l_prefix ."MAP_CENTER"] = "Начальный центр карты (широта,долгота)";
+$MESS[$l_prefix ."MAP_CENTER_SET"] = "изменить";
+$MESS[$l_prefix ."MAP_WIDTH"] = "Ширина карты";
+$MESS[$l_prefix ."MAP_HEIGHT"] = "Высота карты";
+$MESS[$l_prefix ."MAP_ID"] = "Идентификатор карты";
+
+$MESS[$l_prefix ."MAP_CLUSTER"] = "Кластеризация";
+$MESS[$l_prefix ."MAP_CLUSTER_SIMPLE"] = "Простая кластеризация";
+$MESS[$l_prefix ."MAP_CLUSTER_CONTENT_WIDTH"] = "Ширина окна контента (в пикселях)";
+$MESS[$l_prefix ."MAP_CLUSTER_CONTENT_LEFT_COLUMN_WIDTH"] = "Ширина левой колонки (в пикселях)";
+
+$MESS[$l_prefix ."MAP_COLOR"] = "Стандартный цвет метки в 16-ном формате (FFFFFF)";
+$MESS[$l_prefix ."MAP_ICON"] = "Пользовательская иконка для метки";
+$MESS[$l_prefix ."USE_ICON_CONTENT"] = "Выводить текст на иконке";
+$MESS[$l_prefix ."ICON_CONTENT"] = "Свойство для вывода поверх иконки";
+$MESS[$l_prefix ."USE_ELEMENT_ICON"] = "Использовать заданные у элемента иконки (если есть)";
+$MESS[$l_prefix ."USE_SECTION_ICON"] = "Использовать заданные у раздела иконки (если есть)";
+$MESS[$l_prefix ."MAP_BALLOON_COLOR"] = "Поле с цветом метки в 16-ном формате (FFFFFF)";
+$MESS[$l_prefix ."MAP_BALLOON_COORDS"] = "Поле с координатами";
+$MESS[$l_prefix ."MAP_BALLOON_TITLE"] = "Поле с заголовком (всплывающая подсказка)";
+$MESS[$l_prefix ."MAP_BALLOON_NAME"] = "Поле с названием";
+$MESS[$l_prefix ."MAP_BALLOON_TEXT"] = "Поле с описанием";
+$MESS[$l_prefix ."MAP_BALLOON_PROPERTIES"] = "Свойства для вывода";
+$MESS[$l_prefix ."MAP_BALLOON_LINK_SHOW"] = "Отображать ссылку на элемент";
+$MESS[$l_prefix ."MAP_BALLOON_LINK_TEXT"] = "Текст ссылки на элемент";
+$MESS[$l_prefix ."MAP_BALLOON_LINK_TEXT_DEF"] = "подробнее";
+$MESS[$l_prefix ."MAP_BALLOON_LINK_NEW_WINDOW"] = "Открывать ссылку в новом окне";
+$MESS[$l_prefix ."MAP_BALLOON_DETAIL_IMG"] = "Поле с изображением";
+?>
