@@ -56,19 +56,22 @@ top:4px;
 .popup {
     z-index: 3000;
     margin-left: -210px;
-    top: 279px !important;
+    top: 279px;
     opacity: 1;
     position: relative;
 }
-@media (min-width: 767px) {
+@media (max-width: 767px) {
     .popup {
-        max-width: 370px;
-        left: 57%;
+        max-width: 370px !important;
+        left: 57% !important;
     }
 }
 @media (min-width: 768px) {
     .popup {
-        padding: 30px 55px 30px 25px;
+        /*padding: 30px 55px 30px 25px;*/
+    }
+    .popup .form_body {
+        padding: 29px 35px 35px;
     }
 }
 .smsConfirmButton[disabled] {
@@ -86,8 +89,8 @@ top:4px;
 .phoneNumber {
     font-weight: bold;
 }
-.changePhoneNumber, .changePhoneNumber:hover, .resendingSmsButton a, .resendingSmsButton a:hover{
-    text-decoration: underline !important;
+.changePhoneNumber, .changePhoneNumber:hover{
+    /*text-decoration: underline !important;*/
     color: black;
 }
 .resendingSmsAdditionalNote {
@@ -121,18 +124,30 @@ background: url(/local/templates/aspro_next/css/../images/close_icons.png) -1px 
     width: 14px;
     height: 14px;
     opacity: 1;
+    position: absolute;
+    right: 33px;
+    top: 37px;
 }
 .popup h2 {
-    font-size: 1.4em;
+    font-size: 1.866em;
+    line-height: 35px;
 }
 .smsCode {
-    width: 30%;
-    background-color: white;
-    border: 1px solid #ddd;
+    width: 30% !important;
+    background-color: white !important;
+    border: 1px solid #ddd !important;
+    line-height: 17px !important;
 }
 .smsCodeField {
     margin-top: 10px;
 }
 .wrongCode {
     color: red;
+}
+.popup .form .form_footer {
+    padding: 0 !important;
+}
+.resendingSmsButton {
+    margin-bottom: 25px;
+    margin-top: 10px;
 }

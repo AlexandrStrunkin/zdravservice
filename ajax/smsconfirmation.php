@@ -43,7 +43,7 @@ if ($_REQUEST["phoneNumber"] && check_bitrix_sessid()) {
         if ($result->getId() > 0) {
             $curl = curl_init();
             echo $phoneNumber."<br>";
-            $paramArr = ['login' => $login, 'psw' => $password, 'phones' => $phoneNumber, 'mes' => $message];
+            $paramArr = ['login' => $login, 'psw' => $password, 'phones' => $phoneNumber, 'mes' => $message, 'sender' => 'ZdesApteka'];
             curl_setopt_array($curl, [
                     CURLOPT_RETURNTRANSFER => 1, //1 - возврат результата в виде строки, 0 - вывод результата в браузер
                     CURLOPT_URL => $url, //урл для запроса
