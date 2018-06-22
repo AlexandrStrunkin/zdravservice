@@ -55,10 +55,12 @@
                                         var eventdata = {type: 'form_submit', form: form, form_name: 'REGISTER'};
                                         BX.onCustomEvent('onSubmitForm', [eventdata]);
                                     }
+                                    var form_data = $("form#registraion-page-form").serialize();
+                                    // проверка существующих пользователей с текущими e-mail либо номером телефона
                                     $.ajax({
                                         type: "POST",
                                         url: "/ajax/regFormValidation.php",
-                                        data: {phoneNumber: $("#input_PERSONAL_PHONE").val(), email: $("#input_EMAIL").val()}
+                                        data: form_data
                                     }).done(function(strResult) {
                                         if (strResult != "ok") {
                                             $(".ajax_error_text .errortext").html(strResult);    
@@ -103,6 +105,7 @@
                     </script>
 
                     <form id="registraion-page-form" method="post" action="<?=POST_FORM_ACTION_URI?>" name="regform" enctype="multipart/form-data" >
+                        <?=bitrix_sessid_post()?>
                         <?if($arResult["BACKURL"] <> ''):?>
                             <input type="hidden" name="backurl" value="<?=$arResult["BACKURL"]?>" />
                         <?endif;?>

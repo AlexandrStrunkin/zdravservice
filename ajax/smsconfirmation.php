@@ -3,13 +3,7 @@ use Bitrix\Main\Entity;
 use Bitrix\Main\Option;
 use Webgk\Main\Hlblock\Prototype;
 if ($_REQUEST["phoneNumber"] && check_bitrix_sessid()) {
-    $phoneNumber = preg_replace("/\D/", "", $_REQUEST["phoneNumber"]);
-    if (strlen($phoneNumber) == 11) {
-        if (substr($phoneNumber, 0, 1) == "8") {
-            $userPhone = substr_replace($phoneNumber, "7", 0, 1);
-        }
-        $phoneNumber = "+".$phoneNumber;    
-    }                        
+    $phoneNumber = \Webgk\Main\Tools::updateUserPhoneOnRegForm($_REQUEST["phoneNumber"]);                        
     $url = \COption::GetOptionString("grain.customsettings", "sms_sending_url"); 
     $login = \COption::GetOptionString("grain.customsettings", "sms_sending_login");
     $password = \COption::GetOptionString("grain.customsettings", "sms_sending_password");

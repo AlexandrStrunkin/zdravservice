@@ -18,7 +18,11 @@ function parseTime_bv(timestamp){
     }
       
 }
-
+/**
+* проверка на ввод только чисел в поле кода подтверждения из SMS
+* 
+* @param evt
+*/
 function validate(evt) {
   var theEvent = evt || window.event;
   var key = theEvent.keyCode || theEvent.which;

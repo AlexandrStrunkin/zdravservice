@@ -1,22 +1,11 @@
 <?require($_SERVER["DOCUMENT_ROOT"]."/bitrix/modules/main/include/prolog_before.php");
-if ($_REQUEST["phoneNumber"] && $_REQUEST["email"]) {
-    $phoneNumber = preg_replace("/\D/", "", $_REQUEST["phoneNumber"]);
-    if (strlen($phoneNumber) == 11) {
-        if (substr($phoneNumber, 0, 1) == "8") {
-            $userPhone = substr_replace($phoneNumber, "7", 0, 1);
-        }
-        $phoneNumber = "+".$phoneNumber;    
-    }
-    $rsUsers = CUser::GetList(($by = "timestamp_x"), ($order = "desc"), array("PERSONAL_PHONE" => $phoneNumber));
+if ($_REQUEST["REGISTER[PERSONAL_PHONE]"] && $_REQUEST["REGISTER[EMAIL]"] && check_bitrix_sessid()) {
+    $phoneNumber = \Webgk\Main\Tools::updateUserPhoneOnRegForm($_REQUEST["REGISTER[PERSONAL_PHONE]"]);
+    $rsUsers = CUser::GetList(($by = "timestamp_x"), ($order = "desc"), array('LOGIC' => 'OR', array("PERSONAL_PHONE" => $phoneNumber), array("EMAIL" => $_REQUEST["REGISTER[EMAIL]"])) );
     if ($rsUsers->SelectedRowsCount() <= 0) {
-        $rsUsersByEmail = CUser::GetList(($by = "timestamp_x"), ($order = "desc"), array("EMAIL" => $_REQUEST["email"]));
-        if ($rsUsersByEmail->SelectedRowsCount() <= 0) {
-            $result = "ok";
-        } else {
-            $result = "Пользователь с данным e-mail уже существует.";
-        }
+        $result = "ok";
     } else {
-        $result = "Пользователь с данным номером телефона уже существует.";
+        $result = "Пользователь с данным номером телефона или e-mail уже существует.";
     }
     echo $result;
 }
