@@ -4,8 +4,8 @@
     use \webgk\main\iblock\Prototype;
     use \webgk\main\Catalog;
 
-    if (!empty($_POST["items"])) {
-        $data = json_decode($_POST["items"], true);            
+    if (!empty($_REQUEST["items"])) {
+        $data = json_decode($_REQUEST["items"], true);            
 
         $result = array();
 
