@@ -12,7 +12,7 @@ if ($_REQUEST["REGISTER"]["PERSONAL_PHONE"] && $_REQUEST["REGISTER"]["EMAIL"] &&
                 $error[] = "Пользователь с данным номером телефона уже существует.";    
             }
             if ($arUsers["EMAIL"] == $_REQUEST["REGISTER"]["EMAIL"]) {
-                $error[] = "<br>Пользователь с данным e-mail уже существует.";    
+                $error[] = "Пользователь с данным e-mail уже существует.";    
             }
         }
     }
