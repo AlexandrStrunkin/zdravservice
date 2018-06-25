@@ -3,7 +3,7 @@ use Bitrix\Main\Entity;
 use Bitrix\Main\Option;
 use Webgk\Main\Hlblock\Prototype; 
 if ($_REQUEST["phoneNumber"] && $_REQUEST["code"] && check_bitrix_sessid()) {
-    $phoneNumber = \Webgk\Main\Tools::updateUserPhoneOnRegForm($_REQUEST["phoneNumber"]);
+    $phoneNumber = \Webgk\Main\Tools::formatUserPhone($_REQUEST["phoneNumber"]);
     $hlblock = Prototype::getInstance("SMSConfirmationCodes");
 
     $resultData = $hlblock->getElements(array(

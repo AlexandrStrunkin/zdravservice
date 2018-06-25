@@ -189,7 +189,7 @@ Class Tools {
         }                                         
     }
     
-    public static function updateUserPhoneOnRegForm($phoneNumber) {
+    public static function formatUserPhone($phoneNumber) {
         $phoneNumber = preg_replace("/\D/", "", $phoneNumber);
         if (strlen($phoneNumber) == 11) {
             if (substr($phoneNumber, 0, 1) == "8") {
