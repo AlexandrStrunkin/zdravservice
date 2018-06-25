@@ -3,18 +3,12 @@ use Bitrix\Main\Entity;
 use Bitrix\Main\Option;
 use Webgk\Main\Hlblock\Prototype;
 if ($_REQUEST["phoneNumber"] && check_bitrix_sessid()) {
-    $phoneNumber = preg_replace("/\D/", "", $_REQUEST["phoneNumber"]);
-    if (strlen($phoneNumber) == 11) {
-        if (substr($phoneNumber, 0, 1) == "8") {
-            $userPhone = substr_replace($phoneNumber, "7", 0, 1);
-        }
-        $phoneNumber = "+".$phoneNumber;    
-    }                        
+    $phoneNumber = \Webgk\Main\Tools::formatUserPhone($_REQUEST["phoneNumber"]);                        
     $url = \COption::GetOptionString("grain.customsettings", "sms_sending_url"); 
     $login = \COption::GetOptionString("grain.customsettings", "sms_sending_login");
     $password = \COption::GetOptionString("grain.customsettings", "sms_sending_password");
     $confCode = rand(1000, 9999);
-    $message = "Êîä ïîäòâåðæäåíèÿ: ".$confCode;
+    $message = "ÐšÐ¾Ð´ Ð¿Ð¾Ð´Ñ‚Ð²ÐµÑ€Ð¶Ð´ÐµÐ½Ð¸Ñ: ".$confCode;
     if ($url && $login && $password) {
         $hlblock = Prototype::getInstance("SMSConfirmationCodes");
 
@@ -43,11 +37,11 @@ if ($_REQUEST["phoneNumber"] && check_bitrix_sessid()) {
         if ($result->getId() > 0) {
             $curl = curl_init();
             echo $phoneNumber."<br>";
-            $paramArr = ['login' => $login, 'psw' => $password, 'phones' => $phoneNumber, 'mes' => $message];
+            $paramArr = ['login' => $login, 'psw' => $password, 'phones' => $phoneNumber, 'mes' => $message, 'sender' => 'ZdesApteka'];
             curl_setopt_array($curl, [
-                    CURLOPT_RETURNTRANSFER => 1, //1 - âîçâðàò ðåçóëüòàòà â âèäå ñòðîêè, 0 - âûâîä ðåçóëüòàòà â áðàóçåð
-                    CURLOPT_URL => $url, //óðë äëÿ çàïðîñà
-                    CURLOPT_POST => 1, //ìåòîä POST
+                    CURLOPT_RETURNTRANSFER => 1, //1 - Ð²Ð¾Ð·Ð²Ñ€Ð°Ñ‚ Ñ€ÐµÐ·ÑƒÐ»ÑŒÑ‚Ð°Ñ‚Ð° Ð² Ð²Ð¸Ð´Ðµ ÑÑ‚Ñ€Ð¾ÐºÐ¸, 0 - Ð²Ñ‹Ð²Ð¾Ð´ Ñ€ÐµÐ·ÑƒÐ»ÑŒÑ‚Ð°Ñ‚Ð° Ð² Ð±Ñ€Ð°ÑƒÐ·ÐµÑ€
+                    CURLOPT_URL => $url, //ÑƒÑ€Ð» Ð´Ð»Ñ Ð·Ð°Ð¿Ñ€Ð¾ÑÐ°
+                    CURLOPT_POST => 1, //Ð¼ÐµÑ‚Ð¾Ð´ POST
                     CURLOPT_POSTFIELDS => $paramArr
                 ]);
             $res = curl_exec($curl);

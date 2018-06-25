@@ -18,6 +18,21 @@ function parseTime_bv(timestamp){
     }
       
 }
+/**
+* проверка на ввод только чисел в поле кода подтверждения из SMS
+* 
+* @param evt
+*/
+function validate(evt) {
+  var theEvent = evt || window.event;
+  var key = theEvent.keyCode || theEvent.which;
+  key = String.fromCharCode( key );
+  var regex = /[0-9]|\./;
+  if( !regex.test(key) ) {
+    theEvent.returnValue = false;
+    if(theEvent.preventDefault) theEvent.preventDefault();
+  }
+}
 
 $(document).ready(function(){
     /**

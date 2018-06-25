@@ -189,6 +189,17 @@ Class Tools {
         }                                         
     }
     
+    public static function formatUserPhone($phoneNumber) {
+        $phoneNumber = preg_replace("/\D/", "", $phoneNumber);
+        if (strlen($phoneNumber) == 11) {
+            if (substr($phoneNumber, 0, 1) == "8") {
+                $userPhone = substr_replace($phoneNumber, "7", 0, 1);
+            }
+            $phoneNumber = "+".$phoneNumber;    
+        }
+        return $phoneNumber;                                          
+    }
+    
     /**
     * получение информации по бонусам нового пользователя
     * 

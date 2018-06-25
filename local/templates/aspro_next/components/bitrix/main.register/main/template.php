@@ -14,7 +14,9 @@
 
         <?}?>
     <?}?>
-
+    <div class="ajax_error_text">
+        <font class="errortext"></font>
+    </div>
     <?if( empty($arResult["ERRORS"]) && !empty($_POST["register_submit_button"]) && $arResult["USE_EMAIL_CONFIRMATION"]=="N"){
         LocalRedirect(SITE_DIR.'personal/');
     }elseif( empty($arResult["ERRORS"]) && !empty($_POST["register_submit_button"]) && $arResult["USE_EMAIL_CONFIRMATION"]=="Y"){?>
@@ -53,9 +55,22 @@
                                         var eventdata = {type: 'form_submit', form: form, form_name: 'REGISTER'};
                                         BX.onCustomEvent('onSubmitForm', [eventdata]);
                                     }
-                                    $(".jqmOverlay").show();
-                                    $(".popup").show();
-                                    $(".phoneNumber").html($("#input_PERSONAL_PHONE").val());
+                                    var form_data = $("form#registraion-page-form").serialize();
+                                    // проверка существующих пользователей с текущими e-mail либо номером телефона
+                                    $.ajax({
+                                        type: "POST",
+                                        url: "/ajax/regFormValidation.php",
+                                        data: form_data
+                                    }).done(function(strResult) {
+                                        if (strResult != "ok") {
+                                            $(".ajax_error_text .errortext").html(strResult);    
+                                        } else {
+                                            $(".jqmOverlay").show();
+                                            $(".popup").css("top", (window.innerHeight - $(".popup").height()) / 2);
+                                            $(".popup").show();
+                                            $(".phoneNumber").html($("#input_PERSONAL_PHONE").val());    
+                                        }    
+                                    });
                                 },
                                 errorPlacement: function( error, element ){
                                     error.insertBefore(element);
@@ -90,6 +105,7 @@
                     </script>
 
                     <form id="registraion-page-form" method="post" action="<?=POST_FORM_ACTION_URI?>" name="regform" enctype="multipart/form-data" >
+                        <?=bitrix_sessid_post()?>
                         <?if($arResult["BACKURL"] <> ''):?>
                             <input type="hidden" name="backurl" value="<?=$arResult["BACKURL"]?>" />
                         <?endif;?>
@@ -297,21 +313,21 @@
             <div class="form_body">
                 <span class="smsPopupNote">Для завершения регистрации подтвердите<br> номер мобильного телефона </span><span class="phoneNumber"></span>
                 <br><br>
-                <a href="javascript:void(0)" class="changePhoneNumber">Изменить номер</a>
+                <a href="javascript:void(0)" class="btn transparent bold changePhoneNumber">Изменить номер</a>
                 <br><br>
                 <div class="sendedSmsNote" style="display: none;">
                     СМС отправлено. Введите код в поле ниже.<br>
                     <div class="resendingSmsInfo">Повторная отправка СМС возможна через <span class="secAmount">60</span> сек.</div>
-                    <div class="resendingSmsButton" style="display: none;"><a href="javascript:void(0)">Отправить повторно</a><br><span class="resendingSmsAdditionalNote">(Код меняется при каждой отправке)</span>
+                    <div class="resendingSmsButton" style="display: none;"><a href="javascript:void(0)" class="btn btn-default bold">Отправить повторно</a><br>
                 </div>
                 <div class="smsCodeField" style="display: none;">
                     <div class="wrongCode" style="display: none;">Код указан неверно</div>
-                    <input type="text" name="smsCode" class="smsCode" size="4">
-                    <button class="btn btn-default confirmCodeButton">Подтвердить</button>
+                    <input type="text" name="smsCode" class="smsCode" maxlength="4" onkeypress="validate(event)">
+                    <button class="btn btn-default bold confirmCodeButton">Подтвердить</button>
                 </div>
             </div>
             <div class="form_footer">
-                <button class="btn btn-default sendConfirmSMS">Отправить СМС для подтверждения</button>
+                <button class="btn btn-default bold sendConfirmSMS">Отправить СМС для подтверждения</button>
             </div>
         </div>
     </form>
