@@ -10,7 +10,7 @@ class MapYandexAjaxListComponent extends CBitrixComponent{
     private static $LANG_PREFIX = "WAS_GEOOBJECTSMAPBD_";
 
     public function onPrepareComponentParams($arParams){
-        // Tools::log(__FUNCTION__,"",true);
+
         if(!isset($arParams["MAP_SCALE"]) || strlen($arParams["MAP_SCALE"]) < 1){
             $arParams["MAP_SCALE"] = "10";
         }
@@ -129,7 +129,7 @@ class MapYandexAjaxListComponent extends CBitrixComponent{
     }
 
     public function executeComponent(){
-        // Tools::log(__FUNCTION__,"",true);
+
         global $APPLICATION, $USER;
         if(!Loader::includeModule("whatasoft.geoobjectsmapbd")){
             ShowError(GetMessage(self::$LANG_PREFIX ."MODULE_NOT_INSTALLED"));
@@ -177,21 +177,16 @@ class MapYandexAjaxListComponent extends CBitrixComponent{
     }
 
     private function prepareAjax(){
-
-        // Tools::log(__FUNCTION__,"",true);
         \CJSCore::Init(array("fx", "jquery", "ajax"));
         $this->arParams["COMPONENT_TEMPLATE"] = $this->getTemplateName();
         $obCache = CCacheParams::GetInstance();
         $cache_id = $obCache->SetCache($this->getName(), $this->getTemplateName(), $this->arParams);
-        // Tools::log($cache_id,"",true);
         $this->arResult["AJAX_CACHE_ID"] = $cache_id;
         $this->arResult["AJAX_SESSION_ID"] = bitrix_sessid();
     }
 
     private function defaultTemplate(){
         global $APPLICATION, $USER;
-
-        // Tools::log(__FUNCTION__,"",true);
 
         $mapMarker = CMapMarker::GetInstance();
 
@@ -238,6 +233,8 @@ class MapYandexAjaxListComponent extends CBitrixComponent{
             }
             $this->arResult['MAPS_SCRIPT_URL'] = 'https://api-maps.yandex.ru/'.$this->arParams['YANDEX_VERSION'].'/?load=package.full&mode=release&lang='.$this->arParams['LOCALE'].'&wizard=bitrix&ns=whatasoftMaps';
             $APPLICATION->AddHeadScript($this->arResult['MAPS_SCRIPT_URL']);
+
+            Tools::log($this->arResult['MAPS_SCRIPT_URL']);
             define('WAS_YMAP_SCRIPT_LOADED', 1);
         }
 
@@ -247,7 +244,6 @@ class MapYandexAjaxListComponent extends CBitrixComponent{
 
     private function ajaxTemplate(){
         global $APPLICATION;
-        // Tools::log(__FUNCTION__,"",true);
         $response = array();
         $response["status"] = "ok";
         $response["errors"] = array();
@@ -377,10 +373,19 @@ class MapYandexAjaxListComponent extends CBitrixComponent{
             }
         }
 
-        $arrFilter = $this->arParams["arrFilter"];
+        $arrFilter = $this->arParams["STORES"];
         if(!is_array($arrFilter)){
-            $arrFilter = array();
+          $arrFilter = array();
         }
+
+        // if(strlen($this->arParams["FILTER_NAME"])<=0 || !preg_match("/^[A-Za-z_][A-Za-z01-9_]*$/", $this->arParams["FILTER_NAME"])){
+        //     $arrFilter = array();
+        // }else{
+        //     $arrFilter = $GLOBALS[$this->arParams["FILTER_NAME"]];
+        //     if(!is_array($arrFilter))
+        //     $arrFilter = array();
+        // }
+
 
         if($this->arParams["REQUEST_LIMIT"] <= 0){
             $this->arParams["REQUEST_LIMIT"] = 1000;
@@ -397,63 +402,43 @@ class MapYandexAjaxListComponent extends CBitrixComponent{
         $this->arResult["ELEMENTS"] = array();
         $arElementLink = array();
         $intKey = 0;
-        // Tools::log($arSort,"",true);
-        // Tools::log($arFilter,"",true);
-        // Tools::log($arNavStartParams,"",true);
-        // Tools::log($arSelect,"",true);
-        // Tools::log(\Webgk\Main\Tools::dumpshow(CModule::IncludeModule('catalog')),"",true);
 
-
-
-
-        // Tools::log("32","",true);
         $rsElement = CCatalogStore::GetList($arSort, array_merge($arFilter, $arrFilter), false, $arNavStartParams, $arSelect);
-        // Tools::log("33","",true);
-        // Tools::log((array)$rsElement,"",true);
-        // Tools::log("34","",true);
-
 
         // $rsElement->SetUrlTemplates($this->arParams["DETAIL_URL"], "", $this->arParams["IBLOCK_URL"]);
 
-
         while($obElement = $rsElement->Fetch()){
-            // Tools::log($obElement,"",true);
-            // die();
-            $arItem = $obElement/*->GetFields()*/;
-            // $arItem["PROPERTIES"] = array();
+
+            $arItem = $obElement;
             $this->arResult["ITEMS"][$intKey] = $arItem;
             $this->arResult["ELEMENTS"][$intKey] = $arItem["ID"];
             $arElementLink[$arItem["ID"]] = &$this->arResult["ITEMS"][$intKey];
             $intKey++;
         }
 
-
-        // die(23);
         //get properties for all elements
-        $arElemFilter = array(
-            "ID" => $this->arResult["ELEMENTS"],
-            "IBLOCK_ID" => $this->arResult["ID"],
-        );
-        $arPropFilter = array(
-            "ID" => $arPropsToSelect,
-        );
-        CIBlockElement::GetPropertyValuesArray($arElementLink, $this->arResult["ID"], $arElemFilter, $arPropFilter);
+        // $arElemFilter = array(
+        //     "ID" => $this->arResult["ELEMENTS"],
+        //     "IBLOCK_ID" => $this->arResult["ID"],
+        // );
+        // $arPropFilter = array(
+        //     "ID" => $arPropsToSelect,
+        // );
+        // CIBlockElement::GetPropertyValuesArray($arElementLink, $this->arResult["ID"], $arElemFilter, $arPropFilter);
 
         $arCacheIcons = array();
         $arElementLink = array();
         $arFileIds = array();
         foreach($this->arResult["ITEMS"] as $item_key => &$arItem){
 
-            if ($arItem['PRODUCT_AMOUNT'] > 0) {
+            if ($arItem['PRODUCT_AMOUNT'] <= 0) {
                 continue;
             }
 
             $arItem["MAP"] = array();
-            // Tools::log($arItem,"",true);
-            // die();
             // $arItem["MAP"]["COORDINATES"] = $arItem["PROPERTIES"][$this->arParams["MAP_BALLOON_COORDS"]]["VALUE"];
             $arItem["MAP"]["COORDINATES"] = $arItem['GPS_N'].','.$arItem['GPS_S'];
-            // Tools::log($arItem["MAP"]["COORDINATES"],"",true);
+
             if(strlen($arItem["MAP"]["COORDINATES"]) < 3){
                 continue;
             }
@@ -479,76 +464,88 @@ class MapYandexAjaxListComponent extends CBitrixComponent{
                 }
             }
 
-            $arItem["MAP"]['ADDRESS'] = $arItem['ADDRESS'];
+            // foreach($map_prop2param as $key => $param){
+            //     $arItem["MAP"][$key] = "";
+            //     if(strpos($this->arParams[$param], "PROPERTY_") !== false){
+            //         $prop = str_replace("PROPERTY_", "", $this->arParams[$param]);
+            //         $arItem["MAP"][$key] = $arItem["PROPERTIES"][$prop]["VALUE"];
+            //         if($arItem["PROPERTIES"][$prop]["USER_TYPE"] == "HTML"){
+            //             $arItem["MAP"][$key] = $arItem["PROPERTIES"][$prop]["~VALUE"]["TEXT"];
+            //         }
+            //     }else if(strpos($this->arParams[$param], "FIELD_") !== false){
+            //         $field = str_replace("FIELD_", "", $this->arParams[$param]);
+            //         $arItem["MAP"][$key] = $arItem[$field];
+            //     }
+            // }
+            $arItem["MAP"]["TITLE"] = $arItem['TITLE'];
+            $arItem["MAP"]['HEADER'] = $arItem['TITLE'];
+            $arItem["MAP"]["PROPERTIES"]['ADDRESS'] = $arItem['ADDRESS'];
+            $arItem["MAP"]["DISPLAY_PROPERTIES"]['ADDRESS'] = array(
+                "NAME" => "Адресс",
+                "VALUE" => $arItem['ADDRESS']);
+            $arItem["MAP"]["PROPERTIES"]['PHONE'] = $arItem['PHONE'];
+            $arItem["MAP"]["DISPLAY_PROPERTIES"]['PHONE'] = array(
+                "NAME" => "Телефон",
+                "VALUE" => $arItem['PHONE']);
+            $arItem["MAP"]["PROPERTIES"]['SCHEDULE'] = $arItem['SCHEDULE'];
+            $arItem["MAP"]["DISPLAY_PROPERTIES"]['SCHEDULE'] = array(
+                "NAME" => "Время работы",
+                "VALUE" => $arItem['SCHEDULE']);
 
-            foreach($map_prop2param as $key => $param){
-                $arItem["MAP"][$key] = "";
-                if(strpos($this->arParams[$param], "PROPERTY_") !== false){
-                    $prop = str_replace("PROPERTY_", "", $this->arParams[$param]);
-                    $arItem["MAP"][$key] = $arItem["PROPERTIES"][$prop]["VALUE"];
-                    if($arItem["PROPERTIES"][$prop]["USER_TYPE"] == "HTML"){
-                        $arItem["MAP"][$key] = $arItem["PROPERTIES"][$prop]["~VALUE"]["TEXT"];
-                    }
-                }else if(strpos($this->arParams[$param], "FIELD_") !== false){
-                    $field = str_replace("FIELD_", "", $this->arParams[$param]);
-                    $arItem["MAP"][$key] = $arItem[$field];
-                }
-            }
-
-            if(!is_array($arItem["MAP"]["IMG"]) && intval($arItem["MAP"]["IMG"])){
-                $arFileIds[] = $arItem["MAP"]["IMG"];
-                if(!isset($arElementLink[$arItem["MAP"]["IMG"]])){
-                    $arElementLink[$arItem["MAP"]["IMG"]] = array();
-                }
-                $arElementLink[$arItem["MAP"]["IMG"]][] = &$this->arResult["ITEMS"][$item_key];
-            }
+            // if(!is_array($arItem["MAP"]["IMG"]) && intval($arItem["MAP"]["IMG"])){
+            //     $arFileIds[] = $arItem["MAP"]["IMG"];
+            //     if(!isset($arElementLink[$arItem["MAP"]["IMG"]])){
+            //         $arElementLink[$arItem["MAP"]["IMG"]] = array();
+            //     }
+            //     $arElementLink[$arItem["MAP"]["IMG"]][] = &$this->arResult["ITEMS"][$item_key];
+            // }
 
             //get element icon
-            $arItem["MAP"]["ICON_DATA"] = array();
-            if($this->arParams["USE_ELEMENT_ICON"] == "Y"){
-                foreach($arItem["PROPERTIES"] as $arProperty){
-                    if(in_array($arProperty["USER_TYPE"], array("directory", "directory_plus")) && $arProperty["USER_TYPE_SETTINGS"]["TABLE_NAME"] == $hlblock_markers_table){
-                        if(strlen($arProperty["VALUE"])){
-                            $arItem["MAP"]["ICON_DATA"] = $mapMarker->GetMarkerIcon($arProperty["VALUE"]);
-                        }
-                        break;
-                    }
-                }
-            }
-            if($this->arParams["USE_SECTION_ICON"] == "Y" && !count($arItem["MAP"]["ICON_DATA"]) && $arItem["IBLOCK_SECTION_ID"]){
-                $arItem["MAP"]["ICON_DATA"] = $this->arResult["SECTIONS"][$arItem["IBLOCK_SECTION_ID"]]["ICON_DATA"];
-            }
+            // $arItem["MAP"]["ICON_DATA"] = array();
+            // if($this->arParams["USE_ELEMENT_ICON"] == "Y"){
+            //     foreach($arItem["PROPERTIES"] as $arProperty){
+            //         if(in_array($arProperty["USER_TYPE"], array("directory", "directory_plus")) && $arProperty["USER_TYPE_SETTINGS"]["TABLE_NAME"] == $hlblock_markers_table){
+            //             if(strlen($arProperty["VALUE"])){
+            //                 $arItem["MAP"]["ICON_DATA"] = $mapMarker->GetMarkerIcon($arProperty["VALUE"]);
+            //             }
+            //             break;
+            //         }
+            //     }
+            // }
+            // if($this->arParams["USE_SECTION_ICON"] == "Y" && !count($arItem["MAP"]["ICON_DATA"]) && $arItem["IBLOCK_SECTION_ID"]){
+            //     $arItem["MAP"]["ICON_DATA"] = $this->arResult["SECTIONS"][$arItem["IBLOCK_SECTION_ID"]]["ICON_DATA"];
+            // }
 
             unset($arItem["PROPERTIES"]);
         }
         unset($arItem);
 
         //get all image files
-        if(count($arFileIds)){
-            $dbFiles = CFile::GetList(array(), array("@ID" => implode(",", $arFileIds)));
-            while($arFile = $dbFiles->GetNext()){
-                $arFile["SRC"] = CFile::GetFileSRC($arFile, false, false);
-                foreach($arElementLink[$arFile["ID"]] as &$arItem){
-                    $arItem["MAP"]["IMG"] = $arFile;
-                }
-                unset($arItem);
-            }
-        }
+        // if(count($arFileIds)){
+        //     $dbFiles = CFile::GetList(array(), array("@ID" => implode(",", $arFileIds)));
+        //     while($arFile = $dbFiles->GetNext()){
+        //         $arFile["SRC"] = CFile::GetFileSRC($arFile, false, false);
+        //         foreach($arElementLink[$arFile["ID"]] as &$arItem){
+        //             $arItem["MAP"]["IMG"] = $arFile;
+        //         }
+        //         unset($arItem);
+        //     }
+        // }
 
         foreach($this->arResult["ITEMS"] as $item_key => &$arItem){
-            $arItem["MAP"]["FOOTER"] = "";
-            if($arItem["MAP"]["LINK"] && $arItem["MAP"]["LINK"] != "#"){
-                $arItem["MAP"]["FOOTER"] = '<a href="'. $arItem["MAP"]["LINK"] .'"'. ($this->arParams["MAP_BALLOON_LINK_NEW_WINDOW"] == "Y" ? ' target="_blank"' : '') .'>'. htmlspecialcharsbx($this->arParams["MAP_BALLOON_LINK_TEXT"]) .'</a>';
-            }
-
-            $arItem["MAP"]["CONTENT"] = "";
-            if(is_array($arItem["MAP"]["IMG"]) && isset($arItem["MAP"]["IMG"]["SRC"])){
-                $arItem["MAP"]["CONTENT"] .= '<div class="was-map-balloon-inner-img"><img src="'. $arItem["MAP"]["IMG"]["SRC"] .'" alt="" /></div>';
-            }
-            if(strlen($arItem["MAP"]["TEXT"])){
-                $arItem["MAP"]["CONTENT"] .= '<div class="was-map-balloon-inner-text">'. $arItem["MAP"]["TEXT"] .'</div>';
-            }
-
+        //     $arItem["MAP"]["FOOTER"] = "";
+        //     if($arItem["MAP"]["LINK"] && $arItem["MAP"]["LINK"] != "#"){
+        //         $arItem["MAP"]["FOOTER"] = '<a href="'. $arItem["MAP"]["LINK"] .'"'. ($this->arParams["MAP_BALLOON_LINK_NEW_WINDOW"] == "Y" ? ' target="_blank"' : '') .'>'. htmlspecialcharsbx($this->arParams["MAP_BALLOON_LINK_TEXT"]) .'</a>';
+        //     }
+        //
+        //     $arItem["MAP"]["CONTENT"] = "";
+        //     if(is_array($arItem["MAP"]["IMG"]) && isset($arItem["MAP"]["IMG"]["SRC"])){
+        //         $arItem["MAP"]["CONTENT"] .= '<div class="was-map-balloon-inner-img"><img src="'. $arItem["MAP"]["IMG"]["SRC"] .'" alt="" /></div>';
+        //     }
+        //     if(strlen($arItem["MAP"]["TEXT"])){
+        //         $arItem["MAP"]["CONTENT"] .= '<div class="was-map-balloon-inner-text">'. $arItem["MAP"]["TEXT"] .'</div>';
+        //     }
+        //
             $arItem["MAP"]["SHOW_BALLOON"] = (strlen($arItem["MAP"]["HEADER"]) || strlen($arItem["MAP"]["CONTENT"]) || (strlen($arItem["MAP"]["FOOTER"])));
         }
         unset($arItem);

@@ -1120,4 +1120,7 @@ if(is_array($arParams["SECTION_TIZER"]) && $arParams["SECTION_TIZER"]){
 
 $arResult = \Webgk\Main\Catalog::addOldPricesToElement($arResult);
 
+// \Webgk\Main\Tools::arshow($arResult);
+
+
 ?>

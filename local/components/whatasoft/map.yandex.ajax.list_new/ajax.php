@@ -6,7 +6,7 @@ $need_cache_check = true;
 //$need_not_convert_post = true;
 $need_include_module = "whatasoft.geoobjectsmapbd";
 require_once($_SERVER["DOCUMENT_ROOT"]."/local/components/whatasoft/ajax.util/include_before.php");
-\Webgk\Main\Tools::log($need_include_module,'',true);
+
 global $APPLICATION;
 
 
@@ -26,8 +26,10 @@ if(!count($response["errors"])){
     }else{
         $response["errors"][] = "Wrong cache ID";
     }
+    \Webgk\Main\Tools::log($_POST["cache_id"],'',true);
+    \Webgk\Main\Tools::log($arParams,'',true);
+
 }
 
-// \Webgk\Main\Tools::log($response,'',true);
 require_once($_SERVER["DOCUMENT_ROOT"]."/local/components/whatasoft/ajax.util/include_after.php");
 ?>

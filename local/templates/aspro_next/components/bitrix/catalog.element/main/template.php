@@ -86,6 +86,8 @@ $totalCount = CNext::GetTotalCount($arResult, $arParams);
 
 $arQuantityData = CNext::GetQuantityArray($totalCount, $arItemIDs["ALL_ITEM_IDS"], "Y");
 
+// \Webgk\Main\Tools::dumpshow($arQuantityData);
+
 $arParams["BASKET_ITEMS"]=($arParams["BASKET_ITEMS"] ? $arParams["BASKET_ITEMS"] : array());
 $useStores = $arParams["USE_STORE"] == "Y" && $arResult["STORES_COUNT"] && $arQuantityData["RIGHTS"]["SHOW_QUANTITY"];
 $showCustomOffer=(($arResult['OFFERS'] && $arParams["TYPE_SKU"] !="N") ? true : false);
@@ -329,12 +331,12 @@ setViewedProduct(<?=$arResult['ID']?>, <?=CUtil::PhpToJSObject($arViewedData, fa
                             if($elementProperty['CODE'] == 'RETSEPTURNYY_KHRANENIE'){
                                 if(!empty($elementProperty['VALUE'])){?>
                                     <span><?=GetMessage('PROPERTY_RECIPE')?></span>
-                                <?}    
+                                <?}
                             }
-                        }   
+                        }
                     }
                 }?>
-            </div>    
+            </div>
             <?$isArticle=(strlen($arResult["DISPLAY_PROPERTIES"]["CML2_ARTICLE"]["VALUE"]) || ($arResult['SHOW_OFFERS_PROPS'] && $showCustomOffer));?>
             <?if($isArticle || $arResult["BRAND_ITEM"] || $arParams["SHOW_RATING"] == "Y" || strlen($arResult["PREVIEW_TEXT"]) || $arResult["DISPLAY_PROPERTIES"]){?>
                 <div class="top_info">
@@ -412,7 +414,7 @@ setViewedProduct(<?=$arResult['ID']?>, <?=CUtil::PhpToJSObject($arViewedData, fa
                                                             $explodeStr = explode('(',$arProp["VALUE"]);?>
                                                             <span itemprop="value"><?=trim($explodeStr[0], " ")?></span>
                                                          <?} else {?>
-                                                            <span itemprop="value"><?=$arProp["VALUE"]?></span> 
+                                                            <span itemprop="value"><?=$arProp["VALUE"]?></span>
                                                          <?}?>
                                                 <?} else {?>
                                                         <?if(count($arProp["DISPLAY_VALUE"]) > 1):?>
@@ -589,10 +591,19 @@ setViewedProduct(<?=$arResult['ID']?>, <?=CUtil::PhpToJSObject($arViewedData, fa
                         <?endif;?>
                     <?}?>
                     <div class="quantity_block_wrapper">
+
+                        <?/*<a id="callstoresmap" style="display:block; color:red; font-size:15px; cursor:pointer"> ryjgrf </a>*/?>
+                        <!-- <a href="#" class="jqModal" style="display:block; color:red; font-size:15px;">view</a> -->
                         <?if($useStores){?>
                             <div class="p_block">
                         <?}?>
-                            <?=$arQuantityData["HTML"];?>
+
+                        <?//if($arResult['STORES_INFO']['COUNT'] > 0){?>
+                            <a href="#" id="callstoresmap" style="display:block; color:red; font-size:15px; cursor:pointer"> <?=$arQuantityData["HTML"];?> <?$arResult['STORES_INFO']['TEXT']?> </a>
+                        <?//} else {?>
+                            <?//=$arQuantityData["HTML"];?>
+                        <?//}?>
+
                         <?if($useStores){?>
                             </div>
                         <?}?>
@@ -691,7 +702,7 @@ setViewedProduct(<?=$arResult['ID']?>, <?=CUtil::PhpToJSObject($arViewedData, fa
                 </div>
             </div>
         </div>
-        <div class="clearfix"></div>    
+        <div class="clearfix"></div>
     </div>
     <?$bPriceCount = ($arParams['USE_PRICE_COUNT'] == 'Y');?>
     <?if($arResult['OFFERS']):?>
