@@ -1,5 +1,4 @@
-<?require($_SERVER["DOCUMENT_ROOT"]."/bitrix/modules/main/include/prolog_before.php");?>
-<?
+<?require($_SERVER["DOCUMENT_ROOT"]."/bitrix/modules/main/include/prolog_before.php");
     use \webgk\main\Tools;
     use \webgk\main\iblock\Prototype;
     use \webgk\main\Catalog;
@@ -80,4 +79,4 @@
         $data = array("error" => "Неверный формат данных");   
     }        
 
-    echo json_encode($data);
+    echo trim(json_encode($data));
