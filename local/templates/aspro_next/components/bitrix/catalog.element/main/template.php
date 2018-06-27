@@ -598,11 +598,11 @@ setViewedProduct(<?=$arResult['ID']?>, <?=CUtil::PhpToJSObject($arViewedData, fa
                             <div class="p_block">
                         <?}?>
 
-                        <?//if($arResult['STORES_INFO']['COUNT'] > 0){?>
-                            <a href="#" id="callstoresmap" style="display:block; color:red; font-size:15px; cursor:pointer"> <?=$arQuantityData["HTML"];?> <?$arResult['STORES_INFO']['TEXT']?> </a>
-                        <?//} else {?>
-                            <?//=$arQuantityData["HTML"];?>
-                        <?//}?>
+                        <?if($arResult['STORES_INFO']['COUNT'] > 0){?>
+                            <a href="#" id="callstoresmap"> <?=$arQuantityData["HTML"];?> </a>
+                        <?} else {?>
+                            <?=$arQuantityData["HTML"];?>
+                        <?}?>
 
                         <?if($useStores){?>
                             </div>

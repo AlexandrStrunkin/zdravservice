@@ -408,7 +408,10 @@ class MapYandexAjaxListComponent extends CBitrixComponent{
         // $rsElement->SetUrlTemplates($this->arParams["DETAIL_URL"], "", $this->arParams["IBLOCK_URL"]);
 
         while($obElement = $rsElement->Fetch()){
-
+            $pattern = '/^\[.+\]/';
+            $replace_to = '';
+            $obElement['TITLE'] = preg_replace($pattern, $replace_to, $obElement['TITLE']);
+            //$obElement['TITLE'] =
             $arItem = $obElement;
             $this->arResult["ITEMS"][$intKey] = $arItem;
             $this->arResult["ELEMENTS"][$intKey] = $arItem["ID"];

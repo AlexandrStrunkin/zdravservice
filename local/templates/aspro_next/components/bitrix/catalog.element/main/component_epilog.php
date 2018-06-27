@@ -170,20 +170,16 @@ $arrMapFilter = ["ID" => $arParams['STORES']];
 
 <style media="screen">
 
-.modal_popup_window{
-
+.modal_popup_window.popup{
+	box-sizing: border-box;
 	display: none;
 	position: fixed;
 	top: 17%;
 	left: 10%;
-
-
-	/* margin-left: -40%; */
 	width: 80%;
 	min-width: 80%;
     max-width: 80%;
-	/* height: 50%; */
-
+	height: 50%;
 	background-color: #fff;
 	color: #333;
 	border-radius: 0;
@@ -197,10 +193,12 @@ $arrMapFilter = ["ID" => $arParams['STORES']];
 	margin: 0;
 }
 .modal_popup_window .popup_head{
-
-		border-bottom: 2px solid #008c61;
-    	padding: 34px 75px 35px 35px;
-		background-color: #fff;
+	position: relative;
+	box-sizing: border-box;
+	height: 20%;
+	border-bottom: 2px solid #008c61;
+	padding: 34px 75px 35px 35px;
+	background-color: #fff;
 }
 
 .modal_popup_window.overlay  {
@@ -233,9 +231,9 @@ $arrMapFilter = ["ID" => $arParams['STORES']];
 $().ready(function() {
 	$("#callstoresmap").on('click', function(e){
 		e.preventDefault();
-		// console.log("click");
+		console.log("click");
 
-		$.post("<?= $this->__template->GetFolder()."/ajax_map.php"; ?>", {id: <?=$arResult["ID"]?>, stores: <?=\Bitrix\Main\Web\Json::encode($arrMapFilter);?>},
+		$.post("<?= /*$this->__template->GetFolder().*/"/local/templates/aspro_next/components/bitrix/catalog.element/main/ajax_map.php"; ?>", {id: <?=$arResult["ID"]?>, stores: <?=\Bitrix\Main\Web\Json::encode($arrMapFilter);?>},
 			function(data){
 // console.log(data);
 			$( "body" ).append( data );
@@ -247,10 +245,10 @@ $().ready(function() {
 
 			$("#stores_map.modal_popup_window a.close.modal_popup_window_close, .modal_popup_window.overlay").on('click', function(e){
 				e.preventDefault();
-				// console.log("close1");
+				console.log("close1");
 				$("#stores_map").hide(300).remove();
 				$(".modal_popup_window.overlay").hide(300).remove();
-				$( "body" ).css('overflow','none');
+				$( "body" ).css('overflow','scroll');
 			});
 
 			// $(".modal_popup_window.overlay").on('click', function(e){
