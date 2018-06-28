@@ -68,6 +68,7 @@
                                             $(".jqmOverlay").show();
                                             $(".popup").css("top", (window.innerHeight - $(".popup").height()) / 2);
                                             $(".popup").show();
+                                            $(".wrapper1 .header_wrap").css("z-index", "3");
                                             $(".phoneNumber").html($("#input_PERSONAL_PHONE").val());    
                                         }    
                                     });
@@ -331,4 +332,5 @@
             </div>
         </div>
     </form>
+</div>
 </div>

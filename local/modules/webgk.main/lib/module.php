@@ -32,6 +32,8 @@ class Module {
         $eventManager->addEventHandler("main", "OnBeforeUserRegister", ['\\Webgk\\Main\\Tools', 'updateUserPhone']);
         $eventManager->addEventHandler("main", "OnAfterUserRegister",  ['\\Webgk\\Main\\Tools', 'gettingNewClientInfo']);
         $eventManager->addEventHandler("main", "OnAfterUserUpdate",  ['\\Webgk\\Main\\Tools', 'gettingNewClientInfo']);
+        $eventManager->addEventHandler("main", "OnBeforeUserUpdate",  ['\\Webgk\\Main\\Tools', 'updatingBonus']);
+        $eventManager->addEventHandler("iblock", "OnBeforeIBlockElementAdd",  ['\\Webgk\\Main\\Tools', 'fixPhoneNumberForIBlock']);
     }
 
     public static function defineConstants()

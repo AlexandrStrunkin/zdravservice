@@ -1,0 +1,92 @@
+input[type='text'] {
+     width: 510px;
+    height: 38px;
+    font-family: 'Arial Обычный', 'Arial';
+    font-weight: 400;
+    font-style: normal;
+    font-size: 16px;
+    text-decoration: none;
+    color: #000000;
+    text-align: left;   
+}
+input[disabled] {
+    background-color: rgb(235, 235, 228) !important;
+}
+.radioButtonsBlock {
+    width: 39%;
+}
+.radioButtonsBlock td label {
+    padding-left: 15px;
+}
+.iblock.text_block {
+    padding-top: 0 !important;
+}
+input[name='iblock_submit'] {
+    font-weight: bold;
+    font-size: 15px;
+}
+.smsConfirmButton, .smsCodeCheck {
+    background-color: #009b76;
+    border-color: #009b76;
+    color: #ffffff;
+    font-size: 13px;
+    line-height: 18px;
+    font-weight: 400;
+    text-transform: none;
+    text-decoration: none;
+    margin: 0;
+    border: 1px solid;
+    border-radius: 2px;
+    padding: 7px 18px 9px;
+    overflow: hidden;
+    display: inline-block;
+    text-align: center;
+    vertical-align: middle;
+    cursor: pointer;
+    white-space: nowrap;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -o-user-select: none;
+    user-select: none;
+    transition: background-color .3s ease;
+    -moz-transition: background-color .3s ease;
+    -ms-transition: background-color .3s ease;
+    -o-transition: background-color .3s ease;
+    -webkit-transition: background-color .3s ease;
+}
+.popup {
+    z-index: 3000;
+    margin-left: -210px;
+    top: 279px;
+    opacity: 1;
+    position: relative;
+}
+@media (max-width: 767px) {
+    .popup {
+        max-width: 370px !important;
+        left: 57% !important;
+    }
+}
+@media (min-width: 768px) {
+    .popup {
+        /*padding: 30px 55px 30px 25px;*/
+    }
+    .popup .form_body {
+        padding: 29px 35px 35px;
+    }
+}
+
+font.notetext {
+    color: green !important;
+}
+.existedPhoneNumber {
+    color: red;
+}
+.wrap_md.birthday input {
+    position: relative;
+}
+.wrap_md.birthday .calendar-icon {
+    position: absolute;
+    top: 7px;
+}
