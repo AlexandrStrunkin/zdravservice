@@ -68,7 +68,7 @@
 
 	$MESS["REGISTER_FIELD_TEXT_LOGIN"] = "Является логином для входа на сайт.";
 	$MESS["REGISTER_FIELD_TEXT_NAME"] = "Ваше имя необходимо для того, чтобы мы знали с кем имеем дело))";
-	$MESS["REGISTER_FIELD_TEXT_PERSONAL_PHONE"] = "Контактный телефон нужен для уточнения деталей заказа";
+	$MESS["REGISTER_FIELD_TEXT_PERSONAL_PHONE"] = "Мобильный телефон нужен для уточнения деталей заказа и получения СМС о готовности заказов";
 	$MESS["REGISTER_FIELD_TEXT_EMAIL"] = "Является логином для входа на сайт. <br/>Также на него будут приходить уведомления о статусах заказа";
 	$MESS["REGISTER_FIELD_TEXT_EMAIL_SHORT"] = "На него будут приходить уведомления о статусах заказа";
 	$MESS["REGISTER_FIELD_TEXT_PASSWORD"] = "Длина пароля не менее 6 символов";

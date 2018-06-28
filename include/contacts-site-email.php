@@ -1,1 +1,1 @@
-info@dev-zdravservice.webgk.ru
+info@zdesapteka.ru
