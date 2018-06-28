@@ -106,8 +106,10 @@
 							$arResult["arUser"]["PERSONAL_PHONE"] = '+'.$arResult["arUser"]["PERSONAL_PHONE"];
 						}
 						?>
-						<input required type="tel" name="PERSONAL_PHONE" class="phone" maxlength="255" value="<?=$arResult["arUser"]["PERSONAL_PHONE"]?>" />
-					</div>
+						<input required type="tel" name="phone_number" class="phone" maxlength="255" value="<?=$arResult["arUser"]["PERSONAL_PHONE"]?>" />
+                        <br>
+                        <button name="changePhoneNumber" class="btn btn-default short changePhoneNumberButton">Сменить номер телефона</button>
+					</div>                                  
 					<div class="iblock text_block">
 						<?=GetMessage("PERSONAL_PHONE_DESCRIPTION")?>
 					</div>
@@ -133,6 +135,36 @@
 			</div>
 
 		</form>
-		<? if($arResult["SOCSERV_ENABLED"]){ $APPLICATION->IncludeComponent("bitrix:socserv.auth.split", "main", array("SUFFIX"=>"form", "SHOW_PROFILES" => "Y","ALLOW_DELETE" => "Y"),false);}?>
 	</div>
+</div>
+<div class="jqmOverlay" style="height: 100%; width: 100%; position: fixed; left: 0px; top: 0px; z-index: 2999; opacity: 0.5; display: none;"></div>
+<div class="popup">
+    <div class="popupClose">
+    <i></i>
+    </div>
+    <div class="form">
+        <div class="form_head"><h2>Подтверждение мобильного телефона</h2></div>
+        <form action="" method="POST" enctype="multipart/form-data" novalidate="novalidate">
+            <?=bitrix_sessid_post()?>
+            <div class="form_body">
+                <span class="smsPopupNote">Укажите новый номер мобильного телефона</span>
+                <input type="text" class="phoneNumber" name="phoneNumber">
+                <br><br>
+                <div class="sendedSmsNote" style="display: none;">
+                    СМС отправлено. Введите код в поле ниже.<br>
+                    <div class="resendingSmsInfo">Повторная отправка СМС возможна через <span class="secAmount">60</span> сек.</div>
+                    <div class="resendingSmsButton" style="display: none;"><a href="javascript:void(0)" class="btn btn-default bold">Отправить повторно</a><br>
+                </div>
+                <div class="smsCodeField" style="display: none;">
+                    <div class="wrongCode" style="display: none;">Код указан неверно</div>
+                    <input type="text" name="smsCode" class="smsCode" maxlength="4" onkeypress="validate(event)">
+                    <button class="btn btn-default bold confirmCodeButton">Подтвердить</button>
+                </div>
+            </div>
+            <div class="form_footer">
+                <button class="btn btn-default bold sendConfirmSMS">Отправить СМС для подтверждения</button>
+            </div>
+        </div>
+    </form>
+</div>
 </div>

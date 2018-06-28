@@ -68,3 +68,6 @@
 	display: flex;
 	flex-flow: row wrap;
 }
+.sale-personal-section-index-block i.bonus_program {
+    background: url("/images/bonus.png") 0px 0px no-repeat;    
+}

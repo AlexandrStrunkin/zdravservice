@@ -48,7 +48,12 @@ class ClientBonusInfo {
                 $clientInfoArr["PHONE_NUMBER"] = (string)$attrVal;
             }
         }
-
+        foreach ($clientInfo->phone->Gender as $gender) {
+            $genderSymbol = iconv($gender);
+        }
+        foreach ($clientInfo->phone->BDate as $bdate) {
+            $birthday = $bdate;
+        }
         $totalBalance = floatval($clientInfo->Balance[0]);
         $clientInfoArr["USER_BALANCE"] = $totalBalance;  
         $hlblock = Prototype::getInstance("ClientsBonusCards");
@@ -73,6 +78,27 @@ class ClientBonusInfo {
                            'UF_TOTAL_BALANCE' => $clientInfoArr["USER_BALANCE"],
                            'UF_TIMESTAMP_X' => time()
                        ));
+           }
+           $userId = "";
+           $userList = \CUser::GetList(($by = "timestamp_x"), ($order = "desc"), array("PERSONAL_PHONE" => $phoneNumber));
+           while ($arUsers = $userList -> Fetch()) {
+               $userId = $arUsers["ID"];
+           }
+           $updUserFields = array();
+           if (isset($_SESSION["SERVICE_DATA"]["UPDATE_BONUS"])) {
+               if ($userId) {
+                   if (strlen($birthday)) {
+                       $updUserFields["PERSONAL_BIRTHDAY"] = date("d.m.Y", strtotime($birthday));
+                   }
+                   if (strlen($genderSymbol)) {
+                        $updUserFields["PERSONAL_GENDER"] = $genderSymbol;    
+                   }
+                   if (!empty($updUserFields)) {
+                       $userObj = new \CUser;
+                       $userObj -> Update($userId, $updUserFields);
+                   }
+                   unset($_SESSION["SERVICE_DATA"]["UPDATE_BONUS"]);
+               }
            }
     }
     $resultId = $result->getId();

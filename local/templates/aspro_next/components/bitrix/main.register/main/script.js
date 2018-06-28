@@ -1,24 +1,4 @@
 /**
-* функция таймера обратного отсчета
-* 
-* @param timestamp
-*/
-function parseTime_bv(timestamp){
-    if (timestamp >= 0) {
-  
-        var day = Math.floor( (timestamp/60/60) / 24);
-        var hour = Math.floor(timestamp/60/60);
-        var mins = Math.floor((timestamp - hour*60*60)/60);
-        var secs = Math.floor(timestamp - hour*60*60 - mins*60);
-        var left_hour = Math.floor( (timestamp - day*24*60*60) / 60 / 60 );
-      
-        if(String(secs).length > 0)
-            $('.secAmount').text(secs);
-            
-    }
-      
-}
-/**
 * проверка на ввод только чисел в поле кода подтверждения из SMS
 * 
 * @param evt
@@ -47,7 +27,7 @@ $(document).ready(function(){
             url: "/ajax/smsconfirmation.php",
             data: {sessid: $("input[name='sessid']").val(), phoneNumber: $("#input_PERSONAL_PHONE").val()},
         }).done(function(strResult){
-            
+                
         });
         $(".sendConfirmSMS, .resendingSmsButton").hide();
         $(".sendedSmsNote").show();

@@ -291,6 +291,18 @@ Class Tools {
         
         return $result;           
                 
+    }
+    
+    public static function updatingBonus(&$arFields) {
+        if (isset($arFields["PERSONAL_PHONE"])) {
+            $_SESSION["SERVICE_DATA"]["UPDATE_BONUS"] = "Y";
+        }    
+    }
+
+    public static function fixPhoneNumberForIBlock(&$arFields) {
+        if ($arFields["IBLOCK_ID"] == 28 && $arFields["PROPERTY_VALUES"][358]) {
+            $arFields["PROPERTY_VALUES"][358] = \Webgk\Main\Tools::formatUserPhone($arFields["PROPERTY_VALUES"][358]);
+        }    
     }  
 
 }

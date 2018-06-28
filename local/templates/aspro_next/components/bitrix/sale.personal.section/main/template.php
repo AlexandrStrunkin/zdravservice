@@ -17,7 +17,14 @@ if ($arParams['SHOW_ORDER_PAGE'] === 'Y')
 		"icon" => '<i class="cur_orders"></i>'
 	);
 }
-
+if ($arParams['SHOW_BONUS_PROGRAM_PAGE'] === 'Y')
+{
+    $availablePages[] = array(
+        "path" => $arResult['PATH_TO_BONUS_PROGRAM'],
+        "name" => Loc::getMessage("SPS_BONUS_PROGRAM_PAGE_NAME"),
+        "icon" => '<i class="bonus_program"></i>'
+    );
+}
 if ($arParams['SHOW_ACCOUNT_PAGE'] === 'Y')
 {
 	$availablePages[] = array(
@@ -27,16 +34,7 @@ if ($arParams['SHOW_ACCOUNT_PAGE'] === 'Y')
 	);
 }
 
-if ($arParams['SHOW_PRIVATE_PAGE'] === 'Y')
-{
-	$availablePages[] = array(
-		"path" => $arResult['PATH_TO_PRIVATE'],
-		"name" => Loc::getMessage("SPS_PERSONAL_PAGE_NAME"),
-		"icon" => '<i class="personal"></i>'
-	);
-}
-
-if ($arParams['SHOW_ORDER_PAGE'] === 'Y')
+if ($arParams['SHOW_ORDER_HISTORY_PAGE'] === 'Y')
 {
 
 	$delimeter = ($arParams['SEF_MODE'] === 'Y') ? "?" : "&";
@@ -73,7 +71,14 @@ if ($arParams['SHOW_SUBSCRIBE_PAGE'] === 'Y')
 		"icon" => '<i class="subscribe"></i>'
 	);
 }
-
+if ($arParams['SHOW_PRIVATE_PAGE'] === 'Y')
+{
+    $availablePages[] = array(
+        "path" => $arResult['PATH_TO_PRIVATE'],
+        "name" => Loc::getMessage("SPS_PERSONAL_PAGE_NAME"),
+        "icon" => '<i class="personal"></i>'
+    );
+}
 if ($arParams['SHOW_CONTACT_PAGE'] === 'Y')
 {
 	$availablePages[] = array(
