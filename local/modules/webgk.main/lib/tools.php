@@ -299,10 +299,57 @@ Class Tools {
         }    
     }
 
-    public static function fixPhoneNumberForIBlock(&$arFields) {
-        if ($arFields["IBLOCK_ID"] == 28 && $arFields["PROPERTY_VALUES"][358]) {
-            $arFields["PROPERTY_VALUES"][358] = \Webgk\Main\Tools::formatUserPhone($arFields["PROPERTY_VALUES"][358]);
+    public function fixPhoneNumberForIBlock(&$arFields) {
+        if ($arFields["IBLOCK_ID"] == 28) {
+            if ($arFields["PROPERTY_VALUES"][358]) {
+                $arFields["PROPERTY_VALUES"][358] = \Webgk\Main\Tools::formatUserPhone($arFields["PROPERTY_VALUES"][358]);
+            }
         }    
+    }
+    
+    public function updatingUserFieldsFromQuestionnaire (&$arFields) {
+        if ($arFields["IBLOCK_ID"] == 28) {
+            $maleEnumId = \COption::GetOptionString("grain.customsettings", "male_gender_property_enum"); 
+            $femaleEnumId = \COption::GetOptionString("grain.customsettings", "female_gender_property_enum");
+            $userId = "";
+            if ($arFields["PROPERTY_VALUES"][358]) {
+                $userList = \CUser::GetList(($by = "timestamp_x"), ($order = "desc"), array("PERSONAL_PHONE" => $arFields["PROPERTY_VALUES"][358]));
+                while ($arUsers = $userList -> Fetch()) {
+                    $userId = $arUsers["ID"];
+                }
+                $updatingUserFilter["PERSONAL_PHONE"] = $arFields["PROPERTY_VALUES"][358];
+            }
+            if ($arFields["NAME"]) {
+                $explodedNameArr = explode(" ", $arFields["NAME"]);
+                if (!empty($explodedNameArr[0])) {
+                    $updatingUserFilter["LAST_NAME"] = $explodedNameArr[0];
+                }
+                if (!empty($explodedNameArr[1])) {
+                    $updatingUserFilter["NAME"] = $explodedNameArr[1];
+                }
+                if (!empty($explodedNameArr[2])) {
+                    $updatingUserFilter["SECOND_NAME"] = $explodedNameArr[2];
+                }
+            }
+            if ($arFields["PROPERTY_VALUES"][359]) {
+                $updatingUserFilter["EMAIL"] = $arFields["PROPERTY_VALUES"][359];
+            }
+            if ($arFields["PROPERTY_VALUES"][360]) {
+                if ($arFields["PROPERTY_VALUES"][360] == $maleEnumId) {
+                    $updatingUserFilter["PERSONAL_GENDER"] = "M";
+                } else if ($arFields["PROPERTY_VALUES"][360] == $femaleEnumId) {
+                    $updatingUserFilter["PERSONAL_GENDER"] = "F";
+                }
+            }
+            if ($arFields["PROPERTY_VALUES"][361]["VALUE"]) {
+                $updatingUserFilter["PERSONAL_BIRTHDAY"] = $arFields["PROPERTY_VALUES"][361]["VALUE"];
+            }
+            if (!empty($updatingUserFilter)) {
+                $userObj = new \CUser;
+                $updUser = $userObj->Update((int)$userId, $updatingUserFilter);
+                \Webgk\Main\Tools::Log($userObj->LAST_ERROR);
+            }
+        }
     }  
 
 }

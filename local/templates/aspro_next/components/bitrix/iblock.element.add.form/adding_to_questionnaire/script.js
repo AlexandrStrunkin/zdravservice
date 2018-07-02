@@ -3,6 +3,7 @@ $(document).ready(function(){
     $(".phoneNumber").mask("+7(999)999-99-99")
     $(".changePhoneNumberButton").on("click", function(e){
         e.preventDefault();
+        $(".wrapper1 .header_wrap").css("z-index", "3");
         $(".jqmOverlay").show();
         $(".popup").css("top", (window.innerHeight - $(".popup").height()) / 2);
         $(".popup").show();
@@ -16,7 +17,13 @@ $(document).ready(function(){
             $.ajax({
                 type: "POST",
                 url: "/ajax/smsconfirmation.php",
-                data: {sessid: $("input[name='sessid']").val(), phoneNumber: $(".phoneNumber").val()},
+                data: {
+                    sessid: $("input[name='sessid']").val(), 
+                    phoneNumber: $(".phoneNumber").val(), 
+                    clientName: $(".NAME").val(), 
+                    clientEmail: $(".EMAIL").val(),
+                    clientBirthday: $(".birthday input").val()
+                },
             }).done(function(strResult){
                 if (strResult == "existed_user_error") {
                     $(".existedPhoneNumber").show();    

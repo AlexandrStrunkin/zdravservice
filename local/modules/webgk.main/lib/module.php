@@ -34,6 +34,8 @@ class Module {
         $eventManager->addEventHandler("main", "OnAfterUserUpdate",  ['\\Webgk\\Main\\Tools', 'gettingNewClientInfo']);
         $eventManager->addEventHandler("main", "OnBeforeUserUpdate",  ['\\Webgk\\Main\\Tools', 'updatingBonus']);
         $eventManager->addEventHandler("iblock", "OnBeforeIBlockElementAdd",  ['\\Webgk\\Main\\Tools', 'fixPhoneNumberForIBlock']);
+        $eventManager->addEventHandler("iblock", "OnAfterIBlockElementAdd",  ['\\Webgk\\Main\\Tools', 'updatingUserFieldsFromQuestionnaire']);
+
     }
 
     public static function defineConstants()

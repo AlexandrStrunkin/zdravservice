@@ -23,8 +23,32 @@ if ($_REQUEST["phoneNumber"] && $_REQUEST["code"] && check_bitrix_sessid()) {
     if (!empty($resultData)) {
         if ($resultData[0]["UF_TIMESTAMP_X"] >= time() - 180) {
             if (strlen($userId) > 0 && $userId > 0) {
-                $userObj = new CUser;
-                $updUser = $userObj->Update((int)$userId, array("PERSONAL_PHONE" => $phoneNumber));
+                $updatingUserFilter = array();
+                if ($phoneNumber) {
+                    $updatingUserFilter["PERSONAL_PHONE"] = $phoneNumber;
+                }
+                if ($_REQUEST["clientName"]) {
+                    $explodedNameArr = explode(" ", $_REQUEST["clientName"]);
+                    if (!empty($explodedNameArr[0])) {
+                        $updatingUserFilter["LAST_NAME"] = $explodedNameArr[0];
+                    }
+                    if (!empty($explodedNameArr[1])) {
+                        $updatingUserFilter["NAME"] = $explodedNameArr[1];
+                    }
+                    if (!empty($explodedNameArr[2])) {
+                        $updatingUserFilter["SECOND_NAME"] = $explodedNameArr[2];
+                    }
+                }
+                if ($_REQUEST["clientEmail"]) {
+                    $updatingUserFilter["EMAIL"] = $_REQUEST["clientEmail"];
+                }
+                if ($_REQUEST["clientBirthday"]) {
+                    $updatingUserFilter["PERSONAL_BIRTHDAY"] = $_REQUEST["clientBirthday"];
+                }
+                if (!empty($updatingUserFilter)) {
+                    $userObj = new CUser;
+                    $updUser = $userObj->Update((int)$userId, $updatingUserFilter);
+                }
             }
             echo "ok";
         } else {
