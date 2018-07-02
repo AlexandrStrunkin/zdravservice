@@ -56,13 +56,15 @@ else{
 		"SEND_INFO_PRIVATE" => "N",
 		"SET_TITLE" => "Y",
 		"SHOW_ACCOUNT_COMPONENT" => "Y",
-		"SHOW_ACCOUNT_PAGE" => "Y",
+		"SHOW_ACCOUNT_PAGE" => "N",
 		"SHOW_ACCOUNT_PAY_COMPONENT" => "Y",
-		"SHOW_BASKET_PAGE" => "Y",
-		"SHOW_CONTACT_PAGE" => "Y",
+		"SHOW_BASKET_PAGE" => "N",
+		"SHOW_CONTACT_PAGE" => "N",
 		"SHOW_ORDER_PAGE" => "Y",
+        "SHOW_ORDER_HISTORY_PAGE" => "N",
+        "SHOW_BONUS_PROGRAM_PAGE" => "Y",
 		"SHOW_PRIVATE_PAGE" => "Y",
-		"SHOW_PROFILE_PAGE" => "Y",
+		"SHOW_PROFILE_PAGE" => "N",
 		"SHOW_SUBSCRIBE_PAGE" => "Y",
 		"USER_PROPERTY_PRIVATE" => "",
 		"USE_AJAX_LOCATIONS_PROFILE" => "N",
@@ -92,6 +94,7 @@ else{
 			"private" => "private/",
 			"order_detail" => "orders/#ID#",
 			"order_cancel" => "cancel/#ID#",
+            "bonus_program" => "bonus-program/"
 		)
 	),
 	false

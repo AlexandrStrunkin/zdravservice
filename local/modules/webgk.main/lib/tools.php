@@ -4,7 +4,7 @@ namespace Webgk\Main;
 
 Class Tools {
 
-    public static function arshow($array, $adminCheck = false){
+    public static function arshow($array, $adminCheck = false, $die = false){
         global $USER;
         $USER = new \Cuser;
         if ($adminCheck) {
@@ -15,9 +15,13 @@ Class Tools {
         echo "<pre>";
         print_r($array);
         echo "</pre>";
+        
+        if ($die) {
+            die();
+        }
     }
 
-    public static function dumpshow($data, $adminCheck = false)
+    public static function dumpshow($data, $adminCheck = false, $die = false)
     {
         global $USER;
         $USER = new \Cuser;
@@ -29,6 +33,10 @@ Class Tools {
         echo "<pre>";
         var_dump($data);
         echo "</pre>";
+        
+        if ($die) {
+            die();
+        }
     }
 
     /**
@@ -190,6 +198,23 @@ Class Tools {
     }
     
     /**
+    * функция для форматирования телефона
+    * 
+    * @param mixed $path
+    */
+    public static function formatUserPhone($phoneNumber) {
+        $phoneNumber = preg_replace("/\D/", "", $phoneNumber);
+        if (strlen($phoneNumber) == 11) {
+            if (substr($phoneNumber, 0, 1) == "8") {
+                $userPhone = substr_replace($phoneNumber, "7", 0, 1);
+            }
+            $phoneNumber = "+".$phoneNumber;    
+        }
+        return $phoneNumber;                                          
+    }
+    
+    
+    /**
     * получение информации по бонусам нового пользователя
     * 
     * @param array $arFields
@@ -208,7 +233,7 @@ Class Tools {
         }
     }
     
-        /*
+    /*
     *Форматирование свойства "Действующее вещество" от '*', '(' 
     */
     public static function explodeProperty($valueToExplode){
@@ -222,5 +247,62 @@ Class Tools {
             return $explodeThis; 
         }
     }
+    
+    /**
+    * функция сканирует указанную директорию и возвращает массив названий файлов/папок из данной директории
+    * 
+    */
+    public static function scanFileDir($path) {
+        
+        if (empty($path)) {
+            return false;
+        }
+        
+        //добавляем слеш вначале
+        if (substr($path, 0, 1) != "/") {
+            $path = "/" . $path;    
+        }
+        
+        //добавляем слеш вконце
+        if (substr($path, -1) != "/") {
+            $path = $path . "/";    
+        }
+        
+        //проверяем наличие пути до папки сайта в указанном пути $dir
+        $root = $_SERVER["DOCUMENT_ROOT"];
+        
+        $sourcePath = $path;
+        if (!substr_count($path, $root)) {
+            $path = $root . $path;    
+        }
+        
+        $dirData = scandir($path);
+        
+        $result = array();
+        foreach ($dirData as $key => $dirItem) {
+            if ($key >= 2) {
+                $result[] = array(
+                    "NAME" => $dirItem,
+                    "PATH" => $sourcePath . $dirItem, 
+                    "FULL_PATH" => $path . $dirItem 
+                );    
+            }
+        }
+        
+        return $result;           
+                
+    }
+    
+    public static function updatingBonus(&$arFields) {
+        if (isset($arFields["PERSONAL_PHONE"])) {
+            $_SESSION["SERVICE_DATA"]["UPDATE_BONUS"] = "Y";
+        }    
+    }
+
+    public static function fixPhoneNumberForIBlock(&$arFields) {
+        if ($arFields["IBLOCK_ID"] == 28 && $arFields["PROPERTY_VALUES"][358]) {
+            $arFields["PROPERTY_VALUES"][358] = \Webgk\Main\Tools::formatUserPhone($arFields["PROPERTY_VALUES"][358]);
+        }    
+    }  
 
 }

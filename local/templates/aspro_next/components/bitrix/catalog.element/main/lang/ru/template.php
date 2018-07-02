@@ -65,6 +65,7 @@ $MESS["CHEAPER"] = "Нашли дешевле?";
 $MESS["DESCRIPTION_TAB"] = "Описание";
 $MESS["INSTRUCTIONS_FOR_USE"] = "Инструкция по применению";
 $MESS["CONTRAINDICATIONS"] = "Противопоказания";
+$MESS["INSTRUCTIONS_FOR_USE_TITLE"] = "Способ применения и дозы";
 $MESS["VIDEO_TAB"] = "Видео";
 $MESS["ASK_TAB"] = "Задать вопрос";
 $MESS["ADDITIONAL_TAB"] = "Дополнительно";

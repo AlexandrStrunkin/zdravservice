@@ -801,4 +801,24 @@ class Prototype
         }
         return $arResult;
     }
+    
+    /**
+    * получение ID элемента по XML_ID
+    * 
+    * @param mixed $xmlId
+    */
+    public function getItemIdByXmlId($xmlId) {
+        
+        $result = false;
+        
+        if (empty($xmlId)) {
+            return false;
+        }    
+        
+        $item = \CIBlockElement::GetList(array(), array("XML_ID" => $xmlId), false, false, array("ID"))->Fetch();
+        $result = $item["ID"];
+        
+        return $result;
+
+    }
 }

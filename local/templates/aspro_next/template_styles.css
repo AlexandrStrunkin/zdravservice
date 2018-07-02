@@ -6678,3 +6678,86 @@ table.contacts-stores tr.item td:last-of-type{width:30%;}
 .bx-touch .bx_ordercart .bx_sort_container span{display:inline-block;}
 .bx-touch .bx_ordercart .bx_sort_container > span{display:none;}
 .bx-touch #basket_form .bx_ordercart .bx_sort_container a{width: auto;margin-bottom: 0px;border: none;padding: 7px 0px 6px 0px;margin-right: 15px;}
+.smsConfirmButton[disabled] {
+    background: 0 0!important;
+    border: 1px solid #bbb!important;
+    color: #bbb!important;
+}
+.smsPopupTitle {
+    font-weight: bold;
+    font-size: 18px;
+}
+.smsPopupNote, .changePhoneNumber {
+    font-size: 14px;
+}
+.phoneNumber {
+    font-weight: bold;
+}
+.changePhoneNumber, .changePhoneNumber:hover{
+    /*text-decoration: underline !important;*/
+    color: black;
+}
+.resendingSmsAdditionalNote {
+    opacity: 0.5;
+}
+.sendConfirmSMS {
+    padding: 10px;
+    border: 1px solid black;
+    border-radius: 5px;
+}
+.sendConfirmSMS, .sendConfirmSMS:hover {
+    color: black;
+}
+.popupClose {
+        margin: 0;
+    position: absolute;
+    right: 10px;
+    top: 9px;
+    cursor: pointer;
+    z-index: 2;
+        display: block;
+    border-radius: 0px;
+    width: 14px;
+    height: 14px;
+    opacity: 1;
+}
+.popupClose i {
+background: url(/local/templates/aspro_next/css/../images/close_icons.png) -1px -46px no-repeat;
+    display: block;
+    border-radius: 0px;
+    width: 14px;
+    height: 14px;
+    opacity: 1;
+    position: absolute;
+    right: 33px;
+    top: 37px;
+}
+.popup h2 {
+    font-size: 1.866em;
+    line-height: 35px;
+}
+.smsCode {
+    width: 30% !important;
+    background-color: white !important;
+    border: 1px solid #ddd !important;
+    line-height: 17px !important;
+}
+.smsCodeField {
+    margin-top: 10px;
+}
+.wrongCode {
+    color: red;
+}
+.popup .form .form_footer {
+    padding: 0 !important;
+}
+.resendingSmsButton {
+    margin-bottom: 25px;
+    margin-top: 10px;
+}
+.changePhoneNumberButton {
+    margin-top: 10px !important;
+}
+.but-r span {
+    font-weight: bold;
+}

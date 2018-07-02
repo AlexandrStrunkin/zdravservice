@@ -13,7 +13,7 @@
         * 
         * @param mixed $arResult - весь массив данных из шаблона компонента
         */
-        function addOldPricesToResult($arResult) {
+        public static function addOldPricesToResult($arResult) {
 
             //собираем дополнительный массив для типов цен
             foreach ($arResult["PRICES"] as $priceId => $priceData) {
@@ -55,7 +55,7 @@
         * 
         * @param mixed $arResult - весь массив данных из шаблона компонента
         */
-        function addOldPricesToElement($arResult) {
+        public static function addOldPricesToElement($arResult) {
             //собираем дополнительный массив для типов цен
             foreach ($arResult["CAT_PRICES"] as $priceId => $priceData) {
                 //массив вида "xml_id цены" => "id цены"
@@ -84,6 +84,94 @@
             }
             
             return $arResult;    
+        }
+        
+        
+        /**
+        * обновление остатка товара на определенном складе
+        * 
+        * @param integer $itemId - ID товара
+        * @param integer $storeId - ID склада
+        * @param integer $quantity - ID количество
+        */
+        public static function updateItemStoreQuantity($itemId, $storeId, $quantity) {
+            if (empty($itemId) || empty($storeId) || $quantity === null) {
+                return false;
+            }    
+            
+            $itemId = intval($itemId);
+            $storeId = intval($storeId);
+            $quantity = intval($quantity);
+            
+            $arFields = Array(
+                "PRODUCT_ID" => $itemId,
+                "STORE_ID" => $storeId,
+                "AMOUNT" => $quantity,
+            ); 
+         
+            //проверяем есть ли запись с остатками на указанном складе для текущего товара
+            $checkItem = \CCatalogStoreProduct::GetList(array(), array("PRODUCT_ID" => $itemId, "STORE_ID" => $storeId))->Fetch();
+            if ($checkItem["ID"]) {
+                if ($checkItem["AMOUNT"] != $quantity) {
+                   $result = \CCatalogStoreProduct::Update($checkItem["ID"], $arFields); 
+                } else {
+                   $result = true; 
+                }
+            } else {
+                $result = \CCatalogStoreProduct::Add($arFields);    
+            }
+            
+            if($result) {
+                $result = \Webgk\Main\Catalog::updateItemQuantity($itemId);
+            }   
+            
+            return $result;              
+            
+        }
+        
+        
+        /**
+        * обновление общего остатка товара суммарно по всем складам
+        * 
+        * @param integer $id - ID товара
+        */
+        public static function updateItemQuantity($id) {
+            if (empty($id)) {
+                return false;
+            }    
+            
+            $itemStoreData = \CCatalogStoreProduct::GetList(array(), array("PRODUCT_ID" => $id));
+            $totalQuantity = 0;
+            while ($arStoreData = $itemStoreData->Fetch()) {
+                $totalQuantity += $arStoreData["AMOUNT"];    
+            }
+            
+            $result = \CCatalogProduct::Update($id, array("QUANTITY" => $totalQuantity));
+            
+            if ($result) {            
+                $result = $totalQuantity;
+            }
+            
+            return $result;
+        }
+        
+        
+        /**
+        * обновление общего остатка товара суммарно по всем складам
+        * 
+        * @param string $xmlId - XML_ID склада
+        */
+        public static function getStoreIdByXmlId($xmlId) {
+            $result = false;
+            
+            if (empty($xmlId)) {
+                return false;
+            }    
+            
+            $store = \CCatalogStore::GetList(array(), array("XML_ID" => $xmlId), false, false, array("ID"))->Fetch();
+            $result = $store["ID"];
+            
+            return $result;
         }
 
 }

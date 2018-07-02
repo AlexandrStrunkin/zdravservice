@@ -1,0 +1,11 @@
+.form-block-wr table {
+    width: 100%;
+}
+.form-block-wr table tr td:first-child {
+    color: #999999;
+    width: 25%;
+}
+.module-form-block-wr {
+    padding-left: 0 !important;
+    border: none !important;
+}

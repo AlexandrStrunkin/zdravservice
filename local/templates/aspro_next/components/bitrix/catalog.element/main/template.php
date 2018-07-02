@@ -963,12 +963,12 @@ setViewedProduct(<?=$arResult['ID']?>, <?=CUtil::PhpToJSObject($arViewedData, fa
             <?endif;?>
             <?if($arResult["DETAIL_TEXT"]):?>
                 <li class="instructions <?=(!($iTab++) ? ' active' : '')?>">
-                    <a class="instructions" href="#descr"  data-toggle="tab"><span><?=GetMessage("INSTRUCTIONS_FOR_USE");?></span></a>
+                    <a class="instructions" href="#instructions"  data-toggle="tab"><span><?=GetMessage("INSTRUCTIONS_FOR_USE");?></span></a>
                 </li>
             <?endif;?>
             <?if($arResult["DETAIL_TEXT"]):?>
                 <li class="contraindications <?=(!($iTab++) ? ' active' : '')?>">
-                    <a class="contraindications" href="#descr"  data-toggle="tab"><span><?=GetMessage("CONTRAINDICATIONS");?></span></a>
+                    <a class="contraindications" href="#contraindications"  data-toggle="tab"><span><?=GetMessage("CONTRAINDICATIONS");?></span></a>
                 </li>
             <?endif;?>
             <?if($arVideo):?>
@@ -1270,7 +1270,20 @@ setViewedProduct(<?=$arResult['ID']?>, <?=CUtil::PhpToJSObject($arViewedData, fa
                     <div class="title-tab-heading visible-xs"><?=($arParams["TAB_DESCR_NAME"] ? $arParams["TAB_DESCR_NAME"] : GetMessage("DESCRIPTION_TAB"));?></div>
                     <div>
                         <?if(strlen($arResult["DETAIL_TEXT"])):?>
-                            <div class="detail_text"><?=$arResult["DETAIL_TEXT"]?></div>
+                            <?
+                            $tabTitleInst = GetMessage('INSTRUCTIONS_FOR_USE_TITLE');
+                            $tabTitleContra = GetMessage('CONTRAINDICATIONS');
+                            $matchInstructions = '/<h3>'.$tabTitleInst.'<\/h3><p>.*?<\/p>/s';
+                            $matchContraindications = '/<h3>'.$tabTitleContra.'<\/h3><p>.*?<\/p>/s';
+                            $detailText = $arResult["DETAIL_TEXT"];
+                            if(preg_match($matchInstructions , $detailText, $getInstructions )){
+                                $detailText = preg_replace($matchInstructions, '', $detailText);
+                            }
+                            if(preg_match($matchContraindications, $detailText, $getContraindications )){
+                                $detailText = preg_replace('/<h3>'.$tabTitleContra.'<\/h3><p>.*?<\/p>/s', '', $detailText);
+                            }
+                            ?>                         
+                            <div class="detail_text"><?=$detailText?></div>
                         <?endif;?>
                         <?if($showProps && $arParams["PROPERTIES_DISPLAY_LOCATION"] != "TAB"):?>
                             <div class="wraps">
@@ -1588,6 +1601,36 @@ setViewedProduct(<?=$arResult['ID']?>, <?=CUtil::PhpToJSObject($arViewedData, fa
                             </table>
                         <?else:?>
                             <?=$arVideo[0]?>
+                        <?endif;?>
+                    </div>
+                </div>
+            <?endif;?>
+            <?if(!empty($arResult["DETAIL_TEXT"])):?>
+            <div class="tab-pane <?=(!($iTab++) ? ' active' : '')?>" id="instructions">
+                    <div class="title-tab-heading visible-xs"><?=GetMessage("INSTRUCTIONS_FOR_USE");?></div>
+                    <div>
+                        <?if(strlen($arResult["DETAIL_TEXT"])):?>
+                            <?
+                            $tabTitleInst = GetMessage('INSTRUCTIONS_FOR_USE_TITLE');
+                            $matchInstructions = '/<h3>'.$tabTitleInst.'<\/h3><p>.*?<\/p>/s';
+                            preg_match($matchInstructions, $arResult["DETAIL_TEXT"], $getInstructions );                         
+                            ?>
+                            <div class="detail_text"><?=$getInstructions[0]?></div>
+                        <?endif;?>
+                    </div>
+                </div>
+            <?endif;?>
+            <?if(!empty($arResult["DETAIL_TEXT"])):?>
+            <div class="tab-pane <?=(!($iTab++) ? ' active' : '')?>" id="contraindications">
+                    <div class="title-tab-heading visible-xs"><?=GetMessage('CONTRAINDICATIONS');?></div>
+                    <div>
+                        <?if(strlen($arResult["DETAIL_TEXT"])):?>
+                            <?
+                            $tabTitleContra = GetMessage('CONTRAINDICATIONS');
+                            $matchContraindications = '/<h3>'.$tabTitleContra.'<\/h3><p>.*?<\/p>/s';
+                            preg_match($matchContraindications, $arResult["DETAIL_TEXT"], $getContraindications );                         
+                            ?>
+                            <div class="detail_text"><?=$getContraindications[0]?></div>
                         <?endif;?>
                     </div>
                 </div>

@@ -3948,6 +3948,7 @@ window.JCCatalogElement.prototype.allowViewedCount = function(update)
 		this.incViewedCounter();
 	}
 };
+
 })(window);
 /*
 * Вешаем на нужные теги атрибут name для якорей, на которые при клике по тамбам будет происходить переход
