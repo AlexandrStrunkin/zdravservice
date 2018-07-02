@@ -1,0 +1,80 @@
+<?
+$l_prefix = "WAS_GEOOBJECTSMAPBD_";
+$MESS["IBLOCK_CACHE_FILTER"] = "Cache if the filter is active";
+$MESS["CP_BNL_CACHE_GROUPS"] = "Respect Access Permissions";
+$MESS["CP_BNL_INCLUDE_SUBSECTIONS"] = "Show elements from subsections";
+
+$MESS[$l_prefix ."GROUPS_MAP_SETTINGS"] = "Map settings";
+$MESS[$l_prefix ."GROUPS_MAP_BALLOON_SETTINGS"] = "Balloon settings";
+$MESS[$l_prefix ."GROUPS_MAP_CLUSTER"] = "Cluster settings";
+$MESS[$l_prefix ."EMPTY_VALUE"] = "empty";
+
+$MESS[$l_prefix ."IBLOCK_ASC"] = "Ascending";
+$MESS[$l_prefix ."IBLOCK_DESC"] = "Descending";
+$MESS[$l_prefix ."IBLOCK_FID"] = "ID";
+$MESS[$l_prefix ."IBLOCK_FNAME"] = "Name";
+$MESS[$l_prefix ."IBLOCK_FACT"] = "Activation date";
+$MESS[$l_prefix ."IBLOCK_FSORT"] = "Sorting";
+$MESS[$l_prefix ."IBLOCK_FTSAMP"] = "Date of last change";
+$MESS[$l_prefix ."IBLOCK_IBORD1"] = "Field for the first sorting pass";
+$MESS[$l_prefix ."IBLOCK_IBBY1"] = "Direction for the first sorting pass";
+$MESS[$l_prefix ."IBLOCK_IBORD2"] = "Field for the second sorting pass";
+$MESS[$l_prefix ."IBLOCK_IBBY2"] = "Direction for the second sorting pass";
+$MESS[$l_prefix ."REQUEST_LIMIT"] = "Elements limit in one request to the server (100-5000)";
+$MESS[$l_prefix ."IBLOCK_LIST_ID"] = "Information block code";
+$MESS[$l_prefix ."IBLOCK_LIST_TYPE"] = "Type of information block (used for verification only)";
+$MESS[$l_prefix ."IBLOCK_DETAIL_PAGE_URL"] = "Detail page URL (from information block settings by default)";
+$MESS[$l_prefix ."IBLOCK_FILTER"] = "Filter";
+$MESS[$l_prefix ."IBLOCK_SECTION_ID"] = "Section ID";
+$MESS[$l_prefix ."IBLOCK_SECTION_CODE"] = "Section code";
+$MESS[$l_prefix ."IBLOCK_CHECK_DATES"] = "Show only currently active elements";
+
+$MESS[$l_prefix ."INIT_MAP_TYPE"] = "Map type";
+$MESS[$l_prefix ."INIT_MAP_TYPE_MAP"] = "map";
+$MESS[$l_prefix ."INIT_MAP_TYPE_SATELLITE"] = "satellite";
+$MESS[$l_prefix ."INIT_MAP_TYPE_HYBRID"] = "hybrid";
+$MESS[$l_prefix ."BEHAVIORS"] = "Settings";
+$MESS[$l_prefix ."BEHAVIORS_SCROLL_ZOOM"] = "Zoom on scroll";
+$MESS[$l_prefix ."BEHAVIORS_DBLCLICK_ZOOM"] = "Zoom on double click";
+$MESS[$l_prefix ."BEHAVIORS_RIGHT_MAGNIFIER"] = "Right click magnifier";
+$MESS[$l_prefix ."BEHAVIORS_DRAGGING"] = "Drag";
+$MESS[$l_prefix ."BEHAVIORS_RULER"] = "Ruler";
+$MESS[$l_prefix ."CONTROLS"] = "Controls";
+$MESS[$l_prefix ."CONTROLS_GEO"] = "Geolocation";
+$MESS[$l_prefix ."CONTROLS_SEARCH"] = "Search";
+$MESS[$l_prefix ."CONTROLS_ROUTE"] = "Route editor";
+$MESS[$l_prefix ."CONTROLS_TRAFFIC"] = "Traffic";
+$MESS[$l_prefix ."CONTROLS_TYPE"] = "Map type";
+$MESS[$l_prefix ."CONTROLS_FULLSCREEN"] = "Fullscreen switch";
+$MESS[$l_prefix ."CONTROLS_ZOOM"] = "Zoom";
+$MESS[$l_prefix ."CONTROLS_RULER"] = "Ruler";
+$MESS[$l_prefix ."MAP_AUTO_SCALE_CENTER"] = "Map auto center and auto scale";
+$MESS[$l_prefix ."MAP_SCALE"] = "Map scale";
+$MESS[$l_prefix ."MAP_CENTER"] = "Map center (latitude,longitude)";
+$MESS[$l_prefix ."MAP_WIDTH"] = "Map width";
+$MESS[$l_prefix ."MAP_HEIGHT"] = "Map height";
+$MESS[$l_prefix ."MAP_ID"] = "Map ID";
+
+$MESS[$l_prefix ."MAP_CLUSTER"] = "Cluster";
+$MESS[$l_prefix ."MAP_CLUSTER_SIMPLE"] = "Simple cluster";
+$MESS[$l_prefix ."MAP_CLUSTER_CONTENT_WIDTH"] = "Cluster window content width (pixels)";
+$MESS[$l_prefix ."MAP_CLUSTER_CONTENT_LEFT_COLUMN_WIDTH"] = "Cluster window left column width (pixels)";
+
+$MESS[$l_prefix ."MAP_COLOR"] = "Default balloon color in hex format (FFFFFF)";
+$MESS[$l_prefix ."MAP_ICON"] = "User icon for ballon";
+$MESS[$l_prefix ."USE_ICON_CONTENT"] = "Show text on icon";
+$MESS[$l_prefix ."ICON_CONTENT"] = "Property to show over icon";
+$MESS[$l_prefix ."USE_ELEMENT_ICON"] = "Use element icons (if there are any)";
+$MESS[$l_prefix ."USE_SECTION_ICON"] = "Use section icons (if there are any)";
+$MESS[$l_prefix ."MAP_BALLOON_COLOR"] = "Color field in hex format (FFFFFF)";
+$MESS[$l_prefix ."MAP_BALOON_COORDS"] = "Coordinates field";
+$MESS[$l_prefix ."MAP_BALOON_TITLE"] = "Title field";
+$MESS[$l_prefix ."MAP_BALOON_NAME"] = "Name field";
+$MESS[$l_prefix ."MAP_BALOON_TEXT"] = "Text field";
+$MESS[$l_prefix ."MAP_BALLOON_PROPERTIES"] = "Properties to show";
+$MESS[$l_prefix ."MAP_BALOON_LINK_SHOW"] = "Show element link";
+$MESS[$l_prefix ."MAP_BALOON_LINK_TEXT"] = "Element link text";
+$MESS[$l_prefix ."MAP_BALOON_LINK_TEXT_DEF"] = "more";
+$MESS[$l_prefix ."MAP_BALLOON_LINK_NEW_WINDOW"] = "Open link in new window";
+$MESS[$l_prefix ."MAP_BALOON_DETAIL_IMG"] = "Image field";
+?>

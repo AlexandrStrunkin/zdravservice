@@ -1120,4 +1120,21 @@ if(is_array($arParams["SECTION_TIZER"]) && $arParams["SECTION_TIZER"]){
 
 $arResult = \Webgk\Main\Catalog::addOldPricesToElement($arResult);
 
-?>
+
+$rsElement = CCatalogStore::GetList(
+	["ID" => "asc"],
+	[
+		"ID" => $arParams['STORES'],
+		"ACTIVE" => "Y",
+		"PRODUCT_ID" => $arResult["ID"],
+		'!GPS_N' => [false, 0],
+		'!GPS_S' => [false, 0],
+		'>PRODUCT_AMOUNT' => 0,
+		'UF_REGION_STORAGE' => false,
+	],
+	false,
+	false,
+	['ID']
+);
+
+$arResult['STORES_INFO']['COUNT'] = $rsElement->SelectedRowsCount();

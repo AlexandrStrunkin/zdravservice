@@ -81,10 +81,9 @@ $strObName = 'ob'.preg_replace("/[^a-zA-Z0-9_]/", "x", $strMainID);
 
 $arResult["strMainID"] = $this->GetEditAreaId($arResult['ID']);
 $arItemIDs=CNext::GetItemsIDs($arResult, "Y");
-$totalCount = CNext::GetTotalCount($arResult, $arParams);
-
-
-$arQuantityData = CNext::GetQuantityArray($totalCount, $arItemIDs["ALL_ITEM_IDS"], "Y");
+$totalCount = Webgk\Main\AsproExtend\ExtendClass::GetTotalCount($arResult, $arParams);
+$regionalStoreQuantity = Webgk\Main\AsproExtend\ExtendClass::GetTotalCount($arResult, $arParams, true);
+$arQuantityData = Webgk\Main\AsproExtend\ExtendClass::GetQuantityArray($totalCount, $arItemIDs["ALL_ITEM_IDS"], "Y", $regionalStoreQuantity);
 
 $arParams["BASKET_ITEMS"]=($arParams["BASKET_ITEMS"] ? $arParams["BASKET_ITEMS"] : array());
 $useStores = $arParams["USE_STORE"] == "Y" && $arResult["STORES_COUNT"] && $arQuantityData["RIGHTS"]["SHOW_QUANTITY"];
@@ -107,7 +106,7 @@ if($arResult["OFFERS"]){
         $arMeasure = CCatalogMeasure::getList(array(), array("ID"=>$arResult["CATALOG_MEASURE"]), false, false, array())->GetNext();
         $strMeasure=$arMeasure["SYMBOL_RUS"];
     }
-    $arAddToBasketData = CNext::GetAddToBasketArray($arResult, $totalCount, $arParams["DEFAULT_COUNT"], $arParams["BASKET_URL"], false, $arItemIDs["ALL_ITEM_IDS"], 'btn-lg w_icons', $arParams);
+    $arAddToBasketData = CNext::GetAddToBasketArray($arResult, $totalCount+$regionalStoreQuantity, $arParams["DEFAULT_COUNT"], $arParams["BASKET_URL"], false, $arItemIDs["ALL_ITEM_IDS"], 'btn-lg w_icons', $arParams);
 }
 $arOfferProps = implode(';', $arParams['OFFERS_CART_PROPERTIES']);
 
@@ -329,12 +328,12 @@ setViewedProduct(<?=$arResult['ID']?>, <?=CUtil::PhpToJSObject($arViewedData, fa
                             if($elementProperty['CODE'] == 'RETSEPTURNYY_KHRANENIE'){
                                 if(!empty($elementProperty['VALUE'])){?>
                                     <span><?=GetMessage('PROPERTY_RECIPE')?></span>
-                                <?}    
+                                <?}
                             }
-                        }   
+                        }
                     }
                 }?>
-            </div>    
+            </div>
             <?$isArticle=(strlen($arResult["DISPLAY_PROPERTIES"]["CML2_ARTICLE"]["VALUE"]) || ($arResult['SHOW_OFFERS_PROPS'] && $showCustomOffer));?>
             <?if($isArticle || $arResult["BRAND_ITEM"] || $arParams["SHOW_RATING"] == "Y" || strlen($arResult["PREVIEW_TEXT"]) || $arResult["DISPLAY_PROPERTIES"]){?>
                 <div class="top_info">
@@ -412,7 +411,7 @@ setViewedProduct(<?=$arResult['ID']?>, <?=CUtil::PhpToJSObject($arViewedData, fa
                                                             $explodeStr = explode('(',$arProp["VALUE"]);?>
                                                             <span itemprop="value"><?=trim($explodeStr[0], " ")?></span>
                                                          <?} else {?>
-                                                            <span itemprop="value"><?=$arProp["VALUE"]?></span> 
+                                                            <span itemprop="value"><?=$arProp["VALUE"]?></span>
                                                          <?}?>
                                                 <?} else {?>
                                                         <?if(count($arProp["DISPLAY_VALUE"]) > 1):?>
@@ -592,7 +591,13 @@ setViewedProduct(<?=$arResult['ID']?>, <?=CUtil::PhpToJSObject($arViewedData, fa
                         <?if($useStores){?>
                             <div class="p_block">
                         <?}?>
+
+                        <?if($arResult['STORES_INFO']['COUNT'] > 0){?>
+                            <a href="#" id="callstoresmap"> <?=$arQuantityData["HTML"];?> </a>
+                        <?} else {?>
                             <?=$arQuantityData["HTML"];?>
+                        <?}?>
+
                         <?if($useStores){?>
                             </div>
                         <?}?>
@@ -691,7 +696,7 @@ setViewedProduct(<?=$arResult['ID']?>, <?=CUtil::PhpToJSObject($arViewedData, fa
                 </div>
             </div>
         </div>
-        <div class="clearfix"></div>    
+        <div class="clearfix"></div>
     </div>
     <?$bPriceCount = ($arParams['USE_PRICE_COUNT'] == 'Y');?>
     <?if($arResult['OFFERS']):?>
@@ -1274,7 +1279,7 @@ setViewedProduct(<?=$arResult['ID']?>, <?=CUtil::PhpToJSObject($arViewedData, fa
                             if(preg_match($matchContraindications, $detailText, $getContraindications )){
                                 $detailText = preg_replace('/<h3>'.$tabTitleContra.'<\/h3><p>.*?<\/p>/s', '', $detailText);
                             }
-                            ?>                         
+                            ?>
                             <div class="detail_text"><?=$detailText?></div>
                         <?endif;?>
                         <?if($showProps && $arParams["PROPERTIES_DISPLAY_LOCATION"] != "TAB"):?>
@@ -1605,7 +1610,7 @@ setViewedProduct(<?=$arResult['ID']?>, <?=CUtil::PhpToJSObject($arViewedData, fa
                             <?
                             $tabTitleInst = GetMessage('INSTRUCTIONS_FOR_USE_TITLE');
                             $matchInstructions = '/<h3>'.$tabTitleInst.'<\/h3><p>.*?<\/p>/s';
-                            preg_match($matchInstructions, $arResult["DETAIL_TEXT"], $getInstructions );                         
+                            preg_match($matchInstructions, $arResult["DETAIL_TEXT"], $getInstructions );
                             ?>
                             <div class="detail_text"><?=$getInstructions[0]?></div>
                         <?endif;?>
@@ -1620,7 +1625,7 @@ setViewedProduct(<?=$arResult['ID']?>, <?=CUtil::PhpToJSObject($arViewedData, fa
                             <?
                             $tabTitleContra = GetMessage('CONTRAINDICATIONS');
                             $matchContraindications = '/<h3>'.$tabTitleContra.'<\/h3><p>.*?<\/p>/s';
-                            preg_match($matchContraindications, $arResult["DETAIL_TEXT"], $getContraindications );                         
+                            preg_match($matchContraindications, $arResult["DETAIL_TEXT"], $getContraindications );
                             ?>
                             <div class="detail_text"><?=$getContraindications[0]?></div>
                         <?endif;?>

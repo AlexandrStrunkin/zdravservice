@@ -1,0 +1,59 @@
+.was_map_cont {position: relative; display: inline-block; vertical-align: top !important; width: 500px; border: solid 1px #B8C1DD; margin-right: 10px;}
+.was_map_controls {position: relative; display: inline-block; vertical-align: top !important; width: 240px;}
+
+.was_map_controls_list, ul.bx-yandex-address-search-results {
+	display: block; list-style-image: none; list-style-position: outside; list-style-type: none; margin: 0 0 10px 0; padding: 0px;
+}
+.was_map_controls_list li {
+	font-size: 11px;
+	display: block;
+	overflow: hidden;
+	height: auto;
+	margin: 2px 0px 2px 15px;
+	padding: 0px;
+	white-space: nowrap;
+}
+
+div#was_yandex_map_address_search {
+	position: relative; text-align: right; width: 500px;
+	padding: 4px 0px;
+}
+
+ul.bx-yandex-address-search-results {
+	font-size: 12px;
+	display: block;
+	position: absolute;
+	border: solid 1px #BDBDBD;
+	z-index: 2005;
+	width: 400px;
+	color: black;
+	background-color: white;
+	padding: 4px 8px;
+}
+
+ul.bx-yandex-address-search-results li {
+	display: block;
+	overflow: hidden;
+	white-space: nowrap;
+	padding: 0px;
+	border-top: solid 1px #D2D2D2;
+	height: 26px;
+}
+
+ul.bx-yandex-address-search-results li.bx-yandex-first {
+	border-top: none;
+}
+
+ul.bx-yandex-address-search-results li.bx-yandex-notfound {
+	border-top: none;
+	padding-top: 5px;
+}
+
+ul.bx-yandex-address-search-results li a {
+	display: block;
+	text-decoration: none;
+	padding-top: 6px;
+	height: 26px;
+}
+
+ul.bx-yandex-address-search-results li a span {padding-left: 13px; display: block; color: black;}

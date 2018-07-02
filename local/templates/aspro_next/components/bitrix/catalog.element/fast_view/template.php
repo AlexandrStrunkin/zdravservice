@@ -78,9 +78,15 @@ $strObName = 'ob'.preg_replace("/[^a-zA-Z0-9_]/", "x", $strMainID);
 
 $arResult["strMainID"] = $this->GetEditAreaId($arResult['ID'])."f";
 $arItemIDs=CNext::GetItemsIDs($arResult, "Y");
-$totalCount = CNext::GetTotalCount($arResult, $arParams);
 
-$arQuantityData = CNext::GetQuantityArray($totalCount, $arItemIDs["ALL_ITEM_IDS"], "Y");
+
+// $totalCount = CNext::GetTotalCount($arResult, $arParams);
+//
+// $arQuantityData = CNext::GetQuantityArray($totalCount, $arItemIDs["ALL_ITEM_IDS"], "Y");
+
+$totalCount = Webgk\Main\AsproExtend\ExtendClass::GetTotalCount($arResult, $arParams);
+$regionalStoreQuantity = Webgk\Main\AsproExtend\ExtendClass::GetTotalCount($arResult, $arParams, true);
+$arQuantityData = Webgk\Main\AsproExtend\ExtendClass::GetQuantityArray($totalCount, $arItemIDs["ALL_ITEM_IDS"], "Y", $regionalStoreQuantity);
 
 $arParams["BASKET_ITEMS"]=($arParams["BASKET_ITEMS"] ? $arParams["BASKET_ITEMS"] : array());
 $useStores = $arParams["USE_STORE"] == "Y" && $arResult["STORES_COUNT"] && $arQuantityData["RIGHTS"]["SHOW_QUANTITY"];
@@ -369,12 +375,12 @@ setViewedProduct(<?=$arResult['ID']?>, <?=CUtil::PhpToJSObject($arViewedData, fa
 								<input type="text" class="text" id="<? echo $arItemIDs["ALL_ITEM_IDS"]['QUANTITY']; ?>" name="<? echo $arParams["PRODUCT_QUANTITY_VARIABLE"]; ?>" value="<?=$arAddToBasketData["MIN_QUANTITY_BUY"]?>" />
 								<span class="plus" id="<? echo $arItemIDs["ALL_ITEM_IDS"]['QUANTITY_UP']; ?>" <?=($arAddToBasketData["MAX_QUANTITY_BUY"] ? "data-max='".$arAddToBasketData["MAX_QUANTITY_BUY"]."'" : "")?>>+</span>
 							</div>
-						<?endif;?>
-						<div id="<? echo $arItemIDs["ALL_ITEM_IDS"]['BASKET_ACTIONS']; ?>" class="button_block <?=(($arAddToBasketData["ACTION"] == "ORDER" /*&& !$arResult["CAN_BUY"]*/) || !$arAddToBasketData["CAN_BUY"] || !$arAddToBasketData["OPTIONS"]["USE_PRODUCT_QUANTITY_DETAIL"] || ($arAddToBasketData["ACTION"] == "SUBSCRIBE" && $arResult["CATALOG_SUBSCRIBE"] == "Y")  ? "wide" : "");?>">
-							<!--noindex-->
+							<div id="<? echo $arItemIDs["ALL_ITEM_IDS"]['BASKET_ACTIONS']; ?>" class="button_block <?=(($arAddToBasketData["ACTION"] == "ORDER" /*&& !$arResult["CAN_BUY"]*/) || !$arAddToBasketData["CAN_BUY"] || !$arAddToBasketData["OPTIONS"]["USE_PRODUCT_QUANTITY_DETAIL"] || ($arAddToBasketData["ACTION"] == "SUBSCRIBE" && $arResult["CATALOG_SUBSCRIBE"] == "Y")  ? "wide" : "");?>">
+								<!--noindex-->
 								<?=$arAddToBasketData["HTML"]?>
-							<!--/noindex-->
-						</div>
+								<!--/noindex-->
+							</div>
+						<?endif;?>
 					</div>
 					<?if(isset($arResult['PRICE_MATRIX']) && $arResult['PRICE_MATRIX']) // USE_PRICE_COUNT
 					{?>
@@ -450,7 +456,12 @@ setViewedProduct(<?=$arResult['ID']?>, <?=CUtil::PhpToJSObject($arViewedData, fa
 			<div class="top_info">
 				<div class="rows_block">
 					<div class="item_block">
-						<?=$arQuantityData["HTML"];?>
+
+						<?
+						if ($totalCount <= 0 && $regionalStoreQuantity <=0) {
+							echo $arQuantityData["HTML"];
+						}
+						?>
 					</div>
 					<?//if($arResult["ARTICLE"]):?>
 						<div class="item_block">
@@ -504,7 +515,7 @@ setViewedProduct(<?=$arResult['ID']?>, <?=CUtil::PhpToJSObject($arViewedData, fa
                                                             $explodeStr = explode('(',$arProp["VALUE"]);?>
                                                             <span itemprop="value"><?=trim($explodeStr[0], " ")?></span>
                                                          <?} else {?>
-                                                            <span itemprop="value"><?=$arProp["VALUE"]?></span> 
+                                                            <span itemprop="value"><?=$arProp["VALUE"]?></span>
                                                          <?}?>
                                                 <?} else {?>
 												    <?if(count($arProp["DISPLAY_VALUE"]) > 1):?>
@@ -513,7 +524,7 @@ setViewedProduct(<?=$arResult['ID']?>, <?=CUtil::PhpToJSObject($arViewedData, fa
 													    <?=$arProp["DISPLAY_VALUE"];?>
 												    <?endif;
                                                 }?>
-                                                                                               
+
 											</span>
 										</td>
 									</tr>

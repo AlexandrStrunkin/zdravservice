@@ -1,9 +1,11 @@
 <?
 	if(!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED!==true)die();
 	__IncludeLang($_SERVER["DOCUMENT_ROOT"].$templateFolder."/lang/".LANGUAGE_ID."/template.php");
-	
+
 use Bitrix\Main\Loader;
 use Bitrix\Main\ModuleManager;
+$APPLICATION->AddHeadScript("https://api-maps.yandex.ru/2.1/?load=package.full&mode=release&lang=ru-RU&wizard=bitrix&ns=whatasoftMaps");
+
 ?>
 <?if($arResult["ID"]):?>
 	<?if($arParams["USE_REVIEW"] == "Y" && IsModuleInstalled("forum")):?>
@@ -134,7 +136,7 @@ use Bitrix\Main\ModuleManager;
 				});
 			}
 		})
-		
+
 	);
 </script>
 <?if($_REQUEST && isset($_REQUEST['formresult'])):?>
@@ -155,3 +157,54 @@ use Bitrix\Main\ModuleManager;
 		</script>
 	<?}?>
 <?}?>
+
+<?
+
+global $arrMapFilter;
+
+$arrMapFilter = ["ID" => $arParams['STORES']];
+
+?>
+
+
+<script type="text/javascript">
+$().ready(function() {
+	$("#callstoresmap").on('click', function(e){
+		e.preventDefault();
+
+		$.post("<?= "/local/templates/aspro_next/components/bitrix/catalog.element/main/ajax_map.php"; ?>", {id: <?=$arResult["ID"]?>, stores: <?=\Bitrix\Main\Web\Json::encode($arrMapFilter);?>},
+			function(data){
+			$( "body" ).append( data );
+			$(".modal_popup_window.overlay").show(300);
+			$("#stores_map").show(300);
+			$( "body" ).css('overflow','hidden');
+
+			waitScriptLoad();
+
+			$("#stores_map.modal_popup_window a.close.modal_popup_window_close, .modal_popup_window.overlay").on('click', function(e){
+				e.preventDefault();
+				$("#stores_map").hide(300).remove();
+				$(".modal_popup_window.overlay").hide(300).remove();
+				$( "body" ).css('overflow','scroll');
+			});
+
+		});
+
+    });
+
+});
+
+
+function waitScriptLoad(){
+  if(!window.whatasoftMaps){
+	setTimeout(waitScriptLoad, 50);
+  }else{
+	whatasoftMaps.ready(function(){
+	  $(".was-map-yandex-ajax").each(function(i, el){
+		wmap = new WASAjaxYandexMapList();
+		wmap.Init($(el));
+	  });
+	});
+  }
+}
+</script>

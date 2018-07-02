@@ -1,0 +1,29 @@
+.was-map-balloon-inner-img {margin-bottom: 5px; text-align: center;}
+.was-map-balloon-inner-img img {max-width: 250px; max-height: 250px;}
+.was-map-balloon-inner-text {}
+.was-map-balloon-inner-props {margin-top: 5px;}
+.was-map-balloon-inner-prop {margin-bottom: 2px;}
+.was-map-balloon-inner-prop:last-child {margin-bottom: 0;}
+.was-map-balloon-header {font-size: 120%; font-weight: 700; margin: 0 0 10px;}
+.was-map-balloon-footer {margin: 5px 0 0; color: #777; font-size: 90%;}
+
+.was-icon-content {text-align: center; color: #000000; font-weight: normal;}
+
+.was-map-yandex-ajax {position: relative;}
+.was-map-yandex-ajax .was-map-spinner {width: 40px; height: 40px; position: absolute; left: 50%; top: 50%; margin: -20px 0 0 -20px;}
+.was-map-yandex-ajax .was-map-spinner:before,
+.was-map-yandex-ajax .was-map-spinner:after {
+    content: ''; display: block; width: 100%; height: 100%; border-radius: 50%; 
+    background-color: #999; opacity: 0.6; position: absolute; top: 0; left: 0;
+    -webkit-animation: sk-bounce 2.0s infinite ease-in-out; 
+    animation: sk-bounce 2.0s infinite ease-in-out;
+}
+.was-map-yandex-ajax .was-map-spinner:after {-webkit-animation-delay: -1.0s; animation-delay: -1.0s;}
+@-webkit-keyframes sk-bounce {
+  0%, 100% { -webkit-transform: scale(0.0) }
+  50% { -webkit-transform: scale(1.0) }
+}
+@keyframes sk-bounce {
+  0%, 100% { transform: scale(0.0); -webkit-transform: scale(0.0); } 
+  50% { transform: scale(1.0); -webkit-transform: scale(1.0); }
+}
