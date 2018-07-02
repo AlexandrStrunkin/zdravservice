@@ -1138,19 +1138,3 @@ $rsElement = CCatalogStore::GetList(
 );
 
 $arResult['STORES_INFO']['COUNT'] = $rsElement->SelectedRowsCount();
-
-// \Webgk\Main\Tools::arshow($arResult['STORES_INFO']['COUNT']);
-
-// while($obElement = $rsElement->Fetch()){
-// 	$pattern = '/^\[.+\]/';
-// 	$replace_to = '';
-// 	$obElement['TITLE'] = preg_replace($pattern, $replace_to, $obElement['TITLE']);
-// 	//$obElement['TITLE'] =
-// 	$arItem = $obElement;
-// 	$this->arResult["ITEMS"][$intKey] = $arItem;
-// 	$this->arResult["ELEMENTS"][$intKey] = $arItem["ID"];
-// 	$arElementLink[$arItem["ID"]] = &$this->arResult["ITEMS"][$intKey];
-// 	$intKey++;
-// }
-
-?>
