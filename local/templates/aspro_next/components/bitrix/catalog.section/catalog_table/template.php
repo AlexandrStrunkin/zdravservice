@@ -21,8 +21,14 @@
 			<?foreach($arResult["ITEMS"]  as $arItem){
 				$this->AddEditAction($arItem['ID'], $arItem['EDIT_LINK'], CIBlock::GetArrayByID($arParams["IBLOCK_ID"], "ELEMENT_EDIT"));
 				$this->AddDeleteAction($arItem['ID'], $arItem['DELETE_LINK'], CIBlock::GetArrayByID($arParams["IBLOCK_ID"], "ELEMENT_DELETE"), array("CONFIRM" => GetMessage('CT_BCS_ELEMENT_DELETE_CONFIRM')));
-				$totalCount = CNext::GetTotalCount($arItem, $arParams);
-				$arQuantityData = CNext::GetQuantityArray($totalCount);
+
+				// $totalCount = CNext::GetTotalCount($arItem, $arParams);
+				//
+				// $arQuantityData = CNext::GetQuantityArray($totalCount);
+
+				$totalCount = Webgk\Main\AsproExtend\ExtendClass::GetTotalCount($arItem, $arParams);
+				$regionalStoreQuantity = Webgk\Main\AsproExtend\ExtendClass::GetTotalCount($arItem, $arParams, true);
+				$arQuantityData = Webgk\Main\AsproExtend\ExtendClass::GetQuantityArray($totalCount, [], "N", $regionalStoreQuantity);
 
 				$strMeasure = '';
 				if(!$arItem["OFFERS"] || $arParams['TYPE_SKU'] === 'TYPE_2'){
@@ -38,7 +44,7 @@
 				}
 				$elementName = ((isset($arItem['IPROPERTY_VALUES']['ELEMENT_PAGE_TITLE']) && $arItem['IPROPERTY_VALUES']['ELEMENT_PAGE_TITLE']) ? $arItem['IPROPERTY_VALUES']['ELEMENT_PAGE_TITLE'] : $arItem['NAME']);
 				?>
-				<?$arAddToBasketData = CNext::GetAddToBasketArray($arItem, $totalCount, $arParams["DEFAULT_COUNT"], $arParams["BASKET_URL"], false, array(), 'small', $arParams);?>
+				<?$arAddToBasketData = CNext::GetAddToBasketArray($arItem, $totalCount+$regionalStoreQuantity, $arParams["DEFAULT_COUNT"], $arParams["BASKET_URL"], false, array(), 'small', $arParams);?>
 				<tr class="item main_item_wrapper" id="<?=$this->GetEditAreaId($arItem['ID']);?>">
 					<td class="wrapper_td">
 						<table>
@@ -92,7 +98,12 @@
 												);?>
 											</div>
 										<?endif;?>
-										<?=$arQuantityData["HTML"];?>
+										<?
+
+										if ($totalCount <= 0 && $regionalStoreQuantity <=0) {
+											echo $arQuantityData["HTML"];
+										}
+										?>
 									</td>
 									<td class="price-cell">
 										<div class="cost prices clearfix">
@@ -168,12 +179,12 @@
 													<input type="text" class="text" name="quantity" value="<?=$arAddToBasketData["MIN_QUANTITY_BUY"]?>" />
 													<span class="plus" <?=($arAddToBasketData["MAX_QUANTITY_BUY"] ? "data-max='".$arAddToBasketData["MAX_QUANTITY_BUY"]."'" : "")?>>+</span>
 												</div>
-											<?endif;?>
-											<div class="button_block <?=(in_array($arItem["ID"], $arParams["BASKET_ITEMS"])  || $arAddToBasketData["ACTION"] == "ORDER" || !$arAddToBasketData["CAN_BUY"] || !$arAddToBasketData["OPTIONS"]["USE_PRODUCT_QUANTITY_LIST"] ? "wide" : "");?>">
-												<!--noindex-->
+												<div class="button_block <?=(in_array($arItem["ID"], $arParams["BASKET_ITEMS"])  || $arAddToBasketData["ACTION"] == "ORDER" || !$arAddToBasketData["CAN_BUY"] || !$arAddToBasketData["OPTIONS"]["USE_PRODUCT_QUANTITY_LIST"] ? "wide" : "");?>">
+													<!--noindex-->
 													<?=$arAddToBasketData["HTML"]?>
-												<!--/noindex-->
-											</div>
+													<!--/noindex-->
+												</div>
+											<?endif;?>
 										</div>
 										<?
 										if(isset($arItem['PRICE_MATRIX']) && $arItem['PRICE_MATRIX']) // USE_PRICE_COUNT

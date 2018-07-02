@@ -234,7 +234,7 @@ class MapYandexAjaxListComponent extends CBitrixComponent{
             $this->arResult['MAPS_SCRIPT_URL'] = 'https://api-maps.yandex.ru/'.$this->arParams['YANDEX_VERSION'].'/?load=package.full&mode=release&lang='.$this->arParams['LOCALE'].'&wizard=bitrix&ns=whatasoftMaps';
             $APPLICATION->AddHeadScript($this->arResult['MAPS_SCRIPT_URL']);
 
-            Tools::log($this->arResult['MAPS_SCRIPT_URL']);
+
             define('WAS_YMAP_SCRIPT_LOADED', 1);
         }
 
@@ -417,6 +417,7 @@ class MapYandexAjaxListComponent extends CBitrixComponent{
             $this->arResult["ELEMENTS"][$intKey] = $arItem["ID"];
             $arElementLink[$arItem["ID"]] = &$this->arResult["ITEMS"][$intKey];
             $intKey++;
+                //\Webgk\Main\Tools::log($obElement,'',true);
         }
 
         //get properties for all elements
@@ -434,9 +435,9 @@ class MapYandexAjaxListComponent extends CBitrixComponent{
         $arFileIds = array();
         foreach($this->arResult["ITEMS"] as $item_key => &$arItem){
 
-            if ($arItem['PRODUCT_AMOUNT'] <= 0) {
-                continue;
-            }
+            // if ($arItem['PRODUCT_AMOUNT'] <= 0) {
+            //     continue;
+            // }
 
             $arItem["MAP"] = array();
             // $arItem["MAP"]["COORDINATES"] = $arItem["PROPERTIES"][$this->arParams["MAP_BALLOON_COORDS"]]["VALUE"];
@@ -560,6 +561,9 @@ class MapYandexAjaxListComponent extends CBitrixComponent{
 
         $this->arResult["RESPONSE"] = $response;
         $this->includeComponentTemplate("ajax");
+
+// Tools::log($this->arResult["RESPONSE"]);
+
         return $this->arResult["RESPONSE"];
     }
 }

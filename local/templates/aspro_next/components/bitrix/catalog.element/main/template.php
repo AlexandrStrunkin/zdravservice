@@ -81,12 +81,9 @@ $strObName = 'ob'.preg_replace("/[^a-zA-Z0-9_]/", "x", $strMainID);
 
 $arResult["strMainID"] = $this->GetEditAreaId($arResult['ID']);
 $arItemIDs=CNext::GetItemsIDs($arResult, "Y");
-$totalCount = CNext::GetTotalCount($arResult, $arParams);
-
-
-$arQuantityData = CNext::GetQuantityArray($totalCount, $arItemIDs["ALL_ITEM_IDS"], "Y");
-
-// \Webgk\Main\Tools::dumpshow($arQuantityData);
+$totalCount = Webgk\Main\AsproExtend\ExtendClass::GetTotalCount($arResult, $arParams);
+$regionalStoreQuantity = Webgk\Main\AsproExtend\ExtendClass::GetTotalCount($arResult, $arParams, true);
+$arQuantityData = Webgk\Main\AsproExtend\ExtendClass::GetQuantityArray($totalCount, $arItemIDs["ALL_ITEM_IDS"], "Y", $regionalStoreQuantity);
 
 $arParams["BASKET_ITEMS"]=($arParams["BASKET_ITEMS"] ? $arParams["BASKET_ITEMS"] : array());
 $useStores = $arParams["USE_STORE"] == "Y" && $arResult["STORES_COUNT"] && $arQuantityData["RIGHTS"]["SHOW_QUANTITY"];
@@ -109,7 +106,7 @@ if($arResult["OFFERS"]){
         $arMeasure = CCatalogMeasure::getList(array(), array("ID"=>$arResult["CATALOG_MEASURE"]), false, false, array())->GetNext();
         $strMeasure=$arMeasure["SYMBOL_RUS"];
     }
-    $arAddToBasketData = CNext::GetAddToBasketArray($arResult, $totalCount, $arParams["DEFAULT_COUNT"], $arParams["BASKET_URL"], false, $arItemIDs["ALL_ITEM_IDS"], 'btn-lg w_icons', $arParams);
+    $arAddToBasketData = CNext::GetAddToBasketArray($arResult, $totalCount+$regionalStoreQuantity, $arParams["DEFAULT_COUNT"], $arParams["BASKET_URL"], false, $arItemIDs["ALL_ITEM_IDS"], 'btn-lg w_icons', $arParams);
 }
 $arOfferProps = implode(';', $arParams['OFFERS_CART_PROPERTIES']);
 

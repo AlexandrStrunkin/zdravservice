@@ -90,8 +90,12 @@
 					$arItem["strMainID"] = $this->GetEditAreaId($arItem['ID']);
 					$arItemIDs=CNext::GetItemsIDs($arItem);
 
-					$totalCount = CNext::GetTotalCount($arItem, $arParams);
-					$arQuantityData = CNext::GetQuantityArray($totalCount, $arItemIDs["ALL_ITEM_IDS"]);
+					// $totalCount = CNext::GetTotalCount($arItem, $arParams);
+					// $arQuantityData = CNext::GetQuantityArray($totalCount, $arItemIDs["ALL_ITEM_IDS"]);
+
+					$totalCount = Webgk\Main\AsproExtend\ExtendClass::GetTotalCount($arItem, $arParams);
+					$regionalStoreQuantity = Webgk\Main\AsproExtend\ExtendClass::GetTotalCount($arItem, $arParams, true);
+					$arQuantityData = Webgk\Main\AsproExtend\ExtendClass::GetQuantityArray($totalCount, $arItemIDs["ALL_ITEM_IDS"], "", $regionalStoreQuantity);
 
 					$bLinkedItems = (isset($arParams["LINKED_ITEMS"]) && $arParams["LINKED_ITEMS"]);
 					if($bLinkedItems)
@@ -105,12 +109,12 @@
 							$arMeasure = CCatalogMeasure::getList(array(), array("ID" => $arItem["CATALOG_MEASURE"]), false, false, array())->GetNext();
 							$strMeasure = $arMeasure["SYMBOL_RUS"];
 						}
-						$arAddToBasketData = CNext::GetAddToBasketArray($arItem, $totalCount, $arParams["DEFAULT_COUNT"], $arParams["BASKET_URL"], ($bLinkedItems ? true : false), $arItemIDs["ALL_ITEM_IDS"], 'small', $arParams);
+						$arAddToBasketData = CNext::GetAddToBasketArray($arItem, $totalCount +$regionalStoreQuantity, $arParams["DEFAULT_COUNT"], $arParams["BASKET_URL"], ($bLinkedItems ? true : false), $arItemIDs["ALL_ITEM_IDS"], 'small', $arParams);
 					}
 					elseif($arItem["OFFERS"]){
 						$strMeasure = $arItem["MIN_PRICE"]["CATALOG_MEASURE_NAME"];
 					}
-					
+
 					$elementName = ((isset($arItem['IPROPERTY_VALUES']['ELEMENT_PAGE_TITLE']) && $arItem['IPROPERTY_VALUES']['ELEMENT_PAGE_TITLE']) ? $arItem['IPROPERTY_VALUES']['ELEMENT_PAGE_TITLE'] : $arItem['NAME']);
 					?>
 					<div class="catalog_item main_item_wrapper item_wrap <?=(($_GET['q'])) ? 's' : ''?>" id="<?=$arItemIDs["strMainID"];?>">
@@ -175,11 +179,11 @@
 								</a>
 								<div class="fast_view_block" data-event="jqm" data-param-form_id="fast_view" data-param-iblock_id="<?=$arParams["IBLOCK_ID"];?>" data-param-id="<?=$arItem["ID"];?>" data-param-item_href="<?=urlencode($arItem["DETAIL_PAGE_URL"]);?>" data-name="fast_view"><?=$fast_view_text;?></div>
 							</div>
-                            
+
 							<div class="item_info <?=$arParams["TYPE_SKU"]?>">
 								<div class="item-title">
 									<a href="<?=$arItem["DETAIL_PAGE_URL"]?>" class="dark_link"><span><?=$elementName;?></span></a>
-								</div> 
+								</div>
                                 <?if(!empty($arItem["DISPLAY_PROPERTIES"]['STRANA_PROIZVODITELYA']['VALUE']) || !empty($arItem["DISPLAY_PROPERTIES"]['DEYSTVUYUSHCHEE_VESHCHESTVO']['VALUE'])){?>
                                     <div class="show_block_props">
                                     <?foreach( $arItem["DISPLAY_PROPERTIES"] as $arProp ){?>
@@ -199,17 +203,17 @@
                                                         $explodeStr = explode('(',$arProp["VALUE"]);?>
                                                         <span class="element_value"><?=trim($explodeStr[0], " ")?></span>
                                                     <?} else {?>
-                                                        <span class="element_value"><?=$arProp["VALUE"]?></span> 
-                                                     <?}?>                                            
+                                                        <span class="element_value"><?=$arProp["VALUE"]?></span>
+                                                     <?}?>
                                                     </div>
                                                 <?}?>
-                                        <?}?>                                      
+                                        <?}?>
                                     <?}?>
                                     </div>
                                 <?} else {
                                     if(empty($arItem["DISPLAY_PROPERTIES"]) && !empty($arItem["PROPERTIES"])){?>
                                     <div class="show_block_props">
-                                    <?foreach( $arItem["PROPERTIES"] as $arProp ){                          
+                                    <?foreach( $arItem["PROPERTIES"] as $arProp ){
                                         if($arProp['CODE'] == 'STRANA_PROIZVODITELYA'){
                                             if(!empty($arProp["VALUE"])){?>
                                                 <div class="show_block_props_element">
@@ -226,14 +230,14 @@
                                                     $explodeStr = explode('(',$arProp["VALUE"]);?>
                                                     <span class="element_value"><?=trim($explodeStr[0], " ")?></span>
                                                 <?} else {?>
-                                                    <span class="element_value"><?=$arProp["VALUE"]?></span> 
-                                                 <?}?>                                            
+                                                    <span class="element_value"><?=$arProp["VALUE"]?></span>
+                                                 <?}?>
                                                 </div>
                                             <?}
-                                        }                                     
+                                        }
                                     }?>
                                     </div>
-                                <?}                                    
+                                <?}
                                 }?>
 								<div class="cost prices clearfix">
 									<?if( $arItem["OFFERS"]){?>
@@ -342,7 +346,7 @@
 									<?endif;?>
 								<?}?>
 							</div>
-							<div class="footer_button">
+							<!-- <div class="footer_button"> -->
 								<div class="sku_props">
 									<?if($arItem["OFFERS"]){?>
 										<?if(!empty($arItem['OFFERS_PROP'])){?>
@@ -371,12 +375,12 @@
 												<input type="text" class="text" id="<? echo $arItemIDs["ALL_ITEM_IDS"]['QUANTITY']; ?>" name="<? echo $arParams["PRODUCT_QUANTITY_VARIABLE"]; ?>" value="<?=$arAddToBasketData["MIN_QUANTITY_BUY"]?>" />
 												<span class="plus" id="<? echo $arItemIDs["ALL_ITEM_IDS"]['QUANTITY_UP']; ?>" <?=($arAddToBasketData["MAX_QUANTITY_BUY"] ? "data-max='".$arAddToBasketData["MAX_QUANTITY_BUY"]."'" : "")?>>+</span>
 											</div>
-										<?endif;?>
-										<div id="<?=$arItemIDs["ALL_ITEM_IDS"]['BASKET_ACTIONS']; ?>" class="button_block <?=(($arAddToBasketData["ACTION"] == "ORDER"/*&& !$arItem["CAN_BUY"]*/)  || !$arAddToBasketData["CAN_BUY"] || !$arAddToBasketData["OPTIONS"]["USE_PRODUCT_QUANTITY_LIST"] || $arAddToBasketData["ACTION"] == "SUBSCRIBE" ? "wide" : "");?>">
-											<!--noindex-->
+											<div id="<?=$arItemIDs["ALL_ITEM_IDS"]['BASKET_ACTIONS']; ?>" class="button_block <?=(($arAddToBasketData["ACTION"] == "ORDER"/*&& !$arItem["CAN_BUY"]*/)  || !$arAddToBasketData["CAN_BUY"] || !$arAddToBasketData["OPTIONS"]["USE_PRODUCT_QUANTITY_LIST"] || $arAddToBasketData["ACTION"] == "SUBSCRIBE" ? "wide" : "");?>">
+												<!--noindex-->
 												<?=$arAddToBasketData["HTML"]?>
-											<!--/noindex-->
-										</div>
+												<!--/noindex-->
+											</div>
+										<?endif;?>
 									</div>
 									<?
 									if(isset($arItem['PRICE_MATRIX']) && $arItem['PRICE_MATRIX']) // USE_PRICE_COUNT
@@ -399,7 +403,7 @@
 										<div class="offer_buy_block buys_wrapp woffers">
 											<?
 											$arItem["OFFERS_MORE"] = "Y";
-											$arAddToBasketData = CNext::GetAddToBasketArray($arItem, $totalCount, $arParams["DEFAULT_COUNT"], $arParams["BASKET_URL"], false, $arItemIDs["ALL_ITEM_IDS"], 'small read_more1', $arParams);?>
+											$arAddToBasketData = CNext::GetAddToBasketArray($arItem, $totalCount+$regionalStoreQuantity, $arParams["DEFAULT_COUNT"], $arParams["BASKET_URL"], false, $arItemIDs["ALL_ITEM_IDS"], 'small read_more1', $arParams);?>
 											<!--noindex-->
 												<?=$arAddToBasketData["HTML"]?>
 											<!--/noindex-->
@@ -410,7 +414,7 @@
 										</div>
 									<?}?>
 								<?endif;?>
-							</div>
+							<!-- </div> -->
 						</div>
 					</div>
 				</div>

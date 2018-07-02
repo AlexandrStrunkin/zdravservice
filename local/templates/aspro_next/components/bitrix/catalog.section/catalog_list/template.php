@@ -28,8 +28,12 @@
 			$arItem["strMainID"] = $this->GetEditAreaId($arItem['ID']);
 			$arItemIDs=CNext::GetItemsIDs($arItem);
 
-			$totalCount = CNext::GetTotalCount($arItem, $arParams);
-			$arQuantityData = CNext::GetQuantityArray($totalCount, $arItemIDs["ALL_ITEM_IDS"]);
+			// $totalCount = CNext::GetTotalCount($arItem, $arParams);
+			// $arQuantityData = CNext::GetQuantityArray($totalCount, $arItemIDs["ALL_ITEM_IDS"]);
+
+			$totalCount = Webgk\Main\AsproExtend\ExtendClass::GetTotalCount($arItem, $arParams);
+			$regionalStoreQuantity = Webgk\Main\AsproExtend\ExtendClass::GetTotalCount($arItem, $arParams, true);
+			$arQuantityData = Webgk\Main\AsproExtend\ExtendClass::GetQuantityArray($totalCount, $arItemIDs["ALL_ITEM_IDS"], "N", $regionalStoreQuantity);
 
 			$item_id = $arItem["ID"];
 			$strMeasure = '';
@@ -39,7 +43,7 @@
 					$arMeasure = CCatalogMeasure::getList(array(), array("ID" => $arItem["CATALOG_MEASURE"]), false, false, array())->GetNext();
 					$strMeasure = $arMeasure["SYMBOL_RUS"];
 				}
-				$arAddToBasketData = CNext::GetAddToBasketArray($arItem, $totalCount, $arParams["DEFAULT_COUNT"], $arParams["BASKET_URL"], false, $arItemIDs["ALL_ITEM_IDS"], 'small', $arParams);
+				$arAddToBasketData = CNext::GetAddToBasketArray($arItem, $totalCount+$regionalStoreQuantity, $arParams["DEFAULT_COUNT"], $arParams["BASKET_URL"], false, $arItemIDs["ALL_ITEM_IDS"], 'small', $arParams);
 			}
 			elseif($arItem["OFFERS"]){
 				$strMeasure = $arItem["MIN_PRICE"]["CATALOG_MEASURE_NAME"];
@@ -112,7 +116,11 @@
 										);?>
 									</div>
 								<?endif;?>
-								<?=$arQuantityData["HTML"];?>
+								<?
+								if ($totalCount <= 0 && $regionalStoreQuantity <=0) {
+									echo $arQuantityData["HTML"];
+								}
+								?>
 								<div class="article_block">
 									<?if(isset($arItem['ARTICLE']) && $arItem['ARTICLE']['VALUE']){?>
 										<?=$arItem['ARTICLE']['NAME'];?>: <?=$arItem['ARTICLE']['VALUE'];?>
@@ -230,7 +238,7 @@
 									if($arDiscounts)
 										$arDiscount=current($arDiscounts);
 									if($arDiscount["ACTIVE_TO"]){?>
-										<div class="view_sale_block <?=($arQuantityData["HTML"] ? '' : 'wq');?>"">
+										<div class="view_sale_block <?=($arQuantityData["HTML"] ? '' : 'wq');?>">
 											<div class="count_d_block">
 												<span class="active_to hidden"><?=$arDiscount["ACTIVE_TO"];?></span>
 												<div class="title"><?=GetMessage("UNTIL_AKC");?></div>
@@ -359,12 +367,12 @@
 											<input type="text" class="text" id="<? echo $arItemIDs["ALL_ITEM_IDS"]['QUANTITY']; ?>" name="<? echo $arParams["PRODUCT_QUANTITY_VARIABLE"]; ?>" value="<?=$arAddToBasketData["MIN_QUANTITY_BUY"]?>" />
 											<span class="plus" id="<? echo $arItemIDs["ALL_ITEM_IDS"]['QUANTITY_UP']; ?>" <?=($arAddToBasketData["MAX_QUANTITY_BUY"] ? "data-max='".$arAddToBasketData["MAX_QUANTITY_BUY"]."'" : "")?>>+</span>
 										</div>
-									<?endif;?>
-									<div id="<?=$arItemIDs["ALL_ITEM_IDS"]['BASKET_ACTIONS']; ?>" class="button_block <?=(($arAddToBasketData["ACTION"] == "ORDER"/*&& !$arItem["CAN_BUY"]*/) || !$arAddToBasketData["CAN_BUY"] || !$arAddToBasketData["OPTIONS"]["USE_PRODUCT_QUANTITY_LIST"] || $arAddToBasketData["ACTION"] == "SUBSCRIBE" ? "wide" : "");?>">
-										<!--noindex-->
+										<div id="<?=$arItemIDs["ALL_ITEM_IDS"]['BASKET_ACTIONS']; ?>" class="button_block <?=(($arAddToBasketData["ACTION"] == "ORDER"/*&& !$arItem["CAN_BUY"]*/) || !$arAddToBasketData["CAN_BUY"] || !$arAddToBasketData["OPTIONS"]["USE_PRODUCT_QUANTITY_LIST"] || $arAddToBasketData["ACTION"] == "SUBSCRIBE" ? "wide" : "");?>">
+											<!--noindex-->
 											<?=$arAddToBasketData["HTML"]?>
-										<!--/noindex-->
-									</div>
+											<!--/noindex-->
+										</div>
+									<?endif;?>
 								</div>
 								<?
 								if(isset($arItem['PRICE_MATRIX']) && $arItem['PRICE_MATRIX']) // USE_PRICE_COUNT
@@ -388,7 +396,7 @@
 										<div class="counter_wrapp">
 										<?
 										$arItem["OFFERS_MORE"] = "Y";
-										$arAddToBasketData = CNext::GetAddToBasketArray($arItem, $totalCount, $arParams["DEFAULT_COUNT"], $arParams["BASKET_URL"], false, $arItemIDs["ALL_ITEM_IDS"], 'small read_more1', $arParams);?>
+										$arAddToBasketData = CNext::GetAddToBasketArray($arItem, $totalCount+$regionalStoreQuantity, $arParams["DEFAULT_COUNT"], $arParams["BASKET_URL"], false, $arItemIDs["ALL_ITEM_IDS"], 'small read_more1', $arParams);?>
 										<!--noindex-->
 											<?=$arAddToBasketData["HTML"]?>
 										<!--/noindex-->

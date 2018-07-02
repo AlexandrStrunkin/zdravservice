@@ -251,14 +251,7 @@ $().ready(function() {
 				$( "body" ).css('overflow','scroll');
 			});
 
-			// $(".modal_popup_window.overlay").on('click', function(e){
-			// 	e.preventDefault();
-			// 	// console.log("close2");
-			// 	$("#stores_map").hide(300).remove();
-			// 	$(".modal_popup_window.overlay").hide(300).remove();
-			// });
 		});
-
 
     });
 

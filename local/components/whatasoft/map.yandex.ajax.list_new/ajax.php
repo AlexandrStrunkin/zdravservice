@@ -26,8 +26,8 @@ if(!count($response["errors"])){
     }else{
         $response["errors"][] = "Wrong cache ID";
     }
-    \Webgk\Main\Tools::log($_POST["cache_id"],'',true);
-    \Webgk\Main\Tools::log($arParams,'',true);
+    // \Webgk\Main\Tools::log($_POST["cache_id"],'',true);
+    // \Webgk\Main\Tools::log($arParams,'',true);
 
 }
 
