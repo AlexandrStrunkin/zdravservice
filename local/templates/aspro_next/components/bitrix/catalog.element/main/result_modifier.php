@@ -1130,6 +1130,7 @@ $rsElement = CCatalogStore::GetList(
 		'!GPS_N' => [false, 0],
 		'!GPS_S' => [false, 0],
 		'>PRODUCT_AMOUNT' => 0,
+		'UF_REGION_STORAGE' => false,
 	],
 	false,
 	false,

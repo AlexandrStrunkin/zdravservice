@@ -5,8 +5,6 @@ $APPLICATION->SetTitle("Аптеки");
 
 <?
 global $arRegion;
-// \Webgk\Main\Tools::arshow($GLOBALS['arRegionLink']);
-
 global $arrMapFilter;
 
 $arrMapFilter = ["ID" => $arRegion['LIST_STORES']];

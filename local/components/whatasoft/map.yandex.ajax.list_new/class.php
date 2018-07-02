@@ -144,36 +144,6 @@ class MapYandexAjaxListComponent extends CBitrixComponent{
         }else{
             self::defaultTemplate();
         }
-
-        // if(is_numeric($this->arParams["IBLOCK_ID"])){
-        //   $rsIBlock = CIBlock::GetList(array(), array(
-        //     "ACTIVE" => "Y",
-        //     "ID" => $this->arParams["IBLOCK_ID"],
-        //   ));
-        // }else{
-        //   $rsIBlock = CIBlock::GetList(array(), array(
-        //     "ACTIVE" => "Y",
-        //     "CODE" => $this->arParams["IBLOCK_ID"],
-        //     "SITE_ID" => SITE_ID,
-        //   ));
-        // }
-
-        // $this->arResult = $rsIBlock->GetNext();
-        // if($this->arResult){
-        //   if($this->arParams["WAS_FROM_AJAX"] == "Y"){
-        //     return self::ajaxTemplate();
-        //   }else{
-        //     self::defaultTemplate();
-        //   }
-        // }else{
-        //   Iblock\Component\Tools::process404(
-        //     trim($this->arParams["MESSAGE_404"]) ?: GetMessage(self::$LANG_PREFIX ."SECTION_NA")
-        //     ,true
-        //     ,$this->arParams["SET_STATUS_404"] === "Y"
-        //     ,$this->arParams["SHOW_404"] === "Y"
-        //     ,$this->arParams["FILE_404"]
-        //   );
-        // }
     }
 
     private function prepareAjax(){
@@ -250,19 +220,7 @@ class MapYandexAjaxListComponent extends CBitrixComponent{
         $mapMarker = CMapMarker::GetInstance();
         $hlblock_markers_table = $mapMarker->GetHLBlockTableName();
         $this->arResult["SECTIONS"] = array();
-        //get all section icons
-        // if($this->arParams["USE_SECTION_ICON"] == "Y"){
-        //     $arSelect = array("ID", "IBLOCK_SECTION_ID", "DEPTH_LEVEL", "NAME", "UF_WAS_MAP_ICON");
-        //     $arFilter = array("IBLOCK_ID" => $this->arResult["ID"]);
-        //     $dbSections = CIBlockSection::GetList(array("left_margin" => "asc"), $arFilter, false, $arSelect);
-        //     while($arSection = $dbSections->GetNext()){
-        //         $arSection["ICON_DATA"] = $mapMarker->GetMarkerIconByID($arSection["UF_WAS_MAP_ICON"]);
-        //         if(!count($arSection["ICON_DATA"]) && $arSection["IBLOCK_SECTION_ID"]){
-        //             $arSection["ICON_DATA"] = $this->arResult["SECTIONS"][$arSection["IBLOCK_SECTION_ID"]]["ICON_DATA"];
-        //         }
-        //         $this->arResult["SECTIONS"][$arSection["ID"]] = $arSection;
-        //     }
-        // }
+
 
         $arPropsToSelect = array(0);
         $arIblockProps = array();
@@ -278,64 +236,19 @@ class MapYandexAjaxListComponent extends CBitrixComponent{
 
         //SELECT
         $arSelect = array(
-            // "ID",
-            // "IBLOCK_ID",
-            // "IBLOCK_SECTION_ID",
-            // "NAME",
-            // "ACTIVE_FROM",
-            // "TIMESTAMP_X",
-            // "DETAIL_PAGE_URL",
-            // "LIST_PAGE_URL",
-            // "DETAIL_TEXT",
-            // "DETAIL_TEXT_TYPE",
-            // "PREVIEW_TEXT",
-            // "PREVIEW_TEXT_TYPE",
-            // "PREVIEW_PICTURE",
             "ID","TITLE","PRODUCT_AMOUNT","GPS_N","GPS_S","PHONE","SCHEDULE","ADDRESS"
         );
         //WHERE
         $arFilter = array (
-            // "IBLOCK_ID" => $this->arResult["ID"],
             "ACTIVE" => "Y",
             "PRODUCT_ID" => $this->arParams["ELEMENT_ID"],
             '!GPS_N' => [false, 0],
             '!GPS_S' => [false, 0],
-            // "CHECK_PERMISSIONS" => $this->arParams['CHECK_PERMISSIONS'] ? "Y" : "N",
         );
 
-        // if($this->arParams["CHECK_DATES"]){
-        //     $arFilter["ACTIVE_DATE"] = "Y";
-        // }
 
-        // $this->arParams["PARENT_SECTION"] = CIBlockFindTools::GetSectionID(
-        //     $this->arParams["PARENT_SECTION"],
-        //     $this->arParams["PARENT_SECTION_CODE"],
-        //     array(
-        //         "GLOBAL_ACTIVE" => "Y",
-        //         "IBLOCK_ID" => $this->arResult["ID"],
-        //     )
-        // );
+        $this->arResult["SECTION"]= false;
 
-        // if($this->arParams["PARENT_SECTION"]>0){
-        //     $arFilter["SECTION_ID"] = $this->arParams["PARENT_SECTION"];
-        //     if($this->arParams["INCLUDE_SUBSECTIONS"]){
-        //         $arFilter["INCLUDE_SUBSECTIONS"] = "Y";
-        //     }
-        //
-        //     $this->arResult["SECTION"]= array("PATH" => array());
-        //     $rsPath = CIBlockSection::GetNavChain($this->arResult["ID"], $this->arParams["PARENT_SECTION"]);
-        //     $rsPath->SetUrlTemplates("", $this->arParams["SECTION_URL"], $this->arParams["IBLOCK_URL"]);
-        //     while($arPath = $rsPath->GetNext()){
-        //         $ipropValues = new Iblock\InheritedProperty\SectionValues($this->arParams["IBLOCK_ID"], $arPath["ID"]);
-        //         $arPath["IPROPERTY_VALUES"] = $ipropValues->getValues();
-        //         $this->arResult["SECTION"]["PATH"][] = $arPath;
-        //     }
-        //
-        //     $ipropValues = new Iblock\InheritedProperty\SectionValues($this->arResult["ID"], $this->arParams["PARENT_SECTION"]);
-        //     $this->arResult["IPROPERTY_VALUES"] = $ipropValues->getValues();
-        // }else{
-            $this->arResult["SECTION"]= false;
-        // }
         //ORDER BY
         $arSort = array(
             $this->arParams["SORT_BY1"]=>$this->arParams["SORT_ORDER1"],
@@ -378,15 +291,6 @@ class MapYandexAjaxListComponent extends CBitrixComponent{
           $arrFilter = array();
         }
 
-        // if(strlen($this->arParams["FILTER_NAME"])<=0 || !preg_match("/^[A-Za-z_][A-Za-z01-9_]*$/", $this->arParams["FILTER_NAME"])){
-        //     $arrFilter = array();
-        // }else{
-        //     $arrFilter = $GLOBALS[$this->arParams["FILTER_NAME"]];
-        //     if(!is_array($arrFilter))
-        //     $arrFilter = array();
-        // }
-
-
         if($this->arParams["REQUEST_LIMIT"] <= 0){
             $this->arParams["REQUEST_LIMIT"] = 1000;
         }
@@ -405,42 +309,24 @@ class MapYandexAjaxListComponent extends CBitrixComponent{
 
         $rsElement = CCatalogStore::GetList($arSort, array_merge($arFilter, $arrFilter), false, $arNavStartParams, $arSelect);
 
-        // $rsElement->SetUrlTemplates($this->arParams["DETAIL_URL"], "", $this->arParams["IBLOCK_URL"]);
-
         while($obElement = $rsElement->Fetch()){
             $pattern = '/^\[.+\]/';
             $replace_to = '';
             $obElement['TITLE'] = preg_replace($pattern, $replace_to, $obElement['TITLE']);
-            //$obElement['TITLE'] =
             $arItem = $obElement;
             $this->arResult["ITEMS"][$intKey] = $arItem;
             $this->arResult["ELEMENTS"][$intKey] = $arItem["ID"];
             $arElementLink[$arItem["ID"]] = &$this->arResult["ITEMS"][$intKey];
             $intKey++;
-                //\Webgk\Main\Tools::log($obElement,'',true);
-        }
 
-        //get properties for all elements
-        // $arElemFilter = array(
-        //     "ID" => $this->arResult["ELEMENTS"],
-        //     "IBLOCK_ID" => $this->arResult["ID"],
-        // );
-        // $arPropFilter = array(
-        //     "ID" => $arPropsToSelect,
-        // );
-        // CIBlockElement::GetPropertyValuesArray($arElementLink, $this->arResult["ID"], $arElemFilter, $arPropFilter);
+        }
 
         $arCacheIcons = array();
         $arElementLink = array();
         $arFileIds = array();
         foreach($this->arResult["ITEMS"] as $item_key => &$arItem){
 
-            // if ($arItem['PRODUCT_AMOUNT'] <= 0) {
-            //     continue;
-            // }
-
             $arItem["MAP"] = array();
-            // $arItem["MAP"]["COORDINATES"] = $arItem["PROPERTIES"][$this->arParams["MAP_BALLOON_COORDS"]]["VALUE"];
             $arItem["MAP"]["COORDINATES"] = $arItem['GPS_N'].','.$arItem['GPS_S'];
 
             if(strlen($arItem["MAP"]["COORDINATES"]) < 3){
@@ -468,19 +354,6 @@ class MapYandexAjaxListComponent extends CBitrixComponent{
                 }
             }
 
-            // foreach($map_prop2param as $key => $param){
-            //     $arItem["MAP"][$key] = "";
-            //     if(strpos($this->arParams[$param], "PROPERTY_") !== false){
-            //         $prop = str_replace("PROPERTY_", "", $this->arParams[$param]);
-            //         $arItem["MAP"][$key] = $arItem["PROPERTIES"][$prop]["VALUE"];
-            //         if($arItem["PROPERTIES"][$prop]["USER_TYPE"] == "HTML"){
-            //             $arItem["MAP"][$key] = $arItem["PROPERTIES"][$prop]["~VALUE"]["TEXT"];
-            //         }
-            //     }else if(strpos($this->arParams[$param], "FIELD_") !== false){
-            //         $field = str_replace("FIELD_", "", $this->arParams[$param]);
-            //         $arItem["MAP"][$key] = $arItem[$field];
-            //     }
-            // }
             $arItem["MAP"]["TITLE"] = $arItem['TITLE'];
             $arItem["MAP"]['HEADER'] = $arItem['TITLE'];
             $arItem["MAP"]["PROPERTIES"]['ADDRESS'] = $arItem['ADDRESS'];
@@ -496,60 +369,11 @@ class MapYandexAjaxListComponent extends CBitrixComponent{
                 "NAME" => "Время работы",
                 "VALUE" => $arItem['SCHEDULE']);
 
-            // if(!is_array($arItem["MAP"]["IMG"]) && intval($arItem["MAP"]["IMG"])){
-            //     $arFileIds[] = $arItem["MAP"]["IMG"];
-            //     if(!isset($arElementLink[$arItem["MAP"]["IMG"]])){
-            //         $arElementLink[$arItem["MAP"]["IMG"]] = array();
-            //     }
-            //     $arElementLink[$arItem["MAP"]["IMG"]][] = &$this->arResult["ITEMS"][$item_key];
-            // }
-
-            //get element icon
-            // $arItem["MAP"]["ICON_DATA"] = array();
-            // if($this->arParams["USE_ELEMENT_ICON"] == "Y"){
-            //     foreach($arItem["PROPERTIES"] as $arProperty){
-            //         if(in_array($arProperty["USER_TYPE"], array("directory", "directory_plus")) && $arProperty["USER_TYPE_SETTINGS"]["TABLE_NAME"] == $hlblock_markers_table){
-            //             if(strlen($arProperty["VALUE"])){
-            //                 $arItem["MAP"]["ICON_DATA"] = $mapMarker->GetMarkerIcon($arProperty["VALUE"]);
-            //             }
-            //             break;
-            //         }
-            //     }
-            // }
-            // if($this->arParams["USE_SECTION_ICON"] == "Y" && !count($arItem["MAP"]["ICON_DATA"]) && $arItem["IBLOCK_SECTION_ID"]){
-            //     $arItem["MAP"]["ICON_DATA"] = $this->arResult["SECTIONS"][$arItem["IBLOCK_SECTION_ID"]]["ICON_DATA"];
-            // }
-
             unset($arItem["PROPERTIES"]);
         }
         unset($arItem);
 
-        //get all image files
-        // if(count($arFileIds)){
-        //     $dbFiles = CFile::GetList(array(), array("@ID" => implode(",", $arFileIds)));
-        //     while($arFile = $dbFiles->GetNext()){
-        //         $arFile["SRC"] = CFile::GetFileSRC($arFile, false, false);
-        //         foreach($arElementLink[$arFile["ID"]] as &$arItem){
-        //             $arItem["MAP"]["IMG"] = $arFile;
-        //         }
-        //         unset($arItem);
-        //     }
-        // }
-
         foreach($this->arResult["ITEMS"] as $item_key => &$arItem){
-        //     $arItem["MAP"]["FOOTER"] = "";
-        //     if($arItem["MAP"]["LINK"] && $arItem["MAP"]["LINK"] != "#"){
-        //         $arItem["MAP"]["FOOTER"] = '<a href="'. $arItem["MAP"]["LINK"] .'"'. ($this->arParams["MAP_BALLOON_LINK_NEW_WINDOW"] == "Y" ? ' target="_blank"' : '') .'>'. htmlspecialcharsbx($this->arParams["MAP_BALLOON_LINK_TEXT"]) .'</a>';
-        //     }
-        //
-        //     $arItem["MAP"]["CONTENT"] = "";
-        //     if(is_array($arItem["MAP"]["IMG"]) && isset($arItem["MAP"]["IMG"]["SRC"])){
-        //         $arItem["MAP"]["CONTENT"] .= '<div class="was-map-balloon-inner-img"><img src="'. $arItem["MAP"]["IMG"]["SRC"] .'" alt="" /></div>';
-        //     }
-        //     if(strlen($arItem["MAP"]["TEXT"])){
-        //         $arItem["MAP"]["CONTENT"] .= '<div class="was-map-balloon-inner-text">'. $arItem["MAP"]["TEXT"] .'</div>';
-        //     }
-        //
             $arItem["MAP"]["SHOW_BALLOON"] = (strlen($arItem["MAP"]["HEADER"]) || strlen($arItem["MAP"]["CONTENT"]) || (strlen($arItem["MAP"]["FOOTER"])));
         }
         unset($arItem);
@@ -561,8 +385,6 @@ class MapYandexAjaxListComponent extends CBitrixComponent{
 
         $this->arResult["RESPONSE"] = $response;
         $this->includeComponentTemplate("ajax");
-
-// Tools::log($this->arResult["RESPONSE"]);
 
         return $this->arResult["RESPONSE"];
     }
