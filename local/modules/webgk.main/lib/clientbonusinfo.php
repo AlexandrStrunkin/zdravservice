@@ -94,11 +94,12 @@ class ClientBonusInfo {
                         $updUserFields["PERSONAL_GENDER"] = $genderSymbol;    
                    }
                    if (!empty($updUserFields)) {
+                        unset($_SESSION["SERVICE_DATA"]["UPDATE_BONUS"]);
                        $userObj = new \CUser;
                        $userObj -> Update($userId, $updUserFields);
                    }
-                   unset($_SESSION["SERVICE_DATA"]["UPDATE_BONUS"]);
                }
+                unset($_SESSION["SERVICE_DATA"]["UPDATE_BONUS"]);
            }
     }
     $resultId = $result->getId();

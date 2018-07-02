@@ -64,7 +64,6 @@ $(document).ready(function(){
                 ({
                     submitHandler: function( form ) {
                         var eventdata = {type: 'form_submit', form: $("form#registraion-page-form"), form_name: 'REGISTER'};
-                        console.log(eventdata);
                         BX.onCustomEvent('onSubmitForm', [eventdata]);
                     }
                 });

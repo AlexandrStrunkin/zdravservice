@@ -49,3 +49,9 @@
         padding: 29px 35px 35px;
     }
 }
+.form-control input {
+    background: inherit !important;
+}
+.form-control input[disabled] {
+    background: #f7f7f7 !important;    
+}
