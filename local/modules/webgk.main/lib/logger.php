@@ -1,6 +1,6 @@
 <?php
 
-namespace Aero\Tools\Soap;
+namespace Webgk\Main;
 
 use Webgk\Main\Hlblock\Prototype;
 use Webgk\Main\Timer;
