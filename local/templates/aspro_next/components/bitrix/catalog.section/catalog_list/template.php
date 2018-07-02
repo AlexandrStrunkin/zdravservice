@@ -28,9 +28,6 @@
 			$arItem["strMainID"] = $this->GetEditAreaId($arItem['ID']);
 			$arItemIDs=CNext::GetItemsIDs($arItem);
 
-			// $totalCount = CNext::GetTotalCount($arItem, $arParams);
-			// $arQuantityData = CNext::GetQuantityArray($totalCount, $arItemIDs["ALL_ITEM_IDS"]);
-
 			$totalCount = Webgk\Main\AsproExtend\ExtendClass::GetTotalCount($arItem, $arParams);
 			$regionalStoreQuantity = Webgk\Main\AsproExtend\ExtendClass::GetTotalCount($arItem, $arParams, true);
 			$arQuantityData = Webgk\Main\AsproExtend\ExtendClass::GetQuantityArray($totalCount, $arItemIDs["ALL_ITEM_IDS"], "N", $regionalStoreQuantity);

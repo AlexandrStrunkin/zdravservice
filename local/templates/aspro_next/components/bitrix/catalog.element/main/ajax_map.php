@@ -1,6 +1,5 @@
 <?require_once($_SERVER['DOCUMENT_ROOT'] . "/bitrix/modules/main/include/prolog_before.php");
 
-\Webgk\Main\Tools::log($_POST);
 $id = $_POST['id'];
 $arrMapFilter = $_POST['stores'];
 $arrMapFilter['>PRODUCT_AMOUNT'] = 0;

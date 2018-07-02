@@ -22,10 +22,6 @@
 				$this->AddEditAction($arItem['ID'], $arItem['EDIT_LINK'], CIBlock::GetArrayByID($arParams["IBLOCK_ID"], "ELEMENT_EDIT"));
 				$this->AddDeleteAction($arItem['ID'], $arItem['DELETE_LINK'], CIBlock::GetArrayByID($arParams["IBLOCK_ID"], "ELEMENT_DELETE"), array("CONFIRM" => GetMessage('CT_BCS_ELEMENT_DELETE_CONFIRM')));
 
-				// $totalCount = CNext::GetTotalCount($arItem, $arParams);
-				//
-				// $arQuantityData = CNext::GetQuantityArray($totalCount);
-
 				$totalCount = Webgk\Main\AsproExtend\ExtendClass::GetTotalCount($arItem, $arParams);
 				$regionalStoreQuantity = Webgk\Main\AsproExtend\ExtendClass::GetTotalCount($arItem, $arParams, true);
 				$arQuantityData = Webgk\Main\AsproExtend\ExtendClass::GetQuantityArray($totalCount, [], "N", $regionalStoreQuantity);

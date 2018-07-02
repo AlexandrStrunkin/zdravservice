@@ -588,9 +588,6 @@ setViewedProduct(<?=$arResult['ID']?>, <?=CUtil::PhpToJSObject($arViewedData, fa
                         <?endif;?>
                     <?}?>
                     <div class="quantity_block_wrapper">
-
-                        <?/*<a id="callstoresmap" style="display:block; color:red; font-size:15px; cursor:pointer"> ryjgrf </a>*/?>
-                        <!-- <a href="#" class="jqModal" style="display:block; color:red; font-size:15px;">view</a> -->
                         <?if($useStores){?>
                             <div class="p_block">
                         <?}?>
@@ -1282,7 +1279,7 @@ setViewedProduct(<?=$arResult['ID']?>, <?=CUtil::PhpToJSObject($arViewedData, fa
                             if(preg_match($matchContraindications, $detailText, $getContraindications )){
                                 $detailText = preg_replace('/<h3>'.$tabTitleContra.'<\/h3><p>.*?<\/p>/s', '', $detailText);
                             }
-                            ?>                         
+                            ?>
                             <div class="detail_text"><?=$detailText?></div>
                         <?endif;?>
                         <?if($showProps && $arParams["PROPERTIES_DISPLAY_LOCATION"] != "TAB"):?>
@@ -1613,7 +1610,7 @@ setViewedProduct(<?=$arResult['ID']?>, <?=CUtil::PhpToJSObject($arViewedData, fa
                             <?
                             $tabTitleInst = GetMessage('INSTRUCTIONS_FOR_USE_TITLE');
                             $matchInstructions = '/<h3>'.$tabTitleInst.'<\/h3><p>.*?<\/p>/s';
-                            preg_match($matchInstructions, $arResult["DETAIL_TEXT"], $getInstructions );                         
+                            preg_match($matchInstructions, $arResult["DETAIL_TEXT"], $getInstructions );
                             ?>
                             <div class="detail_text"><?=$getInstructions[0]?></div>
                         <?endif;?>
@@ -1628,7 +1625,7 @@ setViewedProduct(<?=$arResult['ID']?>, <?=CUtil::PhpToJSObject($arViewedData, fa
                             <?
                             $tabTitleContra = GetMessage('CONTRAINDICATIONS');
                             $matchContraindications = '/<h3>'.$tabTitleContra.'<\/h3><p>.*?<\/p>/s';
-                            preg_match($matchContraindications, $arResult["DETAIL_TEXT"], $getContraindications );                         
+                            preg_match($matchContraindications, $arResult["DETAIL_TEXT"], $getContraindications );
                             ?>
                             <div class="detail_text"><?=$getContraindications[0]?></div>
                         <?endif;?>
