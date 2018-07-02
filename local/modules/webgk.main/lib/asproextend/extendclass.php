@@ -49,7 +49,7 @@ Class Extendclass{
 		$totalAmount = $totalText = $totalHTML = $totalHTMLs = '';
 
         if ($regionalStoreQuantity <= 0 && $totalCount <= 0) {
-            $arQuantityOptions["EXPRESSION_FOR_NOTEXISTS"] = "Нет в наличие";
+            $arQuantityOptions["EXPRESSION_FOR_NOTEXISTS"] = "Нет в наличии";
         }
 
 		if($arQuantityRights["SHOW_QUANTITY"]){
