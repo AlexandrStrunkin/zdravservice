@@ -12,7 +12,7 @@ if ($_REQUEST["phoneNumber"] && check_bitrix_sessid()) {
         $login = \COption::GetOptionString("grain.customsettings", "sms_sending_login");
         $password = \COption::GetOptionString("grain.customsettings", "sms_sending_password");
         $confCode = rand(1000, 9999);
-        $message = "Код подтверждения: ".$confCode;
+        $message = iconv('UTF-8', 'Windows-1251', "РљРѕРґ РїРѕРґС‚РІРµСЂР¶РґРµРЅРёСЏ: ".$confCode);
         if ($url && $login && $password) {
             $hlblock = Prototype::getInstance("SMSConfirmationCodes");
 
