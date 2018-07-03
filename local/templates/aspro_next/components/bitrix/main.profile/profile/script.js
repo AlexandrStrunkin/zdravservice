@@ -2,14 +2,15 @@ $(document).ready(function(){
     $('a.cancel').click(function(e){
         e.preventDefault()
         document.form1.reset();
-    });
+    });                      
+    // отображение поп-апа смены телефона
     $(".changePhoneNumberButton").on("click", function(e){
         e.preventDefault();
         $(".jqmOverlay").show();
         $(".popup").css("top", (window.innerHeight - $(".popup").height()) / 2);
         $(".popup").show();
     });
-    
+    // отправка SMS с кодом по указанному номеру телефона
         $(".sendConfirmSMS, .resendingSmsButton a").on("click", function(e){
         e.preventDefault();
         if ($(".phoneNumber").val() != "") {

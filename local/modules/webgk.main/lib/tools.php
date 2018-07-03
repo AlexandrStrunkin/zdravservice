@@ -2,6 +2,8 @@
 
 namespace Webgk\Main;
 
+use \Webgk\Main\Iblock\Prototype as IblockPrototype;
+
 Class Tools {
 
     public static function arshow($array, $adminCheck = false, $die = false){
@@ -292,32 +294,73 @@ Class Tools {
         return $result;           
                 
     }
-    
+    /**
+    * добавление флага в сессию для подключения к веб-сервису по получению пола клиента и даты рождения
+    * 
+    * @param mixed $arFields
+    */
     public static function updatingBonus(&$arFields) {
-        if (isset($arFields["PERSONAL_PHONE"])) {
+        if (isset($arFields["PERSONAL_PHONE"]) && !isset($_SESSION["UPDATE_FROM_QUESTIONNAIRE"])) {
             $_SESSION["SERVICE_DATA"]["UPDATE_BONUS"] = "Y";
         }    
     }
-
+    /**
+    * форматирование номера телефона при добавлении в свойство инфоблока "Анкета"
+    * 
+    * @param mixed $arFields
+    */
     public function fixPhoneNumberForIBlock(&$arFields) {
-        if ($arFields["IBLOCK_ID"] == 28) {
-            if ($arFields["PROPERTY_VALUES"][358]) {
-                $arFields["PROPERTY_VALUES"][358] = \Webgk\Main\Tools::formatUserPhone($arFields["PROPERTY_VALUES"][358]);
+        $iblockObj = IblockPrototype::getInstanceByCode('questionnaire');
+        $questionnaireIblockId = $iblockObj->getId();
+        if ($arFields["IBLOCK_ID"] == $questionnaireIblockId) {
+            $propertyList = $iblockObj->getProperties(
+                array(
+                    "filter" => array(
+                        "IBLOCK_ID" => $questionnaireIblockId,
+                        "CODE" => "PHONE_NUMBER"
+                    )
+                )
+            );
+            $phoneNumberPropId = "";
+            foreach ($propertyList as $propertyInfo) {
+                $phoneNumberPropId = $propertyInfo['ID'];    
+            }
+            if ($phoneNumberPropId) {
+                if ($arFields["PROPERTY_VALUES"][$phoneNumberPropId]) {
+                    $arFields["PROPERTY_VALUES"][$phoneNumberPropId] = \Webgk\Main\Tools::formatUserPhone($arFields["PROPERTY_VALUES"][$phoneNumberPropId]);
+                }
             }
         }    
     }
-    
+    /**
+    * обновление полей профиля пользователя после применения формы заполнения анкеты
+    * 
+    * @param mixed $arFields
+    */
     public function updatingUserFieldsFromQuestionnaire (&$arFields) {
-        if ($arFields["IBLOCK_ID"] == 28) {
+        $iblockObj = IblockPrototype::getInstanceByCode('questionnaire');
+        $questionnaireIblockId = $iblockObj->getId();
+        if ($arFields["IBLOCK_ID"] == $questionnaireIblockId) {
+            $propertyList = $iblockObj->getProperties(
+                array(
+                    "filter" => array(
+                        "IBLOCK_ID" => $questionnaireIblockId
+                    )
+                )
+            );
+            $propsArr = array();
+            foreach ($propertyList as $propertyInfo) {
+                $propsArr[$propertyInfo["CODE"]] = $propertyInfo['ID'];    
+            }
             $maleEnumId = \COption::GetOptionString("grain.customsettings", "male_gender_property_enum"); 
             $femaleEnumId = \COption::GetOptionString("grain.customsettings", "female_gender_property_enum");
             $userId = "";
-            if ($arFields["PROPERTY_VALUES"][358]) {
-                $userList = \CUser::GetList(($by = "timestamp_x"), ($order = "desc"), array("PERSONAL_PHONE" => $arFields["PROPERTY_VALUES"][358]));
+            if ($arFields["PROPERTY_VALUES"][$propsArr["PHONE_NUMBER"]]) {
+                $userList = \CUser::GetList(($by = "timestamp_x"), ($order = "desc"), array("PERSONAL_PHONE" => $arFields["PROPERTY_VALUES"][$propsArr["PHONE_NUMBER"]]));
                 while ($arUsers = $userList -> Fetch()) {
                     $userId = $arUsers["ID"];
                 }
-                $updatingUserFilter["PERSONAL_PHONE"] = $arFields["PROPERTY_VALUES"][358];
+                $updatingUserFilter["PERSONAL_PHONE"] = $arFields["PROPERTY_VALUES"][$propsArr["PHONE_NUMBER"]];
             }
             if ($arFields["NAME"]) {
                 $explodedNameArr = explode(" ", $arFields["NAME"]);
@@ -331,23 +374,25 @@ Class Tools {
                     $updatingUserFilter["SECOND_NAME"] = $explodedNameArr[2];
                 }
             }
-            if ($arFields["PROPERTY_VALUES"][359]) {
-                $updatingUserFilter["EMAIL"] = $arFields["PROPERTY_VALUES"][359];
+            if ($arFields["PROPERTY_VALUES"][$propsArr["EMAIL"]]) {
+                $updatingUserFilter["EMAIL"] = $arFields["PROPERTY_VALUES"][$propsArr["EMAIL"]];
             }
-            if ($arFields["PROPERTY_VALUES"][360]) {
-                if ($arFields["PROPERTY_VALUES"][360] == $maleEnumId) {
+            if ($arFields["PROPERTY_VALUES"][$propsArr["GENDER"]]) {
+                if ($arFields["PROPERTY_VALUES"][$propsArr["GENDER"]] == $maleEnumId) {
                     $updatingUserFilter["PERSONAL_GENDER"] = "M";
-                } else if ($arFields["PROPERTY_VALUES"][360] == $femaleEnumId) {
+                } else if ($arFields["PROPERTY_VALUES"][$propsArr["GENDER"]] == $femaleEnumId) {
                     $updatingUserFilter["PERSONAL_GENDER"] = "F";
                 }
             }
-            if ($arFields["PROPERTY_VALUES"][361]["VALUE"]) {
-                $updatingUserFilter["PERSONAL_BIRTHDAY"] = $arFields["PROPERTY_VALUES"][361]["VALUE"];
+            if ($arFields["PROPERTY_VALUES"][$propsArr["BIRTHDAY"]]["VALUE"]) {
+                $updatingUserFilter["PERSONAL_BIRTHDAY"] = date("d.m.Y", strtotime($arFields["PROPERTY_VALUES"][$propsArr["BIRTHDAY"]]["VALUE"]));
             }
-            if (!empty($updatingUserFilter)) {
+            if (!empty($updatingUserFilter) && !empty($userId)) {
+                unset($_SESSION["SERVICE_DATA"]["UPDATE_BONUS"]);
+                $_SESSION["UPDATE_FROM_QUESTIONNAIRE"] = "Y";
                 $userObj = new \CUser;
                 $updUser = $userObj->Update((int)$userId, $updatingUserFilter);
-                \Webgk\Main\Tools::Log($userObj->LAST_ERROR);
+                unset($_SESSION["SERVICE_DATA"]["UPDATE_BONUS"]);
             }
         }
     }  
