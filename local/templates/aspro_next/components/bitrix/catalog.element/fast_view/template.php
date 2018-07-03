@@ -107,7 +107,8 @@ if($arResult["OFFERS"]){
 		$arMeasure = CCatalogMeasure::getList(array(), array("ID"=>$arResult["CATALOG_MEASURE"]), false, false, array())->GetNext();
 		$strMeasure=$arMeasure["SYMBOL_RUS"];
 	}
-	$arAddToBasketData = CNext::GetAddToBasketArray($arResult, $totalCount, $arParams["DEFAULT_COUNT"], $arParams["BASKET_URL"], false, $arItemIDs["ALL_ITEM_IDS"], 'big_btn w_icons', $arParams);
+	// $arAddToBasketData = CNext::GetAddToBasketArray($arResult, $totalCount+$regionalStoreQuantity, $arParams["DEFAULT_COUNT"], $arParams["BASKET_URL"], false, $arItemIDs["ALL_ITEM_IDS"], 'big_btn w_icons', $arParams);
+	$arAddToBasketData = Webgk\Main\AsproExtend\ExtendClass::GetAddToBasketArray($arResult, $totalCount+$regionalStoreQuantity, $arParams["DEFAULT_COUNT"], $arParams["BASKET_URL"], false, $arItemIDs["ALL_ITEM_IDS"], 'big_btn w_icons', $arParams);
 }
 $arOfferProps = implode(';', $arParams['OFFERS_CART_PROPERTIES']);
 
