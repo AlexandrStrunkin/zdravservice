@@ -3,7 +3,8 @@
     use Webgk\Main\Import;
     use Webgk\Main\Tools;
     use Webgk\Main\CSV\CSVToArray;
-    use Webgk\Main\Iblock\Prototype;
+    use Webgk\Main\Hlblock\Prototype;
+    use Webgk\Main\Logger;
 
     /**
     * класс по работе с нормированными товарами, генерация массива из CSV и работа с HL-блоком
@@ -22,25 +23,36 @@
         */
         public static function parceNormData($file) {
 
+            $result = array();
+            $result["update"] = 0;
+            $result["add"] = 0;
+            $result["count_errors"] = 0;
+            
             if (empty($file) || !\CModule::IncludeModule("iblock")) {
-                return false;
+                $result["error"] .= "Файл не найден; \n";
+                $result["count_errors"]++;
+                return $result;
             }   
 
             $fullFilePath = self::NORM_DIR . $file; //полный путь до файла                 
 
             //проверяем, не обрабатывается ли файл в данный момент
             if (Import::checkFileProcessing($fullFilePath)) {
-                return false;
+                $result["error"] .= "Файл уже обрабатывается; \n";
+                $result["count_errors"]++;
+                return $result;
             } else {
                 Import::addFileProcessing($fullFilePath); 
-            }   
-
-            $result = array();
-            $result["update"] = 0;
-            $result["add"] = 0;
+            }      
 
             //получаем данные из файла
             $fileDataTmp = CSVToArray::CSVParse($fullFilePath, array("item_name", "item_quantity"));
+            
+            if (empty($fileDataTmp)) {
+                $result["error"] .= "Пустой файл; \n";
+                $result["count_errors"]++;
+                return $result;    
+            }
 
             foreach ($fileDataTmp as $importedItemInfo) {
                 if (!empty($importedItemInfo["item_name"])) {
@@ -88,30 +100,40 @@
         * агент для обновления акций
         * 
         */
-        function normUpdateAgent() {    
+        function normUpdateAgent() {   
 
             $filePath = self::NORM_DIR . self::FILE_NAME;
             $fileFullPath = $_SERVER["DOCUMENT_ROOT"] . $filePath;
             if (!file_exists($fileFullPath)) {
-                return false;
+                return "\\Webgk\\Main\\normItems::normUpdateAgent();";
             }  
+            
+            $logger = new Logger("Logger");
+            $logger->StartLog(__FUNCTION__);
 
-            //преебираем файлы в директории с файлами выгрузки акций и берем в обработку тот, который еще не обрабатывается
+            //преебираем файл в директории с файлами выгрузки 
 
             if (!Import::checkFileProcessing($filePath)) {
                 $result = self::parceNormData(self::FILE_NAME);
                 $result["file"] = $filePath;
+                
+                $logger->count = $result["update"] + $result["add"];
 
                 //если нет ошибок, удаляем файл после обработки
                 if (!$result["error"]) {
                     unlink($fileFullPath);
+                } else {
+                    $logger->status = "fail";
+                    $logger->count_errors = $result["count_errors"];    
                 }                   
 
             }    
 
-            //TODO log
+            $logger->comment .= print_r($result, true);
 
-            return "\\Webgk\\Main\\normItems::normUpdateAgent();";            
+            $logger->EndLog();
+
+            return "\\Webgk\\Main\\normItems::normUpdateAgent();";             
 
         }
 

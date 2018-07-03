@@ -12,7 +12,7 @@ if ($_REQUEST["phoneNumber"] && check_bitrix_sessid()) {
         $login = \COption::GetOptionString("grain.customsettings", "sms_sending_login");
         $password = \COption::GetOptionString("grain.customsettings", "sms_sending_password");
         $confCode = rand(1000, 9999);
-        $message = "��� �������������: ".$confCode;
+        $message = "Код подтверждения: ".$confCode;
         if ($url && $login && $password) {
             $hlblock = Prototype::getInstance("SMSConfirmationCodes");
 
@@ -42,9 +42,9 @@ if ($_REQUEST["phoneNumber"] && check_bitrix_sessid()) {
                 $curl = curl_init();
                 $paramArr = ['login' => $login, 'psw' => $password, 'phones' => $phoneNumber, 'mes' => $message, 'sender' => 'ZdesApteka'];
                 curl_setopt_array($curl, [
-                        CURLOPT_RETURNTRANSFER => 1, //1 - возврат результата в виде строки, 0 - вывод результата в браузер
-                        CURLOPT_URL => $url, //урл для запроса
-                        CURLOPT_POST => 1, //метод POST
+                        CURLOPT_RETURNTRANSFER => 1, 
+                        CURLOPT_URL => $url, 
+                        CURLOPT_POST => 1, 
                         CURLOPT_POSTFIELDS => $paramArr
                     ]);
                 $res = curl_exec($curl);

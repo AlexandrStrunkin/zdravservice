@@ -9,6 +9,8 @@
     * класс для работы с функциями импорта
     */
     Class import {
+        
+        const HL_BLOCK_ID = "FileProcessing";
 
         /**
         * проверка файла. Если файл в данный момент обрабатывается каким-то процессом, возвращает Y, иначе N (ХЛ блок FileProcessing)
@@ -19,7 +21,7 @@
 
             $result = false;
 
-            $hlblock = Prototype::getInstance("FileProcessing");
+            $hlblock = Prototype::getInstance(self::HL_BLOCK_ID);
             $resultData = $hlblock->getElements(array(
                 "select" => array("*"),
                 "filter" => array("UF_FILE_PATH" => $file),
@@ -46,7 +48,7 @@
             $checkFile = self::checkFileProcessing($file);
 
             if (!$checkFile) {
-                $hlblock = Prototype::getInstance("FileProcessing");
+                $hlblock = Prototype::getInstance(self::HL_BLOCK_ID);
                 $result = $hlblock->addData(array(
                     'UF_FILE_PATH' => $file,
                 ));
@@ -71,7 +73,7 @@
             
             $checkFile = self::checkFileProcessing($file);
             if ($checkFile) {
-                $hlblock = Prototype::getInstance("FileProcessing");
+                $hlblock = Prototype::getInstance(self::HL_BLOCK_ID);
                 $hlblock->deleteData($checkFile);                                          
             }   
         }

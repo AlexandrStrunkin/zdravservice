@@ -59,10 +59,18 @@ class Logger
      * @var int
      */
     public $count_errors;
+    
+    /**
+    * статус
+    * 
+    * @var string
+    */
+    public $status;
 
     public function __construct($hlBlock_code)
     {
         $this->HLBlock = Prototype::getInstance($hlBlock_code);
+        $this->status = "OK";
     }
 
     /**
@@ -115,24 +123,8 @@ class Logger
         $arLog["UF_COMMENT"] = $this->comment;
         $arLog["UF_COUNT"] = $this->count;
         $arLog["UF_COUNT_ERROR"] = $this->count_errors;
+        $arLog["UF_STATUS"] = $this->status; 
 
-        if (stripos($arLog["UF_COMMENT"], 'Ошибка:') === false) {
-            if ($this->count == 0 || $this->count == $this->count_errors) {
-                $arLog["UF_STATUS"] = "Fail";
-                $arLog["UF_COMMENT"] .= " Нет обработаных элементов";
-            } else {
-                if ($this->count_errors > 0) {
-                    $arLog["UF_STATUS"] = "Завершено с ошибками";
-                } else {
-                    $arLog["UF_STATUS"] = "OK";
-                }
-            }
-
-        } else {
-            $arLog["UF_STATUS"] = "Fail";
-        }
-
-        //$logHl= SoapInfo::getInstance();
         $this->HLBlock->addData($arLog);
     }
 }

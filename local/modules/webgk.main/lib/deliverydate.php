@@ -4,7 +4,8 @@
     use Webgk\Main\Import;
     use Webgk\Main\Tools;
     use Webgk\Main\CSV\CSVToArray;
-    use Webgk\Main\Iblock\Prototype;
+    use Webgk\Main\Hlblock\Prototype;
+    use Webgk\Main\Logger;
 
     /**
     * класс для работы с файлом импорта дат доставки
@@ -23,25 +24,36 @@
         */
         public static function parceDeliveryData($file) {
 
+            $result = array();
+            $result["update"] = 0;
+            $result["add"] = 0;
+            $result["count_errors"] = 0;
+
             if (empty($file) || !\CModule::IncludeModule("iblock")) {
-                return false;
+                $result["error"] .= "Файл не найден; \n";
+                $result["count_errors"]++;
+                return $result;
             }   
 
             $fullFilePath = self::DELIVERY_DIR . $file; //полный путь до файла                 
 
             //проверяем, не обрабатывается ли файл в данный момент
             if (Import::checkFileProcessing($fullFilePath)) {
-                return false;
+                $result["error"] .= "Файл уже обрабатывается; \n";
+                $result["count_errors"]++;
+                return $result;
             } else {
                 Import::addFileProcessing($fullFilePath); 
-            }   
-
-            $result = array();
-            $result["update"] = 0;
-            $result["add"] = 0;
+            }                 
 
             //получаем данные из файла
-            $fileDataTmp = CSVToArray::CSVParse($fullFilePath, array("item_name", "delivery_date"));
+            $fileDataTmp = CSVToArray::CSVParse($fullFilePath, array("item_name", "delivery_date"));        
+
+            if (empty($fileDataTmp)) {
+                $result["error"] .= "Пустой файл; \n";
+                $result["count_errors"]++;
+                return $result;    
+            }
 
             //обрабатываем данные
             foreach ($fileDataTmp as $importedItemInfo) {
@@ -60,7 +72,7 @@
                                 'UF_ITEM_ID' => $importedItemInfo["item_name"],
                                 'UF_DELIVERY_DATE' => $formattedDate,
                             ));
-                            
+
                             if ($res->getId()) {
                                 $result["update"]++;    
                             }
@@ -71,15 +83,13 @@
                             'UF_ITEM_ID' => $importedItemInfo["item_name"],
                             'UF_DELIVERY_DATE' => $formattedDate,
                         ));
-                        
+
                         if ($res->getId()) {
                             $result["add"]++;    
                         }
                     }
                 }  
-            }
-            
-             //TODO log
+            }                 
 
             //удаляем файл из таблицы
             Import::deleteFileProcessing($fullFilePath);
@@ -87,7 +97,7 @@
             return $result;        
 
         }                          
-       
+
 
 
         /**
@@ -99,23 +109,33 @@
             $filePath = self::DELIVERY_DIR . self::FILE_NAME;
             $fileFullPath = $_SERVER["DOCUMENT_ROOT"] . $filePath;
             if (!file_exists($fileFullPath)) {
-                return false;
-            }  
+                return "\\Webgk\\Main\\DeliveryDate::deliveryUpdateAgent();";
+            } 
 
-            //преебираем файлы в директории с файлами выгрузки акций и берем в обработку тот, который еще не обрабатывается
+            $logger = new Logger("Logger");
+            $logger->StartLog(__FUNCTION__); 
+
+            //проверяем файл выгрузки
 
             if (!Import::checkFileProcessing($filePath)) {
                 $result = self::parceDeliveryData(self::FILE_NAME);
                 $result["file"] = $filePath;
 
+                $logger->count = $result["update"] + $result["add"];
+
                 //если нет ошибок, удаляем файл после обработки
                 if (!$result["error"]) {
                     unlink($fileFullPath);
-                }                   
+                } else {
+                    $logger->status = "fail";
+                    $logger->count_errors = $result["count_errors"];    
+                }                  
 
             }    
 
-            //TODO log
+            $logger->comment .= print_r($result, true);
+
+            $logger->EndLog();
 
             return "\\Webgk\\Main\\DeliveryDate::deliveryUpdateAgent();";            
 
