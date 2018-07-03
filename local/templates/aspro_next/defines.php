@@ -34,6 +34,8 @@ if($isIndex)
 if($arRegion && $arTheme['USE_REGIONALITY']['DEPENDENT_PARAMS']['REGIONALITY_FILTER_ITEM']['VALUE'] == 'Y')
 {
 	$GLOBALS['arRegionLink'] = array('PROPERTY_LINK_REGION' => $arRegion['ID']);
+	$GLOBALS['arRegionSLink'] = array('PROPERTY_LINK_REGION' => $arRegion['IBLOCK_SECTION_ID']);
+
 	if($isIndex)
 	{
 		$GLOBALS['arRegionLinkFront']['PROPERTY_LINK_REGION'] = $arRegion['ID'];

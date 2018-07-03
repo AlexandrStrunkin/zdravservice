@@ -40,7 +40,8 @@
 					$arMeasure = CCatalogMeasure::getList(array(), array("ID" => $arItem["CATALOG_MEASURE"]), false, false, array())->GetNext();
 					$strMeasure = $arMeasure["SYMBOL_RUS"];
 				}
-				$arAddToBasketData = CNext::GetAddToBasketArray($arItem, $totalCount+$regionalStoreQuantity, $arParams["DEFAULT_COUNT"], $arParams["BASKET_URL"], false, $arItemIDs["ALL_ITEM_IDS"], 'small', $arParams);
+				// $arAddToBasketData = CNext::GetAddToBasketArray($arItem, $totalCount+$regionalStoreQuantity, $arParams["DEFAULT_COUNT"], $arParams["BASKET_URL"], false, $arItemIDs["ALL_ITEM_IDS"], 'small', $arParams);
+				$arAddToBasketData = Webgk\Main\AsproExtend\ExtendClass::GetAddToBasketArray($arItem, $totalCount+$regionalStoreQuantity, $arParams["DEFAULT_COUNT"], $arParams["BASKET_URL"], false, $arItemIDs["ALL_ITEM_IDS"], 'small', $arParams);
 			}
 			elseif($arItem["OFFERS"]){
 				$strMeasure = $arItem["MIN_PRICE"]["CATALOG_MEASURE_NAME"];
