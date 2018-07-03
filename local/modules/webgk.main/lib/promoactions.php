@@ -156,14 +156,14 @@
                 $result = self::parcePromoData(self::FILE_NAME);
                 $result["file"] = $filePath;
                 
-                $logger->count = $result["delete"] + $result["update"] + $result["add"];                 
+                $logger->count = $result["delete"] + $result["update"] + $result["add"];
+                $logger->count_errors = $result["count_errors"];                 
 
                 //если нет ошибок, удаляем файл после обработки
                 if (!$result["error"]) {
                     unlink($fileFullPath);
                 } else {
-                    $logger->status = "fail";
-                    $logger->count_errors = $result["count_errors"];    
+                    $logger->status = "fail";    
                 }                  
 
             }    

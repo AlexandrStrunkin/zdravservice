@@ -187,6 +187,7 @@
                 }
 
                 $logger->count = $result["update"];
+                $logger->count_errors = $result["count_errors"];
 
                 $logger->comment .= print_r($result, true);
 

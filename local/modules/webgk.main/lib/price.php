@@ -166,13 +166,13 @@
                     $result["file"] = $file["PATH"];
 
                     $logger->count = $result["update"] + $result["add"] + $result["no_change"];
+                    $logger->count_errors = $result["count_errors"];
 
                     //если нет ошибок, удаляем файл после обработки
                     if (!$result["error"]) {
                         unlink($file["FULL_PATH"]);                           
                     } else {
-                        $logger->status = "fail";
-                        $logger->count_errors = $result["count_errors"];    
+                        $logger->status = "fail";                             
                     }
                     break;
                 }   
