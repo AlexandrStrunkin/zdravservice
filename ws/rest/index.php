@@ -2,11 +2,20 @@
     use \webgk\main\Tools;
     use \webgk\main\iblock\Prototype;
     use \webgk\main\Catalog;
+    use \webgk\main\Logger;
 
     if (!empty($_REQUEST["items"])) {
-        $data = json_decode($_REQUEST["items"], true);            
+
+        $logger = new Logger("Logger");
+        $logger->StartLog("/ws/rest/");
+
+        $data = json_decode($_REQUEST["items"], true); 
+        
+        $resultData["request"] = $data;           
 
         $result = array();
+        $result["count"] = 0;
+        $result["count_errors"] = 0;
 
         $itemTmp = array(); //временный массив элементов
         $storeTmp = array(); //временный массив складов
@@ -19,13 +28,16 @@
             if (empty($item["id"]) || empty($item["store_id"]) || $item["quantity"] === null) {
                 $error = true;
                 if (empty($item["id"])) {
-                    $errorText[] = "Отсутствует ID товара";    
+                    $errorText[] = "Отсутствует ID товара";
+                    $result["count_errors"]++;    
                 }
                 if (empty($item["store_id"])) {
-                    $errorText[] = "Отсутствует ID склада";    
+                    $errorText[] = "Отсутствует ID склада";
+                    $result["count_errors"]++;    
                 } 
                 if (intval($item["quantity"]) <= 0) {
                     $errorText[] = "Отсутствует количество";
+                    $result["count_errors"]++;
                 }
             }
             if (!$error) {             
@@ -36,7 +48,8 @@
                     $itemId = Prototype::getItemIdByXmlId($item["id"]);
                     if (!$itemId) {
                         $error = true;
-                        $errorText[] = "товар не найден";    
+                        $errorText[] = "товар не найден";
+                        $result["count_errors"]++;    
                     } else {
                         $itemTmp[$item["id"]] = $itemId;
                     }    
@@ -48,13 +61,14 @@
                     $storeId = Catalog::getStoreIdByXmlId($item["store_id"]);
                     if (!$storeId) {
                         $error = true;
-                        $errorText[] = "склад не найден";    
+                        $errorText[] = "склад не найден";
+                        $result["count_errors"]++;    
                     } else {
                         $storeTmp[$item["store_id"]] = $storeId;
                     }    
                 }   
 
-                if ($itemId && $storeId ) {
+                if ($itemId && $storeId) {
                     $updateRes = Catalog::updateItemStoreQuantity($itemId, $storeId, $item["quantity"]);
                     if ($updateRes) {
                         $status = "OK";
@@ -63,17 +77,27 @@
                         $error = true;
                         $status = "error";
                         $errorText[] = "Ошибка обновления остатков товара";
+                        $result["count_errors"]++;
                     } 
                 }      
             } 
 
             if ($error){
                 $status = "error";  
-                $data[$key]["error_text"] = implode("; ", $errorText);  
+                $data[$key]["error_text"] = implode("; ", $errorText);
+                $resultData["error_items"][]  = $data[$key]; 
             }     
 
-            $data[$key]["status"] = $status; 
+            $data[$key]["status"] = $status;
+            $result["count"]++; 
         }
+
+        $logger->count = $result["count"];
+        $logger->count_errors = $result["count_errors"];
+
+        $logger->comment .= print_r($resultData, true);
+
+        $logger->EndLog();
 
     } else {
         $data = array("error" => "Неверный формат данных");   
