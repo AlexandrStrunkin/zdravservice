@@ -397,6 +397,11 @@ Class Tools {
         }
     }
     
+    /**
+    * добавление записи в хл-блок бонусов при заполнении анкеты
+    * 
+    * @param mixed $arFields
+    */
     public function addClientBonusInfoFromQuestionnaire(&$arFields) {
         $iblockObj = IblockPrototype::getInstanceByCode('questionnaire');
         $questionnaireIblockId = $iblockObj->getId();
