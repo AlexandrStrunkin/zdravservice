@@ -56,8 +56,6 @@
                 $result["error"] .= "не удалось соединиться с вебсервисом! \n";
                 return $result;
             }        
-            print_r($clientInfo);
-            die();
             $clientInfoArr = array();
             // Закрываем запрос и удаляем инициализацию $curl
             if ($clientInfo) {
