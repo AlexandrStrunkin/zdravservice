@@ -8,6 +8,7 @@
     use Bitrix\Main\Option;
     use Webgk\Main\Hlblock\Prototype; 
     use Webgk\Main\Logger;
+    use Webgk\Main\Tools;
 
     class ClientBonusInfo {
 
@@ -213,6 +214,9 @@
         * @param string $phoneNumber
         */
         function gettingUserBalanceFromDB($phoneNumber) {
+            
+            $result = false;
+            
             if (!empty($phoneNumber)) {
                 $hlblock = Prototype::getInstance(self::BONUS_HLBLOCK_CODE);
                 $resultData = $hlblock->getElements(array(
@@ -222,9 +226,35 @@
                 if (!empty($resultData)) {
                     $bonusBalance = $resultData[0]["UF_TOTAL_BALANCE"];
                 }
-                if (!empty($bonusBalance)) {
-                    return $bonusBalance;
+                if (intval($bonusBalance) >= 0 ) {
+                    $result = $bonusBalance;    
                 }
             }
+            
+            return $result;
         }
+        
+        /**
+        * функция для получения бонусного баланса текущего пользователя
+        * 
+        */
+        function getCurrentUserBonusBalance() { 
+            
+            global $USER;
+            if (!$USER->IsAuthorized()) {
+                return false;
+            }
+            
+            $userId = $USER->GetId();
+            
+            $arUser = \CUser::GetById($userId)->Fetch();
+            
+            if ($arUser["PERSONAL_PHONE"]) {
+                $balance = self::gettingUserBalanceFromDB($arUser["PERSONAL_PHONE"]);
+            }   
+            
+            return $balance;
+                
+        }
+        
 }
