@@ -4,11 +4,7 @@
     <? global $arRegion;
     foreach($arResult["CATEGORIES"] as $category_id => $arCategory):?>
         <?foreach($arCategory["ITEMS"] as $i => $arItem):
-            //$totalCount = Webgk\Main\AsproExtend\ExtendClass::GetTotalCount($arItem, $arParams);
-            //$regionalStoreQuantity = Webgk\Main\AsproExtend\ExtendClass::GetTotalCount($arItem, $arParams, true);
-            //$arAddToBasketData = CNext::GetAddToBasketArray($arItem, $totalCount +$regionalStoreQuantity, $arParams["DEFAULT_COUNT"], $arParams["BASKET_URL"], ($bLinkedItems ? true : false), $arItemIDs["ALL_ITEM_IDS"], 'small', $arParams);
-            //echo "<pre>"; print_r($arResult["ELEMENTS"][]); echo "</pre>";?>
-            <?//=$arCategory["TITLE"]?>
+            ?>
             <?if($category_id === "all"):?>
                 <div class="bx_item_block all_result">
                     <div class="maxwidth-theme">
@@ -102,7 +98,7 @@
 <script>
 $(document).ready(function(){
     $(".bx_item_element").each(function(){
-        $(this).find("span").html(truncate($(this).find("span").html(), 60));
+        $(this).find("span").html(truncate($(this).find("span").html(), 50));
     })
 });
 </script>
