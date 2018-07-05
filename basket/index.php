@@ -4,7 +4,7 @@ $APPLICATION->SetTitle("Корзина");
 ?>
 <?$APPLICATION->IncludeComponent(
 	"bitrix:sale.basket.basket", 
-	".default", 
+	"basket", 
 	array(
 		"COLUMNS_LIST" => array(
 			0 => "NAME",
@@ -18,11 +18,11 @@ $APPLICATION->SetTitle("Корзина");
 			8 => "SUM",
 		),
 		"OFFERS_PROPS" => array(
-			0 => "SIZES",
-			1 => "COLOR_REF",
+			0 => "COLOR_REF",
+			1 => "SIZES",
 		),
 		"PATH_TO_ORDER" => SITE_DIR."order/",
-		"HIDE_COUPON" => "N",
+		"HIDE_COUPON" => "Y",
 		"PRICE_VAT_SHOW_VALUE" => "Y",
 		"COUNT_DISCOUNT_4_ALL_QUANTITY" => "N",
 		"USE_PREPAYMENT" => "N",
@@ -33,7 +33,7 @@ $APPLICATION->SetTitle("Корзина");
 		"PICTURE_HEIGHT" => "100",
 		"SHOW_FULL_ORDER_BUTTON" => "Y",
 		"SHOW_FAST_ORDER_BUTTON" => "Y",
-		"COMPONENT_TEMPLATE" => ".default",
+		"COMPONENT_TEMPLATE" => "basket",
 		"QUANTITY_FLOAT" => "N",
 		"ACTION_VARIABLE" => "action",
 		"TEMPLATE_THEME" => "blue",
@@ -45,7 +45,7 @@ $APPLICATION->SetTitle("Корзина");
 		"GIFTS_BLOCK_TITLE" => "Выберите один из подарков",
 		"GIFTS_HIDE_BLOCK_TITLE" => "N",
 		"GIFTS_TEXT_LABEL_GIFT" => "Подарок",
-		"GIFTS_PRODUCT_QUANTITY_VARIABLE" => "undefined",
+		"GIFTS_PRODUCT_QUANTITY_VARIABLE" => "quantity",
 		"GIFTS_PRODUCT_PROPS_VARIABLE" => "prop",
 		"GIFTS_SHOW_OLD_PRICE" => "Y",
 		"GIFTS_SHOW_DISCOUNT_PERCENT" => "Y",
@@ -55,7 +55,47 @@ $APPLICATION->SetTitle("Корзина");
 		"GIFTS_MESS_BTN_DETAIL" => "Подробнее",
 		"GIFTS_PAGE_ELEMENT_COUNT" => "4",
 		"GIFTS_CONVERT_CURRENCY" => "N",
-		"GIFTS_HIDE_NOT_AVAILABLE" => "N"
+		"GIFTS_HIDE_NOT_AVAILABLE" => "N",
+		"DEFERRED_REFRESH" => "N",
+		"USE_DYNAMIC_SCROLL" => "Y",
+		"SHOW_FILTER" => "N",
+		"SHOW_RESTORE" => "Y",
+		"COLUMNS_LIST_EXT" => array(
+			0 => "PREVIEW_PICTURE",
+			1 => "DISCOUNT",
+			2 => "DELETE",
+			3 => "DELAY",
+			4 => "SUM",
+		),
+		"COLUMNS_LIST_MOBILE" => array(
+			0 => "PREVIEW_PICTURE",
+			1 => "DISCOUNT",
+			2 => "DELETE",
+			3 => "DELAY",
+			4 => "SUM",
+		),
+		"TOTAL_BLOCK_DISPLAY" => array(
+			0 => "top",
+		),
+		"DISPLAY_MODE" => "extended",
+		"PRICE_DISPLAY_MODE" => "Y",
+		"SHOW_DISCOUNT_PERCENT" => "Y",
+		"DISCOUNT_PERCENT_POSITION" => "bottom-right",
+		"PRODUCT_BLOCKS_ORDER" => "props,sku,columns",
+		"USE_PRICE_ANIMATION" => "Y",
+		"LABEL_PROP" => array(
+		),
+		"CORRECT_RATIO" => "Y",
+		"COMPATIBLE_MODE" => "Y",
+		"LABEL_PROP_MOBILE" => "",
+		"LABEL_PROP_POSITION" => "",
+		"ADDITIONAL_PICT_PROP_2" => "-",
+		"ADDITIONAL_PICT_PROP_3" => "-",
+		"ADDITIONAL_PICT_PROP_20" => "-",
+		"ADDITIONAL_PICT_PROP_23" => "-",
+		"ADDITIONAL_PICT_PROP_26" => "-",
+		"BASKET_IMAGES_SCALING" => "adaptive",
+		"USE_ENHANCED_ECOMMERCE" => "N"
 	),
 	false
 );?>
