@@ -28,18 +28,6 @@
                     </div>
                 </div>
             <?endif?>
-            <?if (!empty($arResult["BONUS_BALANCE"])) {?>
-                <div class="form-control">
-                    <div class="wrap_md">
-                        <div class="iblock label_block">
-                            <label><?= GetMessage("BONUS_BALANCE") ?></label>
-                            <span><?= $arResult["BONUS_BALANCE"] ?></span>
-                        </div>
-                        <div class="iblock text_block">
-                        </div>
-                    </div>
-                </div>
-            <?}?>
             <?if($arTheme["PERSONAL_ONEFIO"]["VALUE"] == "Y"):?>
                 <div class="form-control">
                     <div class="wrap_md">
