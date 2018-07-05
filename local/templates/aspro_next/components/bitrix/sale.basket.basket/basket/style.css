@@ -2145,3 +2145,12 @@ h2.basket-item-info-name {
 }
 
 /*endregion*/
+
+.bonus-balance-description {
+    margin: 10px 0 0;
+}
+
+.bonus-count {
+    font-weight: bold;
+    color: #009b76;
+}

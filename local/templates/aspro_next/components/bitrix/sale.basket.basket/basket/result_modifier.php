@@ -3,6 +3,7 @@
 /** @var array $arParams */
 /** @var array $arResult */
 use Bitrix\Main;
+use Webgk\Main\ClientBonusInfo;
 
 $defaultParams = array(
 	'TEMPLATE_THEME' => 'blue'
@@ -27,4 +28,6 @@ if ('' != $arParams['TEMPLATE_THEME'])
 	}
 }
 if ('' == $arParams['TEMPLATE_THEME'])
-	$arParams['TEMPLATE_THEME'] = 'blue';
+	$arParams['TEMPLATE_THEME'] = 'blue';         
+
+$arResult["BONUS_COUNT"] = ClientBonusInfo::getCurrentUserBonusBalance();

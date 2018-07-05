@@ -36,4 +36,6 @@ $MESS["SBB_GOOD_CAP"] = "Товар";
 $MESS["SBB_GOOD"] = "товар";
 $MESS["SBB_GOOD_2"] = "товара";
 $MESS["SBB_GOODS"] = "товаров";
+$MESS["SBB_BONUS_COUNT"] = "Доступно бонусов";
+$MESS["SBB_BONUS_DESCRIPTION"] = "Вы можете использовать бонусы при получении заказа, 1 бонус = 1 руб.";
 ?>
