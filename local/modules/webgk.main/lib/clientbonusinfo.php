@@ -152,7 +152,8 @@ class ClientBonusInfo {
             $hlblock = Prototype::getInstance("ClientsBonusCards");
             $resultData = $hlblock->getElements(array(
                 "select" => array("*"),
-                "filter" => array("UF_PHONE_NUMBER" => $phoneNumber)
+                "filter" => array("UF_PHONE_NUMBER" => $phoneNumber),
+                "cacheTime" => 0
             ));
             if (!empty($resultData)) {
                 $bonusBalance = $resultData[0]["UF_TOTAL_BALANCE"];

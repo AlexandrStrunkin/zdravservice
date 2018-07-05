@@ -99,3 +99,10 @@
         <?endforeach;?>
     <?endforeach;?>
 </div>
+<script>
+$(document).ready(function(){
+    $(".bx_item_element").each(function(){
+        $(this).find("span").html(truncate($(this).find("span").html(), 60));
+    })
+});
+</script>

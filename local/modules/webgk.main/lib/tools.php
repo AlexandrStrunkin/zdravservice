@@ -3,6 +3,7 @@
 namespace Webgk\Main;
 
 use \Webgk\Main\Iblock\Prototype as IblockPrototype;
+use \Webgk\Main\Hlblock\Prototype as HlblockPrototype;
 
 Class Tools {
 
@@ -395,6 +396,7 @@ Class Tools {
                 unset($_SESSION["SERVICE_DATA"]["UPDATE_BONUS"]);
             }
         }
-    }  
+    }
+     
 
 }

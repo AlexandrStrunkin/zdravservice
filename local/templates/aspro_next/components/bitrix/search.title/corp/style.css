@@ -1,0 +1,8 @@
+.maxwidth-theme {
+    position: relative;
+}
+.maxwidth-theme .to-cart {
+    position: absolute;
+    right: 20px;
+    top: 30px;
+}
