@@ -35,6 +35,9 @@ class Module {
         $eventManager->addEventHandler("iblock", "OnAfterIBlockElementAdd",  ['\\Webgk\\Main\\Tools', 'updatingUserFieldsFromQuestionnaire']);
         $eventManager->addEventHandler("main", "OnAfterUserRegister",  ['\\Webgk\\Main\\Tools', 'gettingNewClientInfo']);
         $eventManager->addEventHandler("main", "OnAfterUserUpdate",  ['\\Webgk\\Main\\Tools', 'gettingNewClientInfo']);
+        $eventManager->addEventHandler("iblock", "OnAfterIBlockElementAdd",  ['\\Webgk\\Main\\Tools', 'addSearchIndexHLBlockElement']);
+        $eventManager->addEventHandler("iblock", "OnAfterIBlockElementUpdate",  ['\\Webgk\\Main\\SearchIndexes', 'addSearchIndexHLBlockElement']);
+        $eventManager->addEventHandler("iblock", "OnAfterIBlockElementAdd",  ['\\Webgk\\Main\\Tools', 'addClientBonusInfoFromQuestionnaire']);
 
     }
 

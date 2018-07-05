@@ -326,8 +326,8 @@ Class Tools {
                 $phoneNumberPropId = $propertyInfo['ID'];    
             }
             if ($phoneNumberPropId) {
-                if ($arFields["PROPERTY_VALUES"][$phoneNumberPropId]) {
-                    $arFields["PROPERTY_VALUES"][$phoneNumberPropId] = \Webgk\Main\Tools::formatUserPhone($arFields["PROPERTY_VALUES"][$phoneNumberPropId]);
+                if ($arFields["PROPERTY_VALUES"][$phoneNumberPropId]["n0"]["VALUE"]) {
+                    $arFields["PROPERTY_VALUES"][$phoneNumberPropId]["n0"]["VALUE"] = \Webgk\Main\Tools::formatUserPhone($arFields["PROPERTY_VALUES"][$phoneNumberPropId]["n0"]["VALUE"]);
                 }
             }
         }    
@@ -395,6 +395,38 @@ Class Tools {
                 unset($_SESSION["SERVICE_DATA"]["UPDATE_BONUS"]);
             }
         }
+    }
+    
+    /**
+    * добавление записи в хл-блок бонусов при заполнении анкеты
+    * 
+    * @param mixed $arFields
+    */
+    public function addClientBonusInfoFromQuestionnaire(&$arFields) {
+        $iblockObj = IblockPrototype::getInstanceByCode('questionnaire');
+        $questionnaireIblockId = $iblockObj->getId();
+        if ($arFields["IBLOCK_ID"] == $questionnaireIblockId) {
+            $elementsList = $iblockObj->getElements(
+                array(
+                    "filter" => array(
+                        "IBLOCK_ID" => $questionnaireIblockId,
+                        "ID" => $arFields["ID"]
+                    ),
+                    "select" => array(
+                        "ID",
+                        "PROPERTY_PHONE_NUMBER"
+                    )
+                )
+            );
+            $propsArr = array();
+            $phoneNumber = "";
+            foreach ($elementsList as $elementInfo) {
+                $phoneNumber = $elementInfo["PROPERTY_PHONE_NUMBER_VALUE"];    
+            }
+            if (strlen($phoneNumber)) {
+                \Webgk\Main\ClientBonusInfo::ClientsInfo($phoneNumber);
+            }
+        }        
     }  
 
 }
