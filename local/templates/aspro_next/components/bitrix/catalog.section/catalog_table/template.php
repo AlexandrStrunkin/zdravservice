@@ -40,7 +40,10 @@
 				}
 				$elementName = ((isset($arItem['IPROPERTY_VALUES']['ELEMENT_PAGE_TITLE']) && $arItem['IPROPERTY_VALUES']['ELEMENT_PAGE_TITLE']) ? $arItem['IPROPERTY_VALUES']['ELEMENT_PAGE_TITLE'] : $arItem['NAME']);
 				?>
-				<?$arAddToBasketData = CNext::GetAddToBasketArray($arItem, $totalCount+$regionalStoreQuantity, $arParams["DEFAULT_COUNT"], $arParams["BASKET_URL"], false, array(), 'small', $arParams);?>
+				<?
+				// $arAddToBasketData = CNext::GetAddToBasketArray($arItem, $totalCount+$regionalStoreQuantity, $arParams["DEFAULT_COUNT"], $arParams["BASKET_URL"], false, array(), 'small', $arParams);
+				$arAddToBasketData = Webgk\Main\AsproExtend\ExtendClass::GetAddToBasketArray($arItem, $totalCount+$regionalStoreQuantity, $arParams["DEFAULT_COUNT"], $arParams["BASKET_URL"], false, array(), 'small', $arParams);
+				?>
 				<tr class="item main_item_wrapper" id="<?=$this->GetEditAreaId($arItem['ID']);?>">
 					<td class="wrapper_td">
 						<table>

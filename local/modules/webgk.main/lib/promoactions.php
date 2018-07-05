@@ -5,6 +5,7 @@
     use Webgk\Main\Tools;
     use Webgk\Main\CSV\CSVToArray;
     use Webgk\Main\Iblock\Prototype;
+    use Webgk\Main\Logger;
 
     /**
     * класс для работы с импортом "маркетинговых активностей" (промо акций)
@@ -25,28 +26,39 @@
         public static function parcePromoData($file) {
 
             global $DB;
+            
+            $result = array();
+            $result["delete"] = 0;
+            $result["update"] = 0;
+            $result["add"] = 0;
+            $result["count_errors"] = 0;
 
             if (empty($file) || !\CModule::IncludeModule("iblock")) {
-                return false;
+                $result["error"] .= "Файл не найден; \n";
+                $result["count_errors"]++;
+                return $result;
             }   
 
             $fullFilePath = self::PROMO_DIR . $file; //полный путь до файла                 
 
             //проверяем, не обрабатывается ли файл в данный момент
-            if (Import::checkFileProcessing($fullFilePath)) {
-                return false;
+            if (Import::checkFileProcessing($fullFilePath)) { 
+                $result["error"] .= "Файл уже обрабатывается; \n";
+                $result["count_errors"]++;
+                return $result;
             } else {
                 Import::addFileProcessing($fullFilePath); 
-            }   
-
-            $result = array();
-            $result["delete"] = 0;
-            $result["update"] = 0;
-            $result["add"] = 0;
+            }                  
 
             //получаем данные из файла
             $fileDataTmp = CSVToArray::CSVParse($fullFilePath, array("XML_ID", "REGION", "NAME", "DESCRIPTION", "ACTIVE_FROM", "ACTIVE_TO"));
             $importData = array();
+            
+            if (empty($fileDataTmp)) {
+                $result["error"] .= "Пустой файл; \n";
+                $result["count_errors"]++;
+                return $result;    
+            }
 
             //формируем массив в удобном вимде для дальнейшей работы
             foreach ($fileDataTmp as $item) {
@@ -85,7 +97,8 @@
                         if ($el->Update($promoId, array("DATE_ACTIVE_TO" => $dateActiveTo))) {
                             $result["update"]++;    
                         } else {
-                            $result["error"] .= $el->LAST_ERROR . "(" . $promoId . ")" . ";";    
+                            $result["error"] .= $el->LAST_ERROR . "(" . $promoId . ")" . "; \n";  
+                            $result["count_errors"]++;  
                         }
                     }
 
@@ -108,12 +121,11 @@
                     if ($el->Add($arPromo)) {
                         $result["add"]++;    
                     } else {
-                        $result["error"] .= $el->LAST_ERROR . "(" . $promoItem["NAME"] . ")" . ";";
+                        $result["error"] .= $el->LAST_ERROR . "(" . $promoItem["NAME"] . ")" . "; \n";
+                        $result["count_errors"]++;
                     } 
                 }     
-            }         
-
-            //TODO log
+            }    
 
             //удаляем файл из таблицы
             Import::deleteFileProcessing($fullFilePath);
@@ -127,30 +139,40 @@
         * агент для обновления акций
         * 
         */
-        function promoUpdateAgent() {    
+        function promoUpdateAgent() {                 
 
             $filePath = self::PROMO_DIR . self::FILE_NAME;
             $fileFullPath = $_SERVER["DOCUMENT_ROOT"] . $filePath;
             if (!file_exists($fileFullPath)) {
-                return false;
+                return "\\Webgk\\Main\\PromoActions::promoUpdateAgent();";
             }  
+
+            $logger = new Logger("Logger");
+            $logger->StartLog(__FUNCTION__);
 
             //преебираем файлы в директории с файлами выгрузки акций и берем в обработку тот, который еще не обрабатывается
 
             if (!Import::checkFileProcessing($filePath)) {
                 $result = self::parcePromoData(self::FILE_NAME);
                 $result["file"] = $filePath;
+                
+                $logger->count = $result["delete"] + $result["update"] + $result["add"];
+                $logger->count_errors = $result["count_errors"];                 
 
                 //если нет ошибок, удаляем файл после обработки
                 if (!$result["error"]) {
                     unlink($fileFullPath);
-                }                   
+                } else {
+                    $logger->status = "fail";    
+                }                  
 
             }    
+            
+            $logger->comment .= print_r($result, true);
 
-            //TODO log
+            $logger->EndLog();
 
-            return "\\Webgk\\Main\\Promoactions::promoUpdateAgent();";            
+            return "\\Webgk\\Main\\PromoActions::promoUpdateAgent();";            
 
         }   
 

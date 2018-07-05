@@ -21,24 +21,29 @@
         */
         public static function parcePriceData($file) {
 
+            $itemsXmlId = array();               
+            $result = array(); 
+            $result["add"] = 0; //цен добавлено      
+            $result["update"] = 0; //цен обновлено       
+            $result["no_change"] = 0; //цен без изменений
+
             if (empty($file) || !\CModule::IncludeModule("catalog") || !\CModule::IncludeModule("iblock")) {
-                return false;
+                $result["error"] .= "Файл не найден; \n";
+                $result["count_errors"]++;
+                return $result;
             }   
 
             $fullFilePath = self::PRICE_DIR . $file; //полный путь до файла
 
             //проверяем, не обрабатывается ли файл в данный момент
             if (Import::checkFileProcessing($fullFilePath)) {
-                return false;
+                $result["error"] .= "Файл уже обрабатывается; \n";
+                $result["count_errors"]++;
+                return $result;
             } else {
                 Import::addFileProcessing($fullFilePath); 
-            }     
+            }              
 
-            $itemsXmlId = array();               
-            $result = array(); 
-            $result["add"] = 0; //цен добавлено      
-            $result["update"] = 0; //цен обновлено       
-            $result["no_change"] = 0; //цен без изменений       
 
             //заменяем в названии файла префикс и формат, чтобы получить ID типа цены
             $replace = array(self::FILE_PREFIX . "-", "." . self::FILE_FORMAT);
@@ -48,13 +53,20 @@
             $arPrice = \CCatalogGroup::GetList(array(), array("XML_ID" => $priceId))->Fetch();
             if (!$arPrice["ID"]) {
                 $result["error"] = "Цена с XML_ID " . $priceId . " не найдена!"; 
-                return result;
+                $result["count_errors"]++;
+                return $result;
             } else {
                 $result["price_id"] = $priceId;    
             } 
 
             //получаем данные из файла
             $fileData = CSVToArray::CSVParse($fullFilePath, array("ITEM_ID", "PRICE", "OLD_PRICE"));
+            
+            if (empty($fileData)) {
+                $result["error"] .= "Пустой файл; \n";
+                $result["count_errors"]++;
+                return $result;    
+            }
 
             //формируем массив с xml_id товаров для выборки     
             foreach ($fileData as $item) {
@@ -119,10 +131,11 @@
                     $oldPrices = json_encode($oldPrices);    
                 }          
 
-                \CIBlockElement::SetPropertyValuesEx($arItem["ID"], false, array("STARAYA_TSENA" => $oldPrices));           
+                if (!empty($arItem["PROPERTY_STARAYA_TSENA_VALUE"]) || !empty($item["OLD_PRICE"])) {
+                    \CIBlockElement::SetPropertyValuesEx($arItem["ID"], false, array("STARAYA_TSENA" => $oldPrices));
+                    $result["old_prices_upd"]++;  
+                }        
             }   
-            
-            //TODO log
 
             //удаляем файл из таблицы
             Import::deleteFileProcessing($fullFilePath);
@@ -140,26 +153,35 @@
 
             $priceFiles = Tools::scanFileDir("/upload/1c_import/price/");
             if (empty($priceFiles)) {
-                return false;
+                return "\\Webgk\\Main\\Price::priceUpdateAgent();";
             }  
-            
-            //преебираем файлы в директории с файлами выгрузки цен и берем в обработку тот, который еще не обрабатывается
+
+            $logger = new Logger("Logger");
+            $logger->StartLog(__FUNCTION__);
+
+            //перебираем файлы в директории с файлами выгрузки цен и берем в обработку тот, который еще не обрабатывается
             foreach ($priceFiles as $file) {
                 if (!Import::checkFileProcessing($file["PATH"])) {
                     $result = self::parcePriceData($file["NAME"]);
                     $result["file"] = $file["PATH"];
-                    
+
+                    $logger->count = $result["update"] + $result["add"] + $result["no_change"];
+                    $logger->count_errors = $result["count_errors"];
+
                     //если нет ошибок, удаляем файл после обработки
                     if (!$result["error"]) {
-                        unlink($file["FULL_PATH"]);
-                        break;
+                        unlink($file["FULL_PATH"]);                           
+                    } else {
+                        $logger->status = "fail";                             
                     }
-                    
+                    break;
                 }   
             }
 
-            //TODO log
-            
+            $logger->comment .= print_r($result, true);
+
+            $logger->EndLog();
+
             return "\\Webgk\\Main\\Price::priceUpdateAgent();";            
 
         }
