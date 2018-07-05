@@ -14,7 +14,7 @@
     "INPUT_ID" => "title-search-input_fixed",
     "CONTAINER_ID" => "title-search_fixed",
     "PRICE_CODE" => array(
-        0 => "BASE",
+        0 => "Тульская область",
     ),
     "PRICE_VAT_INCLUDE" => "Y",
     "SHOW_ANOUNCE" => "N",
