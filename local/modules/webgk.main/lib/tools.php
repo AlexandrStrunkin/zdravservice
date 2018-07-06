@@ -327,8 +327,8 @@ Class Tools {
                 $phoneNumberPropId = $propertyInfo['ID'];    
             }
             if ($phoneNumberPropId) {
-                if ($arFields["PROPERTY_VALUES"][$phoneNumberPropId]) {
-                    $arFields["PROPERTY_VALUES"][$phoneNumberPropId] = \Webgk\Main\Tools::formatUserPhone($arFields["PROPERTY_VALUES"][$phoneNumberPropId]);
+                if ($arFields["PROPERTY_VALUES"][$phoneNumberPropId]["n0"]["VALUE"]) {
+                    $arFields["PROPERTY_VALUES"][$phoneNumberPropId]["n0"]["VALUE"] = \Webgk\Main\Tools::formatUserPhone($arFields["PROPERTY_VALUES"][$phoneNumberPropId]["n0"]["VALUE"]);
                 }
             }
         }    
@@ -397,6 +397,41 @@ Class Tools {
             }
         }
     }
-     
+    
+    /**
+    * добавление записи в хл-блок бонусов при заполнении анкеты
+    * 
+    * @param mixed $arFields
+    */
+    public function addClientBonusInfoFromQuestionnaire(&$arFields) {
+        $iblockObj = IblockPrototype::getInstanceByCode('questionnaire');
+        $questionnaireIblockId = $iblockObj->getId();
+        if ($arFields["IBLOCK_ID"] == $questionnaireIblockId && $arFields["ACTIVE"] == "Y") {
+            $elementsList = $iblockObj->getElements(
+                array(
+                    "filter" => array(
+                        "IBLOCK_ID" => $questionnaireIblockId,
+                        "ID" => $arFields["ID"]
+                    ),
+                    "select" => array(
+                        "ID",
+                        "PROPERTY_PHONE_NUMBER"
+                    )
+                )
+            );
+            $propsArr = array();
+            $phoneNumber = "";
+            foreach ($elementsList as $elementInfo) {
+                $phoneNumber = $elementInfo["PROPERTY_PHONE_NUMBER_VALUE"];    
+            }
+            if (strlen($phoneNumber)) {
+                $newBonusInfo = \Webgk\Main\ClientBonusInfo::ClientsInfo($phoneNumber);
+                if (empty($newBonusInfo["error"])) {
+                    $updQuestionElement = new \CIBlockElement;
+                    $updQuestionElement -> Update($arFields["ID"], array("ACTIVE" => "N"));    
+                }
+            }
+        }        
+    }  
 
 }

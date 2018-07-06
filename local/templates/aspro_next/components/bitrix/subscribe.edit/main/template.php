@@ -15,11 +15,6 @@ if($arResult["ID"] == 0 && empty($_REQUEST["action"]) || CSubscription::IsAuthor
 	{
 		include("confirmation.php");
 	}
-	//show current authorization section
-	if($USER->IsAuthorized() && ($arResult["ID"] == 0 || $arResult["SUBSCRIPTION"]["USER_ID"] == 0))
-	{
-		include("authorization.php");
-	}
 	//show authorization section for new subscription
 	if($arResult["ID"]==0 && !$USER->IsAuthorized())
 	{
