@@ -5,12 +5,13 @@ use Bitrix\Main as MainModule;
 use Bitrix\Iblock;    
 use Bitrix\Main\Entity;
 use Bitrix\Main\Option;
-use Webgk\Main\Hlblock\Prototype;
+use Webgk\Main\Iblock\Prototype as IblockPrototype;
+use Webgk\Main\Hlblock\Prototype as HlblockPrototype;
  
 class SearchIndexes {
 
     public function addSearchIndexHLBlockElement (&$arFields) {
-        $iblockObj = IblockPrototype::getInstanceByCode('catalog_1c');
+        $iblockObj = IblockPrototype::getInstanceByCode('catalog_1c_catalog');
         $catalogIblockId = $iblockObj->getId();
         if ($arFields["IBLOCK_ID"] == $catalogIblockId) {
             $propsValues = array();

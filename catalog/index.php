@@ -113,7 +113,12 @@ $APPLICATION->IncludeComponent(
 		"COMPARE_ELEMENT_SORT_ORDER" => "asc",
 		"DISPLAY_ELEMENT_SELECT_BOX" => "N",
 		"PRICE_CODE" => array(
-			0 => "Тульская область",
+			0 => "Владимирская обл",
+			1 => "Калужская обл",
+			2 => "Краснодарский край",
+			3 => "Московская область",
+			4 => "Республика Адыгея",
+			5 => "Тульская область",
 		),
 		"USE_PRICE_COUNT" => "Y",
 		"SHOW_PRICE_COUNT" => "1",
