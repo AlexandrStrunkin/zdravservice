@@ -405,7 +405,7 @@ Class Tools {
     public function addClientBonusInfoFromQuestionnaire(&$arFields) {
         $iblockObj = IblockPrototype::getInstanceByCode('questionnaire');
         $questionnaireIblockId = $iblockObj->getId();
-        if ($arFields["IBLOCK_ID"] == $questionnaireIblockId) {
+        if ($arFields["IBLOCK_ID"] == $questionnaireIblockId && $arFields["ACTIVE"] == "Y") {
             $elementsList = $iblockObj->getElements(
                 array(
                     "filter" => array(
@@ -424,7 +424,11 @@ Class Tools {
                 $phoneNumber = $elementInfo["PROPERTY_PHONE_NUMBER_VALUE"];    
             }
             if (strlen($phoneNumber)) {
-                \Webgk\Main\ClientBonusInfo::ClientsInfo($phoneNumber);
+                $newBonusInfo = \Webgk\Main\ClientBonusInfo::ClientsInfo($phoneNumber);
+                if (empty($newBonusInfo["error"])) {
+                    $updQuestionElement = new \CIBlockElement;
+                    $updQuestionElement -> Update($arFields["ID"], array("ACTIVE" => "N"));    
+                }
             }
         }        
     }  
