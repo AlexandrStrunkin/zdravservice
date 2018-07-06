@@ -1,5 +1,4 @@
 $(document).ready(function(){
-    console.log(arNextOptions);
 	$('.confirm_region .aprove').on('click', function(e){
 		var _this = $(this);
 		$.removeCookie('current_region');
