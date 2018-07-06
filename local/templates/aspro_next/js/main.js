@@ -6654,7 +6654,7 @@ function parseTime_bv(timestamp){
 
 //Обрезка длинных названий
 function truncate(str, maxlength){
-    if (str.length > maxlength){
+    if (str && str.length > maxlength){
         return str.slice(0, maxlength-3) + '...';
     }
     return str;
