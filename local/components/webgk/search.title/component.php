@@ -94,68 +94,6 @@ if(
 		$arOthersFilter[] = $exFILTER;
 		$j = 0;
         $query = $arResult["alt_query"]? $arResult["alt_query"]: $arResult["query"];
-		/*$obTitle = new CSearchTitle;
-		$obTitle->setMinWordLength($_REQUEST["l"]);
-		if($obTitle->Search(
-			$arResult["alt_query"]? $arResult["alt_query"]: $arResult["query"]
-			,$arParams["TOP_COUNT"]
-			,$exFILTER
-			,false
-			,$arParams["ORDER"]
-		))
-		{
-			while($ar = $obTitle->Fetch())
-			{
-				$j++;
-				if($j > $arParams["TOP_COUNT"])
-				{
-					$params = array("q" => $arResult["alt_query"]? $arResult["alt_query"]: $arResult["query"]);
-
-					$url = CHTTP::urlAddParams(
-						str_replace("#SITE_DIR#", SITE_DIR, $arParams["PAGE"])
-						,$params
-						,array("encode"=>true)
-					).CSearchTitle::MakeFilterUrl("f", $exFILTER);
-
-					$arResult["CATEGORIES"][$i]["ITEMS"][] = array(
-						"NAME" => GetMessage("CC_BST_MORE"),
-						"URL" => htmlspecialcharsex($url),
-					);
-					break;
-				}
-				else
-				{
-					$arResult["CATEGORIES"][$i]["ITEMS"][] = array(
-						"NAME" => $ar["NAME"],
-						"URL" => htmlspecialcharsbx($ar["URL"]),
-						"MODULE_ID" => $ar["MODULE_ID"],
-						"PARAM1" => $ar["PARAM1"],
-						"PARAM2" => $ar["PARAM2"],
-						"ITEM_ID" => $ar["ITEM_ID"],
-					);
-				}
-			}
-		}*/
-		/* This code adds not fixed keyboard link to the category
-		if($arResult["alt_query"] != "")
-		{
-			$params = array(
-				"q" => $arResult["query"],
-				"spell" => 1,
-			);
-
-			$url = CHTTP::urlAddParams(
-				str_replace("#SITE_DIR#", SITE_DIR, $arParams["PAGE"])
-				,$params
-				,array("encode"=>true)
-			).CSearchTitle::MakeFilterUrl("f", $exFILTER);
-
-			$arResult["CATEGORIES"][$i]["ITEMS"][] = array(
-				"NAME" => GetMessage("CC_BST_QUERY_PROMPT", array("#query#"=>$arResult["query"])),
-				"URL" => htmlspecialcharsex($url),
-			);
-		}
-		*/
         $hlblockObj = \Webgk\Main\Hlblock\Prototype::getInstance('SearchIndexes');
         $hlblockResultData = $hlblockObj->getElements(
                 array(
@@ -299,26 +237,6 @@ if(
 			"NAME" => GetMessage("CC_BST_ALL_RESULTS"),
 			"URL" => $url,
 		);
-		/*
-		if($arResult["alt_query"] != "")
-		{
-			$params = array(
-				"q" => $arResult["query"],
-				"spell" => 1,
-			);
-
-			$url = CHTTP::urlAddParams(
-				str_replace("#SITE_DIR#", SITE_DIR, $arParams["PAGE"])
-				,$params
-				,array("encode"=>true)
-			);
-
-			$arResult["CATEGORIES"]["all"]["ITEMS"][] = array(
-				"NAME" => GetMessage("CC_BST_ALL_QUERY_PROMPT", array("#query#"=>$arResult["query"])),
-				"URL" => htmlspecialcharsex($url),
-			);
-		}
-		*/
 	}
 }
 
