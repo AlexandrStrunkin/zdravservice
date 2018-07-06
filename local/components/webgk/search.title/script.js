@@ -1,4 +1,4 @@
-function JCTitleSearch2(arParams)
+function JCTitleSearch(arParams)
 {
 	var _this = this;
 
@@ -6,10 +6,8 @@ function JCTitleSearch2(arParams)
 		'AJAX_PAGE': arParams.AJAX_PAGE,
 		'CONTAINER_ID': arParams.CONTAINER_ID,
 		'INPUT_ID': arParams.INPUT_ID,
-		'INPUT_ID_TMP': arParams.INPUT_ID_TMP,
 		'MIN_QUERY_LEN': parseInt(arParams.MIN_QUERY_LEN)
 	};
-
 	if(arParams.WAIT_IMAGE)
 		this.arParams.WAIT_IMAGE = arParams.WAIT_IMAGE;
 	if(arParams.MIN_QUERY_LEN <= 0)
@@ -44,6 +42,7 @@ function JCTitleSearch2(arParams)
 		{
 			th = BX.findChild(tbl, {'tag':'th'}, true);
 		}
+
 		if(th)
 		{
 			var tbl_pos = BX.pos(tbl);
@@ -222,7 +221,7 @@ function JCTitleSearch2(arParams)
 						_this.arParams.AJAX_PAGE,
 						{
 							'ajax_call':'y',
-							'INPUT_ID':_this.arParams.INPUT_ID_TMP,
+							'INPUT_ID':_this.arParams.INPUT_ID,
 							'q':_this.INPUT.value,
 							'l':_this.arParams.MIN_QUERY_LEN
 						},
@@ -258,6 +257,17 @@ function JCTitleSearch2(arParams)
 		if (!!callback)
 			callback();
 		_this.running = false;
+	};
+
+	this.onScroll = function ()
+	{
+		if(BX.type.isElementNode(_this.RESULT)
+			&& _this.RESULT.style.display !== "none"
+			&& _this.RESULT.innerHTML !== ''
+		)
+		{
+			_this.adjustResultNode();
+		}
 	};
 
 	this.UnSelectAll = function()
@@ -298,9 +308,8 @@ function JCTitleSearch2(arParams)
 	};
 
 	this.onFocusLost = function(hide)
-	{ 
-		setTimeout(function(){_this.RESULT.style.display = 'none';}, 300);
-		// _this.RESULT.style.display = 'none';
+	{
+		setTimeout(function(){_this.RESULT.style.display = 'none';}, 250);
 	};
 
 	this.onFocusGain = function()
@@ -313,6 +322,7 @@ function JCTitleSearch2(arParams)
 	{
 		if(!e)
 			e = window.event;
+
 		if (_this.RESULT.style.display == 'block')
 		{
 			if(_this.onKeyPress(e.keyCode))
@@ -322,35 +332,29 @@ function JCTitleSearch2(arParams)
 
 	this.adjustResultNode = function()
 	{
-		var pos, pos_input;
-		var fixedParent = BX.findParent(_this.CONTAINER, BX.is_fixed);
-		if(!!fixedParent)
+		if(!(BX.type.isElementNode(_this.RESULT)
+			&& BX.type.isElementNode(_this.CONTAINER))
+		)
 		{
-			_this.RESULT.style.position = 'fixed';
-			_this.RESULT.style.zIndex = BX.style(fixedParent, 'z-index') + 2;
-			pos = BX.pos(_this.CONTAINER, true);
+			return { top: 0, right: 0, bottom: 0, left: 0, width: 0, height: 0 };
 		}
-		else
-		{
-			_this.RESULT.style.position = 'absolute';
-			pos = BX.pos(_this.CONTAINER);
-		}
-		pos_input = BX.pos(_this.INPUT);
 
-		pos.width = pos.right - pos.left;
+		var pos = BX.pos(_this.CONTAINER);
+
+		_this.RESULT.style.position = 'absolute';
 		_this.RESULT.style.top = (pos.bottom + 2) + 'px';
-		_this.RESULT.style.left = pos_input.left + 'px';
+		_this.RESULT.style.left = pos.left + 'px';
+		_this.RESULT.style.width = pos.width + 'px';
 
-		if($(_this.INPUT).closest('.inline-search-block.with-close').length)
-			_this.RESULT.style.width = pos_input.width + 'px';
-		else
-			_this.RESULT.style.width = pos.width + 'px';
 		return pos;
 	};
 
 	this._onContainerLayoutChange = function()
 	{
-		if(_this.RESULT.style.display !== "none" && _this.RESULT.innerHTML !== '')
+		if(BX.type.isElementNode(_this.RESULT)
+			&& _this.RESULT.style.display !== "none"
+			&& _this.RESULT.innerHTML !== ''
+		)
 		{
 			_this.adjustResultNode();
 		}
@@ -361,22 +365,12 @@ function JCTitleSearch2(arParams)
 		BX.addCustomEvent(this.CONTAINER, "OnNodeLayoutChange", this._onContainerLayoutChange);
 
 		this.RESULT = document.body.appendChild(document.createElement("DIV"));
-
-		this.RESULT.className = 'title-search-result '+this.arParams.INPUT_ID;
+		this.RESULT.className = 'title-search-result';
 		this.INPUT = document.getElementById(this.arParams.INPUT_ID);
 		this.startText = this.oldValue = this.INPUT.value;
-		BX.bind(this.INPUT, 'focus', function(e) {			
-			_this.onFocusGain()
-		});
-		BX.bind(this.INPUT, 'blur', function(e) {
-			if(!$(e.relatedTarget).hasClass('bx_item_block'))
-				_this.onFocusLost();
-		});
-
-		if(BX.browser.IsSafari() || BX.browser.IsIE())
-			this.INPUT.onkeydown = this.onKeyDown;
-		else
-			this.INPUT.onkeypress = this.onKeyDown;
+		BX.bind(this.INPUT, 'focus', function() {_this.onFocusGain()});
+		BX.bind(this.INPUT, 'blur', function() {_this.onFocusLost()});
+		this.INPUT.onkeydown = this.onKeyDown;
 
 		if(this.arParams.WAIT_IMAGE)
 		{
@@ -389,7 +383,13 @@ function JCTitleSearch2(arParams)
 			this.WAIT.style.zIndex = '1100';
 		}
 
-		BX.bind(this.INPUT, 'bxchange', function(e) {_this.onChange()});
+		BX.bind(this.INPUT, 'bxchange', function() {_this.onChange()});
+
+		var fixedParent = BX.findParent(this.CONTAINER, BX.is_fixed);
+		if(BX.type.isElementNode(fixedParent))
+		{
+			BX.bind(window, 'scroll', BX.throttle(this.onScroll, 100, this));
+		}
 	};
 	BX.ready(function (){_this.Init(arParams)});
 }

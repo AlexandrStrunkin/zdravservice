@@ -3,6 +3,7 @@
 namespace Webgk\Main;
 
 use \Webgk\Main\Iblock\Prototype as IblockPrototype;
+use \Webgk\Main\Hlblock\Prototype as HlblockPrototype;
 
 Class Tools {
 

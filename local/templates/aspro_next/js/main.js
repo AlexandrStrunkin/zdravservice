@@ -6651,6 +6651,14 @@ function parseTime_bv(timestamp){
     }
       
 }
+
+//Обрезка длинных названий
+function truncate(str, maxlength){
+    if (str.length > maxlength){
+        return str.slice(0, maxlength-3) + '...';
+    }
+    return str;
+}
 /*custom event for sku prices*/
 
 /*BX.addCustomEvent('onAsproSkuSetPrice', function(eventdata){
