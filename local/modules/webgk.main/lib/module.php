@@ -39,6 +39,17 @@ class Module {
         $eventManager->addEventHandler("iblock", "OnAfterIBlockElementUpdate",  ['\\Webgk\\Main\\SearchIndexes', 'addSearchIndexHLBlockElement']);
         $eventManager->addEventHandler("iblock", "OnAfterIBlockElementAdd",  ['\\Webgk\\Main\\Tools', 'addClientBonusInfoFromQuestionnaire']);
 
+        //Изменение данных в корзине на основе ответа от веб-сервиса
+        $eventManager->addEventHandler("sale", "OnBasketUpdate", ['\\Webgk\\Main\\Sale', 'changeBasketWebUpdate']);
+        $eventManager->addEventHandler("sale", "OnBasketAdd",    ['\\Webgk\\Main\\Sale', 'changeBasketWebUpdate']);
+        $eventManager->addEventHandler("sale", "OnBasketDelete", ['\\Webgk\\Main\\Sale', 'changeBasketWebUpdate']);
+
+
+        //$eventManager->addEventHandler("sale", "OnBeforeBasketAdd",  ['\\Webgk\\Main\\Sale', 'changeBasketAddFromWeb']);
+        //$eventManager->addEventHandler("sale", "OnBeforeBasketUpdate",  ['\\Webgk\\Main\\Sale', 'changeBasketUpdateFromWeb']);
+
+
+        //$eventManager->addEventHandler("sale", "OnBeforeBasketUpdateAfterCheck",  ['\\Webgk\\Main\\Sale', 'changeBasketWeb']);
     }
 
     public static function defineConstants()

@@ -175,6 +175,12 @@ if (empty($arResult['ERROR_MESSAGE']))
 						<?=Loc::getMessage('SBB_BASKET_ITEM_WARNING')?>
 					</div>
 				</div>
+				<div class="waiter_discount">
+					<div class="waiter_discount_block">
+						<img src="/local/templates/aspro_next/images/waiter.gif"/>
+						<div class="waiter_discount_text">Поиск скидок</div>
+					</div>
+				</div>
 			</div>
 		</div>
 

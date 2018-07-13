@@ -438,6 +438,10 @@
 							totalNodes[i].innerHTML = totalRender;
 
 							this.bindTotalEvents(totalNodes[i]);
+							
+							$("#basket-root").find(".basket-btn-checkout").show();
+							$("#basket-root").find(".basket_waiter").hide();
+							$("#basket-root").find(".waiter_discount").hide();
 						}
 					}
 				}
@@ -1887,6 +1891,9 @@
 
 				if (parseFloat(itemData.QUANTITY) !== parseFloat(quantity))
 				{
+					$("#basket-root").find(".basket-btn-checkout").hide();
+					$("#basket-root").find(".basket_waiter").show();
+					$("#basket-root").find(".waiter_discount").show();
 					this.animatePriceByQuantity(itemData, quantity);
 					this.actionPool.changeQuantity(itemData.ID, quantity, currentQuantity);
 				}

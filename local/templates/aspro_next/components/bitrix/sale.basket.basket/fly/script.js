@@ -3,6 +3,12 @@ var totalSum;
 var timerBasketUpdate = false;
 
 function setQuantityFly(basketId, ratio, direction){
+
+	$('form[name^=basket_form] .wrap_button .btn').hide();
+	$('form[name^=basket_form] .basket_waiter').show();
+	$('form[name^=basket_form] .waiter_discount').show();
+	$('form[name^=basket_form] .discount_list').hide();
+
 	var currentValue = BX("QUANTITY_INPUT_" + basketId).value, newVal;
 
 	var isDblQuantity = $("#QUANTITY_INPUT_" + basketId).data('float_ratio'),
@@ -21,7 +27,7 @@ function setQuantityFly(basketId, ratio, direction){
 
 	if (curValue < 0) curValue = 0;
 	if (curValue > 0) {
-		
+
 		BX("QUANTITY_INPUT_" + basketId).value = curValue;
 		BX("QUANTITY_INPUT_" + basketId).defaultValue = currentValue;
 
@@ -54,6 +60,11 @@ function setQuantityFly(basketId, ratio, direction){
 
 function updateQuantityFly(controlId, basketId, ratio, animate) {
 
+	$('form[name^=basket_form] .wrap_button .btn').hide();
+	$('form[name^=basket_form] .basket_waiter').show();
+	$('form[name^=basket_form] .waiter_discount').show();
+	$('form[name^=basket_form] .discount_list').hide();
+
 	var oldVal = BX(controlId).defaultValue, newVal = parseFloat(BX(controlId).value) || 0; bValidChange = false; // if quantity is correct for this ratio
 
 	if (!newVal) {
@@ -75,12 +86,14 @@ function updateQuantityFly(controlId, basketId, ratio, animate) {
 	BX("QUANTITY_INPUT_" + basketId).value = newVal; // set hidden real quantity value (will be used in POST)
 
 	$('form[name^=basket_form]').prepend('<input type="hidden" name="BasketRefresh" value="Y" />');
-
 	$.post( arNextOptions['SITE_DIR']+'ajax/basket_fly.php', $("form[name^=basket_form]").serialize(), $.proxy(function( data){
 		if (timerBasketUpdate==false) {
 			basketFly('open');
 		}
 		$('form[name^=basket_form] input[name=BasketRefresh]').remove();
+		$('form[name^=basket_form] .wrap_button .btn').show();
+		$('form[name^=basket_form] .basket_waiter').hide();
+		$('form[name^=basket_form] .waiter_discount').hide();
 	}));
 }
 
@@ -156,9 +169,9 @@ function checkOutFly(event){
 		checkoutCounter(1, th.data('text'), th.data('href'));
 	}
 	setTimeout(function(){
-		location.href=th.data('href');		
+		location.href=th.data('href');
 	}, 50);
-	
+
 	return true;
 }
 

@@ -18,7 +18,7 @@ Class Tools {
         echo "<pre>";
         print_r($array);
         echo "</pre>";
-        
+
         if ($die) {
             die();
         }
@@ -36,7 +36,7 @@ Class Tools {
         echo "<pre>";
         var_dump($data);
         echo "</pre>";
-        
+
         if ($die) {
             die();
         }
@@ -74,6 +74,20 @@ Class Tools {
         }
     }
 
+    /**
+     * Преобразует объект SimpleXMl в массив, нормальной функции не существует в природе, использовать на свой страх и риск. Для простеньких ответов покатит.
+     *
+     * @param SimpleXMLElement $xmlObject объект SimpleXMl
+     * @return array
+     */
+    public static function xmlToArray($xmlObject) {
+        $out = array();
+        $xmlArray = (array)$xmlObject;
+        foreach ($xmlArray as $index => $node)
+            $out[$index] = is_object($node) ? self::xmlToArray($node) : $node;
+
+        return $out;
+    }
 
     /**
      * Обрезает текст, превыщающий заданную длину
@@ -182,7 +196,7 @@ Class Tools {
 
         return round($bytes, $precision) . ' ' . $types[$i];
     }
-    
+
     public static function updateUserPhone(&$arFields) {
         $userPhone = "";
         if (isset($arFields["PERSONAL_PHONE"])) {
@@ -193,16 +207,16 @@ Class Tools {
                     if (substr($userPhone, 0, 1) == "8") {
                         $userPhone = substr_replace($userPhone, "7", 0, 1);
                     }
-                    $userPhone = "+".$userPhone;    
+                    $userPhone = "+".$userPhone;
                 }
             }
             $arFields["PERSONAL_PHONE"] = $userPhone;
-        }                                         
+        }
     }
-    
+
     /**
     * функция для форматирования телефона
-    * 
+    *
     * @param mixed $path
     */
     public static function formatUserPhone($phoneNumber) {
@@ -211,15 +225,15 @@ Class Tools {
             if (substr($phoneNumber, 0, 1) == "8") {
                 $userPhone = substr_replace($phoneNumber, "7", 0, 1);
             }
-            $phoneNumber = "+".$phoneNumber;    
+            $phoneNumber = "+".$phoneNumber;
         }
-        return $phoneNumber;                                          
+        return $phoneNumber;
     }
-    
-    
+
+
     /**
     * получение информации по бонусам нового пользователя
-    * 
+    *
     * @param array $arFields
     */
     public static function gettingNewClientInfo(&$arFields) {
@@ -235,9 +249,9 @@ Class Tools {
             }
         }
     }
-    
+
     /*
-    *Форматирование свойства "Действующее вещество" от '*', '(' 
+    *Форматирование свойства "Действующее вещество" от '*', '('
     */
     public static function explodeProperty($valueToExplode){
         if(!empty($valueToExplode)){
@@ -247,67 +261,67 @@ Class Tools {
                     $explodeThis = explode('(', $explodeThis);
                     $explodeThis = trim($explodeThis[0], " ");
                 }
-            return $explodeThis; 
+            return $explodeThis;
         }
     }
-    
+
     /**
     * функция сканирует указанную директорию и возвращает массив названий файлов/папок из данной директории
-    * 
+    *
     */
     public static function scanFileDir($path) {
-        
+
         if (empty($path)) {
             return false;
         }
-        
+
         //добавляем слеш вначале
         if (substr($path, 0, 1) != "/") {
-            $path = "/" . $path;    
+            $path = "/" . $path;
         }
-        
+
         //добавляем слеш вконце
         if (substr($path, -1) != "/") {
-            $path = $path . "/";    
+            $path = $path . "/";
         }
-        
+
         //проверяем наличие пути до папки сайта в указанном пути $dir
         $root = $_SERVER["DOCUMENT_ROOT"];
-        
+
         $sourcePath = $path;
         if (!substr_count($path, $root)) {
-            $path = $root . $path;    
+            $path = $root . $path;
         }
-        
+
         $dirData = scandir($path);
-        
+
         $result = array();
         foreach ($dirData as $key => $dirItem) {
             if ($key >= 2) {
                 $result[] = array(
                     "NAME" => $dirItem,
-                    "PATH" => $sourcePath . $dirItem, 
-                    "FULL_PATH" => $path . $dirItem 
-                );    
+                    "PATH" => $sourcePath . $dirItem,
+                    "FULL_PATH" => $path . $dirItem
+                );
             }
         }
-        
-        return $result;           
-                
+
+        return $result;
+
     }
     /**
     * добавление флага в сессию для подключения к веб-сервису по получению пола клиента и даты рождения
-    * 
+    *
     * @param mixed $arFields
     */
     public static function updatingBonus(&$arFields) {
         if (isset($arFields["PERSONAL_PHONE"]) && !isset($_SESSION["UPDATE_FROM_QUESTIONNAIRE"])) {
             $_SESSION["SERVICE_DATA"]["UPDATE_BONUS"] = "Y";
-        }    
+        }
     }
     /**
     * форматирование номера телефона при добавлении в свойство инфоблока "Анкета"
-    * 
+    *
     * @param mixed $arFields
     */
     public function fixPhoneNumberForIBlock(&$arFields) {
@@ -324,18 +338,18 @@ Class Tools {
             );
             $phoneNumberPropId = "";
             foreach ($propertyList as $propertyInfo) {
-                $phoneNumberPropId = $propertyInfo['ID'];    
+                $phoneNumberPropId = $propertyInfo['ID'];
             }
             if ($phoneNumberPropId) {
                 if ($arFields["PROPERTY_VALUES"][$phoneNumberPropId]["n0"]["VALUE"]) {
                     $arFields["PROPERTY_VALUES"][$phoneNumberPropId]["n0"]["VALUE"] = \Webgk\Main\Tools::formatUserPhone($arFields["PROPERTY_VALUES"][$phoneNumberPropId]["n0"]["VALUE"]);
                 }
             }
-        }    
+        }
     }
     /**
     * обновление полей профиля пользователя после применения формы заполнения анкеты
-    * 
+    *
     * @param mixed $arFields
     */
     public function updatingUserFieldsFromQuestionnaire (&$arFields) {
@@ -351,9 +365,9 @@ Class Tools {
             );
             $propsArr = array();
             foreach ($propertyList as $propertyInfo) {
-                $propsArr[$propertyInfo["CODE"]] = $propertyInfo['ID'];    
+                $propsArr[$propertyInfo["CODE"]] = $propertyInfo['ID'];
             }
-            $maleEnumId = \COption::GetOptionString("grain.customsettings", "male_gender_property_enum"); 
+            $maleEnumId = \COption::GetOptionString("grain.customsettings", "male_gender_property_enum");
             $femaleEnumId = \COption::GetOptionString("grain.customsettings", "female_gender_property_enum");
             $userId = "";
             if ($arFields["PROPERTY_VALUES"][$propsArr["PHONE_NUMBER"]]) {
@@ -397,10 +411,10 @@ Class Tools {
             }
         }
     }
-    
+
     /**
     * добавление записи в хл-блок бонусов при заполнении анкеты
-    * 
+    *
     * @param mixed $arFields
     */
     public function addClientBonusInfoFromQuestionnaire(&$arFields) {
@@ -422,16 +436,16 @@ Class Tools {
             $propsArr = array();
             $phoneNumber = "";
             foreach ($elementsList as $elementInfo) {
-                $phoneNumber = $elementInfo["PROPERTY_PHONE_NUMBER_VALUE"];    
+                $phoneNumber = $elementInfo["PROPERTY_PHONE_NUMBER_VALUE"];
             }
             if (strlen($phoneNumber)) {
                 $newBonusInfo = \Webgk\Main\ClientBonusInfo::ClientsInfo($phoneNumber);
                 if (empty($newBonusInfo["error"])) {
                     $updQuestionElement = new \CIBlockElement;
-                    $updQuestionElement -> Update($arFields["ID"], array("ACTIVE" => "N"));    
+                    $updQuestionElement -> Update($arFields["ID"], array("ACTIVE" => "N"));
                 }
             }
-        }        
-    }  
+        }
+    }
 
 }

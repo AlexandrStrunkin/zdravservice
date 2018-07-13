@@ -190,6 +190,7 @@
 											</div>
 										<?}else{?>
 											<div class="price"><?=$arItem["PRICE_FORMATED"];?></div>
+											<div class="price discount"><strike><?=$arItem["DISCOUNT_VALUE"]?></strike></div>
 											<input type="hidden" name="item_price_<?=$arItem["ID"]?>" value="<?=$arItem["PRICE"]?>" />
 										<?}?>
 										<input type="hidden" name="item_summ_<?=$arItem["ID"]?>" value="<?=$arItem["PRICE"]*$arItem["QUANTITY"]?>" />
@@ -241,6 +242,25 @@
 		</table>
 	</div>
 	<?$arError = CNext::checkAllowDelivery($arResult["allSum"],$currency);?>
+
+	<div class="waiter_discount">
+		<div class="waiter_discount_block">
+			<img src="/local/templates/aspro_next/images/waiter.gif"/>
+			<div class="waiter_discount_text">Поиск скидок</div>
+		</div>
+	</div>
+	<?if(count($arResult["DISCOUNT_LIST"]) > 0) {?>
+		<div class="discount_list">
+			<div class="discount_list_block">
+				<div class="discount_list_title">Применены скидки по акции: </div>
+				<ul class="discount_list_ul">
+					<?foreach($arResult["DISCOUNT_LIST"] as $discountName) {?>
+						<li><?=$discountName?></li>
+					<?}?>
+				</ul>
+			</div>
+		</div>
+	<?}?>
 	<div class="itog">
 		<table class="colored fixed" height="100%" width="100%">
 			<?$totalCols = 3 + ($arParams["AJAX_MODE_CUSTOM"] != "Y" ? 1 : 0) + ($arParams["SHOW_FULL_ORDER_BUTTON"] == "Y" && !$arError["ERROR"] ? 1 : 0)?>
@@ -295,6 +315,7 @@
 							<div class="basket_back">
 								<div class="wrap_button">
 									<a href="<?=$arParams["PATH_TO_BASKET"]?>" class="btn btn-default white"><span><?=GetMessage("GO_TO_BASKET")?></span></a>
+									<div class="basket_waiter"><img src="/local/templates/aspro_next/images/waiter.gif" alt="Идёт пересчет корзины"/></div>
 								</div>
 								<div class="description"><?=GetMessage("SALE_TO_BASKET_DESCRIPTION");?></div>
 							</div>
@@ -319,12 +340,20 @@
 								<div class="wrap_button">
 									<a href="<?=$arParams["PATH_TO_BASKET"]?>" class="btn btn-default white"><span><?=GetMessage("GO_TO_BASKET")?></span></a>
 								</div>
+								<div class="basket_waiter">
+									<img src="/local/templates/aspro_next/images/waiter.gif"/>
+									<div>Пересчет корзины</div>
+								</div>
 								<div class="description"><?=GetMessage("SALE_TO_BASKET_DESCRIPTION");?></div>
 							<?endif;?>
 						<?}else{?>
 							<div class="basket_back">
 								<div class="wrap_button">
 									<a href="<?=$arParams["PATH_TO_BASKET"]?>" class="btn btn-default white"><span><?=GetMessage("GO_TO_BASKET")?></span></a>
+								</div>
+								<div class="basket_waiter">
+									<img src="/local/templates/aspro_next/images/waiter.gif"/>
+									<div>Пересчет корзины</div>
 								</div>
 								<div class="description"><?=GetMessage("SALE_TO_BASKET_DESCRIPTION");?></div>
 							</div>

@@ -28,6 +28,6 @@ if ('' != $arParams['TEMPLATE_THEME'])
 	}
 }
 if ('' == $arParams['TEMPLATE_THEME'])
-	$arParams['TEMPLATE_THEME'] = 'blue';         
+	$arParams['TEMPLATE_THEME'] = 'blue';
 
 $arResult["BONUS_COUNT"] = ClientBonusInfo::getCurrentUserBonusBalance();

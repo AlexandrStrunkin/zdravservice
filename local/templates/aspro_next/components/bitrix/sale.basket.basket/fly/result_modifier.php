@@ -3,16 +3,37 @@
 	{
 		usort($arResult["GRID"]["ROWS"], 'CNext::cmpByID');
 		$arImages = array();
+		$arResult["DISCOUNT_LIST"] = array();
 		foreach($arResult["GRID"]["ROWS"] as $key=>$arItem)
 		{
+			//Соберем информацию о скидках, т.к. сам компонент этиу информацию не предоставляет
+			$discountFields = "";
+			$discountFields = Bitrix\Sale\Internals\BasketTable::getList(array(
+			    'filter' => array(
+			        'ID' => $arItem["ID"],
+			    ),
+			    'select' => array('DISCOUNT_NAME', 'DISCOUNT_VALUE')
+			))->fetch();
+
+			if($discountFields["DISCOUNT_VALUE"] > 0) {
+				if(!in_array($discountFields["DISCOUNT_NAME"], $arResult["DISCOUNT_LIST"])) {
+					if(!empty($discountFields["DISCOUNT_NAME"])){
+						$arResult["DISCOUNT_LIST"][] = $discountFields["DISCOUNT_NAME"];
+					}
+				}
+				$arResult["GRID"]["ROWS"][$key]["DISCOUNT_NAME"]  = $discountFields["DISCOUNT_NAME"];
+				$arResult["GRID"]["ROWS"][$key]["DISCOUNT_PRICE_PERCENT"] = $discountFields["DISCOUNT_VALUE"];
+			}
+
+
 			// fix bitrix measure bug
 			if(!isset($arItem["MEASURE"]) && !isset($arItem["MEASURE_RATIO"]) && strlen($arItem["MEASURE_TEXT"])){
 				$arResult["GRID"]["ROWS"][$key]["MEASURE_RATIO"] = 1;
-			} 
-			
+			}
+
 			//fix image size
 			if (isset($arItem["PREVIEW_PICTURE"]) && intval($arItem["PREVIEW_PICTURE"]) > 0)
-			{	
+			{
 				$arImage = CFile::GetFileArray($arItem["PREVIEW_PICTURE"]);
 				if ($arImage)
 				{
@@ -52,36 +73,36 @@
 			}*/
 		}
 		unset($arImages);
-		
+
 		$isPrice = false;
 		$priceIndex = 0;
 		foreach($arResult["GRID"]["HEADERS"] as $key => $arHeader)
 		{
-			if($arHeader["id"]=="PRICE") 
+			if($arHeader["id"]=="PRICE")
 			{
-				$isPrice = true; 
+				$isPrice = true;
 				$priceIndex = $key;
 			}
 		}
-		
+
 		foreach($arResult["GRID"]["HEADERS"] as $key => $arHeader)
 		{
 				if ($arHeader["id"]=="QUANTITY" && $isPrice && $priceIndex)
 				{
-					$arResult["GRID"]["HEADERS"] = array_merge(	array_slice($arResult["GRID"]["HEADERS"], 0, $priceIndex), 
-								array(array("id"=>"SUMM", "name"=>"")), 
+					$arResult["GRID"]["HEADERS"] = array_merge(	array_slice($arResult["GRID"]["HEADERS"], 0, $priceIndex),
+								array(array("id"=>"SUMM", "name"=>"")),
 								array_slice($arResult["GRID"]["HEADERS"], $priceIndex, count($arResult["GRID"]["HEADERS"]))
 							);
 				}
 		}
-					
+
 		foreach($arResult["GRID"]["HEADERS"] as $key => $arHeader)
 		{
 			switch($arHeader["id"])
 			{
-				case "DELETE": $arResult["GRID"]["HEADERS"][$key]["SORT"] = 100; break;	
-				case "NAME": $arResult["GRID"]["HEADERS"][$key]["SORT"] = 200; break;	
-				case "DISCOUNT": $arResult["GRID"]["HEADERS"][$key]["SORT"] = 300; break;		
+				case "DELETE": $arResult["GRID"]["HEADERS"][$key]["SORT"] = 100; break;
+				case "NAME": $arResult["GRID"]["HEADERS"][$key]["SORT"] = 200; break;
+				case "DISCOUNT": $arResult["GRID"]["HEADERS"][$key]["SORT"] = 300; break;
 				case "PROPS": $arResult["GRID"]["HEADERS"][$key]["SORT"] = 400; break;
 				case "WEIGHT": $arResult["GRID"]["HEADERS"][$key]["SORT"] = 500; break;
 				case "PRICE": $arResult["GRID"]["HEADERS"][$key]["SORT"] = 600; break;
@@ -96,26 +117,26 @@
 
 		}
 		usort($arResult["GRID"]["HEADERS"], 'CNext::cmpBySort');
-		
-		
+
+
 		$arNormal = array();
 		$arDelay = array();
 		$arSubscribe = array();
-		$arNa = array();	
+		$arNa = array();
 		$arTotals = array();
 		$arResult["DELAY_PRICE"]["SUMM"]=0;
-			
+
 		foreach ($arResult["GRID"]["ROWS"] as $k => $arItem)
 		{
 			if ($arItem["DELAY"] == "N" && $arItem["CAN_BUY"] == "Y")
 			{
-				$arNormal[$arItem["ID"]] = $arItem;  
+				$arNormal[$arItem["ID"]] = $arItem;
 			}
 			if ($arItem["DELAY"] == "Y" && $arItem["CAN_BUY"] == "Y")
 			{
 				$arDelay[$arItem["ID"]] = $arItem;
 				$arResult["DELAY_PRICE"]["SUMM"]+=$arItem["PRICE"];
-				
+
 			}
 			if ($arItem["CAN_BUY"] == "N" && $arItem["SUBSCRIBE"] == "Y")
 			{
@@ -126,42 +147,46 @@
 				$arNa[$arItem["ID"]] = $arItem;
 			}
 		}
-		
+
 		foreach ($arResult["GRID"]["HEADERS"] as $id => $arHeader)	{	if ($arHeader["id"] == "WEIGHT"){ $bWeightColumn = true;}	}
-		 
+
 		if ($bWeightColumn) { $arTotal["WEIGHT"]["NAME"] = GetMessage("SALE_TOTAL_WEIGHT"); $arTotal["WEIGHT"]["VALUE"] = $arResult["allWeight_FORMATED"];}
-		if ($arParams["PRICE_VAT_SHOW_VALUE"] == "Y") 
-		{ 
+		if ($arParams["PRICE_VAT_SHOW_VALUE"] == "Y")
+		{
 			$arTotal["VAT_EXCLUDED"]["NAME"] = GetMessage("SALE_VAT_EXCLUDED"); $arTotal["VAT_EXCLUDED"]["VALUE"] = $arResult["allSum_wVAT_FORMATED"];
 			$arTotal["VAT_INCLUDED"]["NAME"] = GetMessage("SALE_VAT_INCLUDED"); $arTotal["VAT_INCLUDED"]["VALUE"] = $arResult["allVATSum_FORMATED"];
 		}
 		if (doubleval($arResult["DISCOUNT_PRICE_ALL"]) > 0)
 		{
-			$arTotal["PRICE"]["NAME"] = GetMessage("SALE_TOTAL"); 
+			$arTotal["PRICE"]["NAME"] = GetMessage("SALE_TOTAL");
 			$arTotal["PRICE"]["VALUES"]["ALL"] = str_replace(" ", "&nbsp;", $arResult["allSum_FORMATED"]);
 			$arTotal["PRICE"]["VALUES"]["WITHOUT_DISCOUNT"] = $arResult["PRICE_WITHOUT_DISCOUNT"];
 		}
 		else
 		{
-			$arTotal["PRICE"]["NAME"] = GetMessage("SALE_TOTAL"); 
+			$arTotal["PRICE"]["NAME"] = GetMessage("SALE_TOTAL");
 			$arTotal["PRICE"]["VALUES"]["ALL"] = $arResult["allSum_FORMATED"];
 		}
 
 		$arNormal["COUNT"] = count($arNormal);
 		$arNormal["TOTAL"] = $arTotal;
-		
+
 		$arDelay["COUNT"] = count($arDelay);
 		$arSubscribe["COUNT"] = count($arSubscribe);
 		$arNa["COUNT"] = count($arNa);
 
 		$arResult["DELAY_PRICE"]["SUMM_FORMATED"]=CCurrencyLang::CurrencyFormat($arResult["DELAY_PRICE"]["SUMM"], CSaleLang::GetLangCurrency(SITE_ID), true);
-		
+
 		$arJson = array();
 		if ($arNormal["COUNT"]) { $arJson[]= array("AnDelCanBuy"=>$arNormal); }
 		if ($arDelay["COUNT"]) { $arJson[]= array("DelDelCanBuy"=>$arDelay); }
 		if ($arSubscribe["COUNT"]) { $arJson[]= array("ProdSubscribe"=>$arSubscribe); }
 		if ($arNa["COUNT"]) { $arJson[]= array("nAnCanBuy"=>$arNa); }
-		
+
 		$arResult["JSON"] = $arJson;
 	}
+
+print_r("<pre style='display:none'>");
+print_r($arResult);
+print_r("</pre>");
 ?>

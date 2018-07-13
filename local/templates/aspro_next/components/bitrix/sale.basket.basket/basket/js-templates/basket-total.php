@@ -28,17 +28,17 @@ use Bitrix\Main\Localization\Loc;
 			<?} else {?>
                 <?if ($arResult["BONUS_COUNT"] !== false) {?>
                 <div class="basket-coupon-section bonus-balance-description">
-                    <div class="basket-coupon-block-field"> 
+                    <div class="basket-coupon-block-field">
                         <b><?=Loc::getMessage("SBB_BONUS_COUNT")?>: </b>
-                        <span class="bonus-count"><?=$arResult["BONUS_COUNT"]?></span>  
+                        <span class="bonus-count"><?=$arResult["BONUS_COUNT"]?></span>
                         <div class="basket-coupon-block-field-description">
-                        <?=Loc::getMessage("SBB_BONUS_DESCRIPTION")?>  
+                        <?=Loc::getMessage("SBB_BONUS_DESCRIPTION")?>
                         </div>
                     </div>
                 </div>
                 <?}?>
             <?}?>
-        
+
 		<div class="basket-checkout-section">
 			<div class="basket-checkout-section-inner">
 				<div class="basket-checkout-block basket-checkout-block-total">
@@ -82,6 +82,10 @@ use Bitrix\Main\Localization\Loc;
 						data-entity="basket-checkout-button">
 						<?=Loc::getMessage('SBB_ORDER')?>
 					</button>
+					<div class="basket_waiter">
+						<img src="/local/templates/aspro_next/images/waiter.gif"/>
+						<div>Пересчет корзины</div>
+					</div>
 				</div>
 			</div>
 		</div>
