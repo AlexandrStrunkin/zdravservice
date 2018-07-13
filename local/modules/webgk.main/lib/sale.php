@@ -106,7 +106,7 @@ class Sale {
                                     'PRICE'          => $newPrice > 0 ? $newPrice : (float)$newBasketItem->price,
                                     'CUSTOM_PRICE'   => "Y",
                                     'TYPE'           => "IGNORE_HANDLERS",
-                                    "DISCOUNT_NAME"  => (strlen($actionElement[0]["NAME"]) > 0) ? "<a href=".$actionElement[0]["DETAIL_PAGE_URL"].">".$actionElement[0]["NAME"]."</a>" : "",
+                                    "DISCOUNT_NAME"  => (strlen($actionElement[0]["NAME"]) > 0) ? "<a target='_blank' href=".$actionElement[0]["DETAIL_PAGE_URL"].">".$actionElement[0]["NAME"]."</a>" : "",
                                     "DISCOUNT_VALUE" => (float)$newBasketItem->discount
                                 );
                             }
