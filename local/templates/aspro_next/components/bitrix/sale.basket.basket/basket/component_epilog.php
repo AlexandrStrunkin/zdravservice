@@ -1,25 +1,25 @@
 <style>
-form[name^="basket_form"] .discount_list {
-    display: block;
+#basket-root .discount_list {
+    display: none;
 }
-form[name^="basket_form"] .discount_list .discount_list_block {
+#basket-root .discount_list .discount_list_block {
     float: right;
-    margin-top: 8px;
+    margin-top: -10px;
 }
-form[name^="basket_form"] .discount_list .discount_list_title{
+#basket-root .discount_list .discount_list_title{
     display: inline-block;
     float: left;
 }
-form[name^="basket_form"] .discount_list .discount_list_ul{
+#basket-root .discount_list .discount_list_ul{
     display: inline-block;
     float: right;
     max-width: 320px;
     margin-right: 48px;
 }
-form[name^="basket_form"] .discount_list .discount_list_ul li a{
+#basket-root .discount_list .discount_list_ul li a{
     text-decoration: underline;
 }
-form[name^="basket_form"] .discount_list .discount_list_ul li:before{
+#basket-root .discount_list .discount_list_ul li:before{
     content: "";
 }
 

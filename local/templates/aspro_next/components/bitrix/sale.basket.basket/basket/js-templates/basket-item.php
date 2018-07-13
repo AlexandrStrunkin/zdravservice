@@ -122,7 +122,7 @@ if (!empty($arParams['LABEL_PROP_POSITION']))
 							{{#DETAIL_PAGE_URL}}
 								<a href="{{DETAIL_PAGE_URL}}" class="basket-item-info-name-link">
 							{{/DETAIL_PAGE_URL}}
-	
+
 							<span data-entity="basket-item-name">{{NAME}}</span>
 
 							{{#DETAIL_PAGE_URL}}

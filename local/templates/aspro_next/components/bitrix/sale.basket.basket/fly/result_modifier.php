@@ -185,8 +185,4 @@
 
 		$arResult["JSON"] = $arJson;
 	}
-
-print_r("<pre style='display:none'>");
-print_r($arResult);
-print_r("</pre>");
 ?>

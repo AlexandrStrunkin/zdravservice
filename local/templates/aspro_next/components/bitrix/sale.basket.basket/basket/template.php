@@ -181,6 +181,13 @@ if (empty($arResult['ERROR_MESSAGE']))
 						<div class="waiter_discount_text">Поиск скидок</div>
 					</div>
 				</div>
+				<div class="discount_list">
+					<div class="discount_list_block">
+						<div class="discount_list_title">Применены скидки по акции: </div>
+						<ul class="discount_list_ul">
+						</ul>
+					</div>
+				</div>
 			</div>
 		</div>
 

@@ -71,10 +71,13 @@
 			this.signedParamsString = parameters.signedParamsString || '';
 			this.siteId = parameters.siteId || '';
 			this.ajaxUrl = parameters.ajaxUrl || '';
+			this.templateAjaxUrl = '/local/templates/aspro_next/components/bitrix/sale.basket.basket/basket/ajax/';
 			this.templateFolder = parameters.templateFolder || '';
 
 			this.useDynamicScroll = this.params.USE_DYNAMIC_SCROLL === 'Y';
 			this.useItemsFilter = this.params.SHOW_FILTER === 'Y' && !this.isMobile;
+			//Добавляем получение информации о скидках
+			this.getDiscountData();
 
 			this.initializeFilter();
 			this.applyBasketResult(parameters.result);
@@ -438,7 +441,7 @@
 							totalNodes[i].innerHTML = totalRender;
 
 							this.bindTotalEvents(totalNodes[i]);
-							
+
 							$("#basket-root").find(".basket-btn-checkout").show();
 							$("#basket-root").find(".basket_waiter").hide();
 							$("#basket-root").find(".waiter_discount").hide();
@@ -660,6 +663,19 @@
 				url: this.ajaxUrl,
 				data: this.getData(data),
 				onsuccess: BX.delegate(function(result) {
+				}, this),
+				onfailure: BX.delegate(function() {
+					this.actionPool.doProcessing(false);
+				}, this)
+			});
+
+			//Костылим повторный запрос для правильного обновления цен, по умолчанию, компонент получает данные о товарах ПЕРЕД обновлением и цены получаются не измененными хенделрами
+			BX.ajax({
+				method: 'POST',
+				dataType: 'json',
+				url: this.ajaxUrl,
+				data: this.getData(data),
+				onsuccess: BX.delegate(function(result) {
 					this.actionPool.doProcessing(false);
 
 					if (!BX.type.isPlainObject(result))
@@ -686,6 +702,9 @@
 					this.editBasketItems(this.getItemsToEdit());
 					this.editTotal();
 
+					//Добавляем получение информации о скидках
+					this.getDiscountData();
+
 					this.adjustBasketWrapperHeight();
 					this.applyPriceAnimation();
 					this.editWarnings();
@@ -695,6 +714,28 @@
 					if (this.isBasketIntegrated() && this.isBasketChanged())
 					{
 						BX.Sale.OrderAjaxComponent.sendRequest();
+					}
+				}, this),
+				onfailure: BX.delegate(function() {
+					this.actionPool.doProcessing(false);
+				}, this)
+			});
+		},
+
+		getDiscountData: function() {
+			var requestFields = {};
+			$("#basket-root .discount_list").hide();
+			requestFields.action = "getActualDiscount";
+
+			BX.ajax({
+				method: 'POST',
+				dataType: 'json',
+				url: this.templateAjaxUrl + "discount.php",
+				data: requestFields,
+				onsuccess: BX.delegate(function(result) {
+					if(result != false) {
+						$("#basket-root .discount_list_ul").html(result);
+						$("#basket-root .discount_list").show();
 					}
 				}, this),
 				onfailure: BX.delegate(function() {
@@ -1892,6 +1933,7 @@
 				if (parseFloat(itemData.QUANTITY) !== parseFloat(quantity))
 				{
 					$("#basket-root").find(".basket-btn-checkout").hide();
+					$("#basket-root .discount_list").hide();
 					$("#basket-root").find(".basket_waiter").show();
 					$("#basket-root").find(".waiter_discount").show();
 					this.animatePriceByQuantity(itemData, quantity);
