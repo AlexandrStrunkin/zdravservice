@@ -2,12 +2,23 @@ var basketTimeout;
 var totalSum;
 var timerBasketUpdate = false;
 
-function setQuantityFly(basketId, ratio, direction){
-
+function showPreloaders() {
 	$('form[name^=basket_form] .wrap_button .btn').hide();
 	$('form[name^=basket_form] .basket_waiter').show();
 	$('form[name^=basket_form] .waiter_discount').show();
 	$('form[name^=basket_form] .discount_list').hide();
+}
+
+function hidePreloaders() {
+	$('form[name^=basket_form] input[name=BasketRefresh]').remove();
+	$('form[name^=basket_form] .wrap_button .btn').show();
+	$('form[name^=basket_form] .basket_waiter').hide();
+	$('form[name^=basket_form] .waiter_discount').hide();
+}
+
+function setQuantityFly(basketId, ratio, direction){
+
+	showPreloaders();
 
 	var currentValue = BX("QUANTITY_INPUT_" + basketId).value, newVal;
 
@@ -60,10 +71,7 @@ function setQuantityFly(basketId, ratio, direction){
 
 function updateQuantityFly(controlId, basketId, ratio, animate) {
 
-	$('form[name^=basket_form] .wrap_button .btn').hide();
-	$('form[name^=basket_form] .basket_waiter').show();
-	$('form[name^=basket_form] .waiter_discount').show();
-	$('form[name^=basket_form] .discount_list').hide();
+	showPreloaders();
 
 	var oldVal = BX(controlId).defaultValue, newVal = parseFloat(BX(controlId).value) || 0; bValidChange = false; // if quantity is correct for this ratio
 
@@ -89,15 +97,13 @@ function updateQuantityFly(controlId, basketId, ratio, animate) {
 	$.post( arNextOptions['SITE_DIR']+'ajax/basket_fly.php', $("form[name^=basket_form]").serialize(), $.proxy(function( data){
 		if (timerBasketUpdate==false) {
 			basketFly('open');
+			hidePreloaders();
 		}
-		$('form[name^=basket_form] input[name=BasketRefresh]').remove();
-		$('form[name^=basket_form] .wrap_button .btn').show();
-		$('form[name^=basket_form] .basket_waiter').hide();
-		$('form[name^=basket_form] .waiter_discount').hide();
 	}));
 }
 
 function delete_all_items(type, item_section, correctSpeed){
+	showPreloaders();
 	var index=(type=="delay" ? "2" : "1");
 	if(type == "na")
 		index = 4;
@@ -115,16 +121,19 @@ function delete_all_items(type, item_section, correctSpeed){
 
 		var eventdata = {action:'loadBasket'};
 		BX.onCustomEvent('onCompleteAction', [eventdata]);
+		hidePreloaders();
 	}));
 }
 
 function deleteProduct(basketId, itemSection, item, th){
+	showPreloaders();
 	function _deleteProduct(basketId, itemSection, product_id){
 		arStatusBasketAspro = {};
 		$.post( arNextOptions['SITE_DIR']+'ajax/item.php', 'delete_item=Y&item='+product_id, $.proxy(function( data ){
 			basketFly('open');
 			getActualBasket();
 			$('.to-cart[data-item='+product_id+']').removeClass("clicked");
+			hidePreloaders();
 		}));
 	}
 	var product_id=th.attr("product-id");
@@ -140,7 +149,9 @@ function deleteProduct(basketId, itemSection, item, th){
 }
 
 function delayProduct(basketId, itemSection, th){
+	showPreloaders();
 	var product_id=th.attr("product-id");
+
 	$.post( arNextOptions['SITE_DIR']+'ajax/item.php', 'wish_item=Y&item='+product_id+'&quantity='+th.find('#QUANTITY_'+basketId).val(), $.proxy(function( data ){
 		basketFly('open');
 		getActualBasket(th.attr('data-iblockid'));
@@ -148,6 +159,7 @@ function delayProduct(basketId, itemSection, th){
 		arStatusBasketAspro = {};
 		var eventdata = {action:'loadBasket'};
 		BX.onCustomEvent('onCompleteAction', [eventdata]);
+		hidePreloaders();
 	}));
 }
 

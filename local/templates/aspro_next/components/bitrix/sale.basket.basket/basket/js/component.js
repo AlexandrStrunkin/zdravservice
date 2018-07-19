@@ -441,16 +441,20 @@
 							totalNodes[i].innerHTML = totalRender;
 
 							this.bindTotalEvents(totalNodes[i]);
-
-							$("#basket-root").find(".basket-btn-checkout").show();
-							$("#basket-root").find(".basket_waiter").hide();
-							$("#basket-root").find(".waiter_discount").hide();
+							this.hidePreloaders();
 						}
 					}
 				}
 			}
 
 			this.checkStickyHeaders();
+		},
+
+		hidePreloaders: function()
+		{
+			$("#basket-root").find(".basket-btn-checkout").show();
+			$("#basket-root").find(".basket_waiter").hide();
+			$("#basket-root").find(".waiter_discount").hide();
 		},
 
 		showItemsCount: function()
@@ -1932,14 +1936,19 @@
 
 				if (parseFloat(itemData.QUANTITY) !== parseFloat(quantity))
 				{
-					$("#basket-root").find(".basket-btn-checkout").hide();
-					$("#basket-root .discount_list").hide();
-					$("#basket-root").find(".basket_waiter").show();
-					$("#basket-root").find(".waiter_discount").show();
+					this.showPreloaders();
 					this.animatePriceByQuantity(itemData, quantity);
 					this.actionPool.changeQuantity(itemData.ID, quantity, currentQuantity);
 				}
 			}
+		},
+
+		showPreloaders: function()
+		{
+			$("#basket-root").find(".basket-btn-checkout").hide();
+			$("#basket-root .discount_list").hide();
+			$("#basket-root").find(".basket_waiter").show();
+			$("#basket-root").find(".waiter_discount").show();
 		},
 
 		animatePriceByQuantity: function(itemData, quantity)
@@ -2245,6 +2254,7 @@
 				this.actionPool.deleteItem(itemData.ID);
 
 				this.items[itemData.ID].SHOW_LOADING = true;
+				this.showPreloaders();
 
 				if (this.params.SHOW_RESTORE === 'Y' && this.isItemAvailable(itemData.ID))
 				{

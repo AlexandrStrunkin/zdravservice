@@ -7,24 +7,25 @@
 		foreach($arResult["GRID"]["ROWS"] as $key=>$arItem)
 		{
 			//Соберем информацию о скидках, т.к. сам компонент этиу информацию не предоставляет
-			$discountFields = "";
-			$discountFields = Bitrix\Sale\Internals\BasketTable::getList(array(
-			    'filter' => array(
-			        'ID' => $arItem["ID"],
-			    ),
-			    'select' => array('DISCOUNT_NAME', 'DISCOUNT_VALUE')
-			))->fetch();
+			if($arItem["DELAY"] != "Y") {
+				$discountFields = "";
+				$discountFields = Bitrix\Sale\Internals\BasketTable::getList(array(
+				    'filter' => array(
+				        'ID' => $arItem["ID"],
+				    ),
+				    'select' => array('DISCOUNT_NAME', 'DISCOUNT_VALUE')
+				))->fetch();
 
-			if($discountFields["DISCOUNT_VALUE"] > 0) {
-				if(!in_array($discountFields["DISCOUNT_NAME"], $arResult["DISCOUNT_LIST"])) {
-					if(!empty($discountFields["DISCOUNT_NAME"])){
-						$arResult["DISCOUNT_LIST"][] = $discountFields["DISCOUNT_NAME"];
+				if($discountFields["DISCOUNT_VALUE"] > 0) {
+					if(!in_array($discountFields["DISCOUNT_NAME"], $arResult["DISCOUNT_LIST"])) {
+						if(!empty($discountFields["DISCOUNT_NAME"])){
+							$arResult["DISCOUNT_LIST"][] = $discountFields["DISCOUNT_NAME"];
+						}
 					}
+					$arResult["GRID"]["ROWS"][$key]["DISCOUNT_NAME"]  = $discountFields["DISCOUNT_NAME"];
+					$arResult["GRID"]["ROWS"][$key]["DISCOUNT_PRICE_PERCENT"] = $discountFields["DISCOUNT_VALUE"];
 				}
-				$arResult["GRID"]["ROWS"][$key]["DISCOUNT_NAME"]  = $discountFields["DISCOUNT_NAME"];
-				$arResult["GRID"]["ROWS"][$key]["DISCOUNT_PRICE_PERCENT"] = $discountFields["DISCOUNT_VALUE"];
 			}
-
 
 			// fix bitrix measure bug
 			if(!isset($arItem["MEASURE"]) && !isset($arItem["MEASURE_RATIO"]) && strlen($arItem["MEASURE_TEXT"])){
