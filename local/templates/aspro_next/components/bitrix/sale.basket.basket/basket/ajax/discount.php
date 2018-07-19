@@ -4,13 +4,15 @@ if($_REQUEST["action"] == 'getActualDiscount') {
     $resultHtml = false;
     $basket = Bitrix\Sale\Basket::loadItemsForFUser(Bitrix\Sale\Fuser::getId(), Bitrix\Main\Context::getCurrent()->getSite());
     foreach($basket as $basketItem) {
-        $discountName = "";
-        $discountValue = "";
+        if(!$basketItem->isDelay()) {
+            $discountName = "";
+            $discountValue = "";
 
-        $discountName = $basketItem->getField("DISCOUNT_NAME");
+            $discountName = $basketItem->getField("DISCOUNT_NAME");
 
-        if(!empty($discountName)) {
-            $resultHtml .= "<li>".$discountName."</li>";
+            if(!empty($discountName)) {
+                $resultHtml .= "<li>".$discountName."</li>";
+            }
         }
     }
 

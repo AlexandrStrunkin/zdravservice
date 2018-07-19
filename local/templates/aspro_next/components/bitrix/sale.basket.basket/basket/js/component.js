@@ -2252,15 +2252,15 @@
 			if (itemData)
 			{
 				this.actionPool.deleteItem(itemData.ID);
-
-				this.items[itemData.ID].SHOW_LOADING = true;
+				$("#basket-item-"+itemData.ID).remove();
 				this.showPreloaders();
-
+				/*
+				this.items[itemData.ID].SHOW_LOADING = true;
 				if (this.params.SHOW_RESTORE === 'Y' && this.isItemAvailable(itemData.ID))
 				{
 					this.items[itemData.ID].SHOW_RESTORE = true;
 				}
-
+				*/
 				this.redrawBasketItemNode(itemData.ID);
 			}
 		},
@@ -2282,6 +2282,7 @@
 			var itemData = this.getItemDataByTarget(BX.proxy_context);
 			if (itemData)
 			{
+				this.showPreloaders();
 				this.actionPool.removeDelayed(itemData.ID);
 
 				this.items[itemData.ID].SHOW_LOADING = true;
