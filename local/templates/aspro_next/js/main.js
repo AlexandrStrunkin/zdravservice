@@ -126,6 +126,9 @@ if(!funcDefined('basketFly')){
             if(action=="refresh")
                 $('li[data-type=AnDelCanBuy]').trigger('click');
 
+            if(action=='open')
+                $('li[data-type=AnDelCanBuy]').trigger('click');
+                
             if(typeof(opener) == 'undefined')
             {
                 if(window.matchMedia('(min-width: 769px)').matches)
@@ -874,7 +877,7 @@ if(!funcDefined('onLoadjqm')){
                                         (title.indexOf(':') > 0 ? '' : '<span class="val">'+$(this).find('ul li.active > span').text()+'</span>')+
                                     '</span>'+
                                 '</div>';
-                    
+
                 })
                 propsHtml += '</div>';
             }
@@ -6236,7 +6239,7 @@ if(!funcDefined('checkMinPrice')){
 
                     if($('.oneclickbuy.fast_order').length)
                         $('.oneclickbuy.fast_order').remove();
-                    
+
                     if($('.basket-checkout-container').length)
                     {
                         if(!$('.icon_error_wrapper').length){
@@ -6298,9 +6301,9 @@ if (typeof window.frameCacheVars !== "undefined"){
         CheckTopMenuPadding();
         CheckTopMenuOncePadding();
         CheckTopMenuDotted();
-        
+
         CheckSearchWidth();
-    
+
         if($('.logo-row.v2').length)
         {
             $(window).resize(); // need to check resize flexslider & menu
@@ -6633,23 +6636,23 @@ BX.addCustomEvent('onSubmitForm', function(eventdata){
 
 /**
 * функция таймера обратного отсчета
-* 
+*
 * @param timestamp
 */
 function parseTime_bv(timestamp){
     if (timestamp >= 0) {
-  
+
         var day = Math.floor( (timestamp/60/60) / 24);
         var hour = Math.floor(timestamp/60/60);
         var mins = Math.floor((timestamp - hour*60*60)/60);
         var secs = Math.floor(timestamp - hour*60*60 - mins*60);
         var left_hour = Math.floor( (timestamp - day*24*60*60) / 60 / 60 );
-      
+
         if(String(secs).length > 0)
             $('.secAmount').text(secs);
-            
+
     }
-      
+
 }
 
 //Обрезка длинных названий
